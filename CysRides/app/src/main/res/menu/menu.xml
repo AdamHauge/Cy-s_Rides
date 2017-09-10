@@ -4,10 +4,16 @@
 
     <item
         android:id="@+id/menu_item1"
-        android:actionViewClass="android.widget.SearchView"
-        android:title="Do Stuff" />
+        android:title="@string/profile" />
+        <!--android:actionViewClass="android.widget.SearchView"-->
 
     <item
         android:id="@+id/menu_item2"
-        android:title="Do stuff2" />
+        android:title="@string/offers" />
+
+    <item
+        android:id="@+id/menu_item3"
+        android:title="@string/requests" />
+
+
 </menu>

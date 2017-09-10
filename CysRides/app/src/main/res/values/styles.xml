@@ -10,11 +10,7 @@
 
     <style name="CustomActionBar">
         <item name="android:background">@color/colorCardinal</item>
-        <item name="android:titleTextStyle">@style/CustomTextColor</item>
-    </style>
-
-    <style name="CustomTextColor">
-        <item name="android:textColor">@color/colorGold</item>
+        <item name="android:titleTextStyle">@color/colorGold</item>
     </style>
 
 </resources>
