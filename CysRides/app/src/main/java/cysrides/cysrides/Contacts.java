@@ -24,8 +24,7 @@ public class Contacts extends AppCompatActivity {
 
         listView = (ListView)findViewById(R.id.contacts_list);
 
-        for(int i = 0; i < 20; i++) //TODO the number needs to match the amount of contacts
-        {
+        for(int i = 0; i < 20; i++) { //TODO the number needs to match the amount of contacts
             list.add("Item #" + (i + 1)); //TODO this needs to be changed to match the contact names
         }
 
