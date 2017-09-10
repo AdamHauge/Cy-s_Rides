@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Ride Requests", Toast.LENGTH_SHORT).show();
                 break;
             default:
-                System.out.println("This is Claudia's test commit.");
                 return super.onOptionsItemSelected(item);
         }
         return true;
