@@ -33,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
                 break;
                 case R.id.login:
                 Toast.makeText(getApplicationContext(), "Login", Toast.LENGTH_SHORT).show();
+                i = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(i);
                 break;
             case R.id.profile:
                 Toast.makeText(getApplicationContext(), "My Profile", Toast.LENGTH_SHORT).show();
