@@ -23,14 +23,13 @@
         </activity>
         <activity
             android:name=".Contacts"
-            android:label="Contacts" />
+            android:label="@string/contacts" />
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login" />
         <activity
             android:name=".RideRequests"
-            android:label="@string/title_activity_ride_requests"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_ride_requests" />
         <activity
             android:name=".ViewProfile"
             android:label="@string/title_activity_view_profile"
