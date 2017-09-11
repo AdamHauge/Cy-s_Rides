@@ -49,6 +49,10 @@ public class MainActivity extends AppCompatActivity {
                 i = new Intent(MainActivity.this, RideRequests.class);
                 startActivity(i);
                 break;
+            case R.id.createProfile:
+                i = new Intent(MainActivity.this, CreateProfile.class);
+                startActivity(i);
+                break;
             default:
                 return super.onOptionsItemSelected(item);
         }

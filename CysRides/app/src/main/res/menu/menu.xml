@@ -22,4 +22,8 @@
         android:id="@+id/requests"
         android:title="@string/requests" />
 
+    <item
+        android:id="@+id/createProfile"
+        android:title="Create Profile" />
+
 </menu>
