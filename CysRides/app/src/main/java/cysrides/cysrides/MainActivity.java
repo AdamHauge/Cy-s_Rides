@@ -44,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.requests:
                 Toast.makeText(getApplicationContext(), "Ride Requests", Toast.LENGTH_SHORT).show();
+                i = new Intent(MainActivity.this, RideRequests.class);
+                startActivity(i);
                 break;
             default:
                 return super.onOptionsItemSelected(item);
