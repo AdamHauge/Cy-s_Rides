@@ -4,7 +4,7 @@ public class Offer {
 
     private UserType userType;
     private double cost;
-    private String user;
+    private UserInfo user;
     private String destination;
     private String description;
 
