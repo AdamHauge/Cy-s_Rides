@@ -7,4 +7,10 @@
     android:visibility="visible"
     tools:context="cysrides.cysrides.RideRequests">
 
+    <ListView
+        android:id="@+id/contacts_list"
+        android:layout_width="368dp"
+        android:layout_height="495dp"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="8dp" />
 </android.support.constraint.ConstraintLayout>
