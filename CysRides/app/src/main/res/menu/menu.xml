@@ -30,4 +30,8 @@
         android:id="@+id/createProfile"
         android:title="Create Profile" />
 
+    <item
+        android:id="@+id/createOffer"
+        android:title="Create Ride Offer" />
+
 </menu>

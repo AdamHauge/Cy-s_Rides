@@ -81,6 +81,12 @@ public class MainActivity extends AppCompatActivity {
                 i = new Intent(MainActivity.this, CreateProfile.class);
                 startActivity(i);
                 break;
+            case R.id.createOffer:
+                Toast.makeText(getApplicationContext(), "Create New Offer", Toast.LENGTH_SHORT).show();
+
+                i = new Intent(MainActivity.this, CreateOffer.class);
+                startActivity(i);
+                break;
             default:
                 return super.onOptionsItemSelected(item);
         }

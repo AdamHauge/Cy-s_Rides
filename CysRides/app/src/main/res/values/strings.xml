@@ -22,6 +22,10 @@
         completions."
     </string>
     <string name="title_activity_ride_requests">Ride Requests</string>
+    <string name="name">Name</string>
+    <string name="destination">Destination</string>
+    <string name="cost">Ride Cost</string>
+    <string name="ride_description">Ride Description</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 

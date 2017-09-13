@@ -37,7 +37,10 @@
             android:label="@string/title_activity_view_profile"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".CreateProfile" />
-        <activity android:name=".Registration"></activity>
+        <activity android:name=".Registration" />
+        <activity
+            android:name=".CreateOffer"
+            android:label= "Create Offer" />
     </application>
 
 </manifest>
