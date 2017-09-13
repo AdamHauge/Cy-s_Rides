@@ -3,6 +3,18 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/profile"
+        android:title="@string/profile"
+        android:icon="@mipmap/ic_launcher_round"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/requests"
+        android:title="@string/requests"
+        android:icon="@drawable/ic_search_black_24dp"
+        app:showAsAction="always"/>
+
+    <item
         android:id="@+id/register"
         android:title="@string/register" />
 
@@ -11,19 +23,12 @@
         android:title="@string/login" />
 
     <item
-        android:id="@+id/profile"
-        android:title="@string/profile" />
-
-    <item
         android:id="@+id/contacts"
         android:title="@string/contacts" />
 
     <item
-        android:id="@+id/requests"
-        android:title="@string/requests" />
-
-    <item
         android:id="@+id/createProfile"
         android:title="Create Profile" />
+
 
 </menu>
