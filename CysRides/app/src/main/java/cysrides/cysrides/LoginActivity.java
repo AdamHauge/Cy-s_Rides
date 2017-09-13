@@ -3,6 +3,7 @@ package cysrides.cysrides;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -191,14 +192,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
+        return email.contains("@iastate.edu");
     }
 
+
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
+        if (password.length() > 8){
+            for (int i = 0; i < password.length(); i++) {
+                if (Character.isDigit(password.charAt(i))) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
+
 
     /**
      * Shows the progress UI and hides the login form.
@@ -345,6 +353,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = null;
             showProgress(false);
         }
+    }
+
+    public void onSignInClick(View view){
+        Intent i;
+        i = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(i);
+    }
+
+    public void onRegisterClick(View view){
+        Intent i;
+        i = new Intent(LoginActivity.this, CreateProfile.class);
+        startActivity(i);
     }
 }
 
