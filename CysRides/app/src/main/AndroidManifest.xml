@@ -40,7 +40,11 @@
         <activity android:name=".Registration" />
         <activity
             android:name=".CreateOffer"
-            android:label= "Create Offer" />
+            android:label="Create Offer" />
+
+        <activity
+            android:name=".CreateRequest"
+            android:label="Create Request" />
     </application>
 
 </manifest>

@@ -25,7 +25,9 @@
     <string name="name">Name</string>
     <string name="destination">Destination</string>
     <string name="cost">Ride Cost</string>
-    <string name="ride_description">Ride Description</string>
+    <string name="description">Description</string>
+    <string name="num_bags">Number of Bags</string>
+    <string name="leave_date">Desired leave date (mm/dd/yy)</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 
