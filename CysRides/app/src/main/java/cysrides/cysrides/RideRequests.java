@@ -21,7 +21,6 @@ public class RideRequests extends AppCompatActivity {
 
     OfferService offerService = new OfferServiceImpl();
 
-    private int testVariable;
     private ListView listView;
     private ArrayAdapter adapter;
     private List<Offer> list = offerService.getOfferRequests(new UserInfo("userName", "password", "email", UserType.DRIVER, "firstName", "lastName", "venmoName", 4, null));
