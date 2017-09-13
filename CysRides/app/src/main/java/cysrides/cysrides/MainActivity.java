@@ -27,8 +27,8 @@ public class MainActivity extends AppCompatActivity {
         //TODO what is going to get put on our main page???
         listView = (ListView) findViewById(R.id.main_list);
 
-        for (int i = 0; i < 20; i++) { //TODO the number needs to match the amount of contacts
-            list.add("Item #" + (i + 1)); //TODO this needs to be changed to match the contact names
+        for (int i = 0; i < 5; i++) { //TODO the number needs to match the amount of contacts
+            list.add("Ride Offer"); //TODO this needs to be changed to match the contact names
         }
 
         adapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_2, android.R.id.text1, list);
