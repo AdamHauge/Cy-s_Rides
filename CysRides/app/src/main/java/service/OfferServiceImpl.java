@@ -1,13 +1,16 @@
 package service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import domain.Offer;
 import domain.UserInfo;
 import domain.UserType;
+import jdbc.OfferJdbc;
+import jdbc.OfferJdbcImpl;
 
 public class OfferServiceImpl implements OfferService {
+
+    OfferJdbc offerJdbc = new OfferJdbcImpl();
 
     @Override
     public List<Offer> getOfferRequests(UserInfo userInfo) {
@@ -24,21 +27,11 @@ public class OfferServiceImpl implements OfferService {
     }
 
     protected List<Offer> getDriverOfferRequests() {
-        List<Offer> dummyList = new ArrayList<>();
-        for(int i=0 ; i<25 ; i++) {
-            Offer offer = new Offer(UserType.PASSENGER, 53180.08, null, "Des Moines", "Take me to Des Moines Yo");
-            dummyList.add(offer);
-        }
-        return dummyList;
+        return offerJdbc.getDriverOffers();
     }
 
     protected List<Offer> getPassengerOfferRequests() {
-        List<Offer> dummyList = new ArrayList<>();
-        for(int i=0 ; i<5 ; i++) {
-            Offer offer = new Offer(UserType.DRIVER, 53180.08, null, "Des Moines", "I'm going to Des Moines Yo");
-            dummyList.add(offer);
-        }
-        return dummyList;
+        return offerJdbc.getPassengerOffers();
     }
 
 }
