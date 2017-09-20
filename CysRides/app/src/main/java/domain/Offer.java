@@ -1,5 +1,12 @@
 package domain;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+
+import cysrides.cysrides.ViewOffer;
+import cysrides.cysrides.ViewRequest;
+
 public class Offer {
 
     private UserType userType;
@@ -7,13 +14,15 @@ public class Offer {
     private UserInfo user;
     private String destination;
     private String description;
+    private String date;
 
-    public Offer(UserType userType, double cost, UserInfo user, String destination, String description) {
+    public Offer(UserType userType, double cost, UserInfo user, String destination, String description, String date) {
         this.userType = userType;
         this.cost = cost;
         this.user = user;
         this.destination = destination;
         this.description = description;
+        this.date = date;
     }
 
     public UserType getUserType() {
@@ -54,5 +63,21 @@ public class Offer {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public void setDate(String date) {this.date = date;}
+
+    public String getDate(){return date;}
+
+    public void viewOffer(Offer o, Activity c){
+
+        Intent i = new Intent(c , ViewOffer.class);
+        i.putExtra("UserName", o.getUser().getFirstName() + " " + o.getUser().getLastName());
+        i.putExtra("Dest", o.getDestination());
+        i.putExtra("Cost", Double.toString(o.getCost()));
+        i.putExtra("Date", o.getDate());
+        i.putExtra("Description", o.getDescription());
+
+        c.startActivity(i);
     }
 }

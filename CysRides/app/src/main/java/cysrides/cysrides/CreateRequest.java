@@ -46,17 +46,6 @@ public class CreateRequest extends AppCompatActivity {
                 Request r = new Request(numBags, ui, dest, description, date);
 
                 r.viewRequest(r, CreateRequest.this);
-
-
-//                Intent i = new Intent(CreateRequest.this, ViewRequest.class);
-//                Bundle b = new Bundle();
-//                i.putExtra("UserName", ui.getFirstName() + " " + ui.getLastName());
-//                i.putExtra("Dest", r.getDestination());
-//                i.putExtra("NumBags", Integer.toString(numBags));
-//                i.putExtra("Date", r.getDate());
-//                i.putExtra("Description", r.getDescription());
-//
-//                startActivity(i);
             }
         });
     }

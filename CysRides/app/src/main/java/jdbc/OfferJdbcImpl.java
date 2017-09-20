@@ -12,7 +12,7 @@ public class OfferJdbcImpl implements OfferJdbc {
     public List<Offer> getDriverOffers() {
         List<Offer> dummyList = new ArrayList<>();
         for(int i=0 ; i<25 ; i++) {
-            Offer offer = new Offer(UserType.PASSENGER, 53180.08, null, "Des Moines", "Take me to Des Moines Yo");
+            Offer offer = new Offer(UserType.PASSENGER, 53180.08, null, "Des Moines", "Take me to Des Moines Yo", null);
             dummyList.add(offer);
         }
         return dummyList;
@@ -22,7 +22,7 @@ public class OfferJdbcImpl implements OfferJdbc {
     public List<Offer> getPassengerOffers() {
         List<Offer> dummyList = new ArrayList<>();
         for(int i=0 ; i<5 ; i++) {
-            Offer offer = new Offer(UserType.DRIVER, 53180.08, null, "Des Moines", "I'm going to Des Moines Yo");
+            Offer offer = new Offer(UserType.DRIVER, 53180.08, null, "Des Moines", "I'm going to Des Moines Yo", null);
             dummyList.add(offer);
         }
         return dummyList;

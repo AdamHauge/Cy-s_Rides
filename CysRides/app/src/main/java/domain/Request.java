@@ -4,6 +4,7 @@ package domain;
  * Created by Ryan on 9/13/2017.
  */
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -65,9 +66,9 @@ public class Request {
 
     public void setDate(String date) {this.date = date;}
 
-    public void viewRequest(Request r, cysrides.cysrides.CreateRequest c){
+    public void viewRequest(Request r, Activity a){
 
-        Intent i = new Intent(c , ViewRequest.class);
+        Intent i = new Intent(a , ViewRequest.class);
         Bundle b = new Bundle();
         i.putExtra("UserName", r.getUser().getFirstName() + " " + r.getUser().getLastName());
         i.putExtra("Dest", r.getDestination());
@@ -75,6 +76,6 @@ public class Request {
         i.putExtra("Date", r.getDate());
         i.putExtra("Description", r.getDescription());
 
-        c.startActivity(i);
+        a.startActivity(i);
     }
 }
