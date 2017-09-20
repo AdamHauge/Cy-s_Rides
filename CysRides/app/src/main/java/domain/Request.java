@@ -4,6 +4,13 @@ package domain;
  * Created by Ryan on 9/13/2017.
  */
 
+import android.content.Intent;
+import android.os.Bundle;
+
+import cysrides.cysrides.CreateRequest;
+import cysrides.cysrides.ViewRequest;
+
+
 public class Request {
 
     private int num_bags;
@@ -57,4 +64,17 @@ public class Request {
     public String getDate() {return date;}
 
     public void setDate(String date) {this.date = date;}
+
+    public void viewRequest(Request r, cysrides.cysrides.CreateRequest c){
+
+        Intent i = new Intent(c , ViewRequest.class);
+        Bundle b = new Bundle();
+        i.putExtra("UserName", r.getUser().getFirstName() + " " + r.getUser().getLastName());
+        i.putExtra("Dest", r.getDestination());
+        i.putExtra("NumBags", Integer.toString(r.num_bags));
+        i.putExtra("Date", r.getDate());
+        i.putExtra("Description", r.getDescription());
+
+        c.startActivity(i);
+    }
 }

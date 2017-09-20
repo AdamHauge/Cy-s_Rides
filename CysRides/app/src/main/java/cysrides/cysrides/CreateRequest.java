@@ -40,21 +40,23 @@ public class CreateRequest extends AppCompatActivity {
                 temp = (EditText)findViewById(R.id.dateInput);
                 String date = temp.getText().toString();
 
-                UserInfo ui = new UserInfo("user", "password", "email", UserType.DRIVER, "First",
-                        "Second", "Venmo", (float)5.0 , new ArrayList<Offer>());
+                UserInfo ui = new UserInfo("username", "password", "rcerveny@iastate.edu", UserType.DRIVER, "Ryan",
+                        "Cerveny", "Venmo", (float)5.0 , new ArrayList<Offer>());
 
                 Request r = new Request(numBags, ui, dest, description, date);
 
-                Intent i = new Intent(CreateRequest.this, ViewRequest.class);
-                Bundle b = new Bundle();
-                i.putExtra("UserName", ui.getFirstName() + " " + ui.getLastName());
-                i.putExtra("Dest", r.getDestination());
-                i.putExtra("NumBags", Integer.toString(numBags));
-                i.putExtra("Date", r.getDate());
-                i.putExtra("Description", r.getDescription());
-                //i.putExtra("Bundle",b);
+                r.viewRequest(r, CreateRequest.this);
 
-                startActivity(i);
+
+//                Intent i = new Intent(CreateRequest.this, ViewRequest.class);
+//                Bundle b = new Bundle();
+//                i.putExtra("UserName", ui.getFirstName() + " " + ui.getLastName());
+//                i.putExtra("Dest", r.getDestination());
+//                i.putExtra("NumBags", Integer.toString(numBags));
+//                i.putExtra("Date", r.getDate());
+//                i.putExtra("Description", r.getDescription());
+//
+//                startActivity(i);
             }
         });
     }
