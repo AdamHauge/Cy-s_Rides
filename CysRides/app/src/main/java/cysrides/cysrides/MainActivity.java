@@ -1,10 +1,9 @@
 package cysrides.cysrides;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -15,8 +14,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    private Intent i;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.my_profile_button, menu);
         return true;
     }
 
@@ -60,8 +60,10 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.my_profile) {
+            Toast.makeText(getApplicationContext(), "My Profile", Toast.LENGTH_SHORT).show();
+            i = new Intent(MainActivity.this, ViewProfile.class);
+            startActivity(i);
         }
 
         return super.onOptionsItemSelected(item);
@@ -72,7 +74,6 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        Intent i;
 
         switch(id)
         {
@@ -86,11 +87,6 @@ public class MainActivity extends AppCompatActivity
                 i = new Intent(MainActivity.this, RideRequests.class);
                 startActivity(i);
                 break;
-            case R.id.register:
-                Toast.makeText(getApplicationContext(), "Register", Toast.LENGTH_SHORT).show();
-                i = new Intent(MainActivity.this, CreateProfile.class);
-                startActivity(i);
-                break;
             case R.id.login:
                 Toast.makeText(getApplicationContext(), "Login", Toast.LENGTH_SHORT).show();
                 i = new Intent(MainActivity.this, ViewProfile.class);
@@ -99,11 +95,6 @@ public class MainActivity extends AppCompatActivity
             case R.id.contacts:
                 Toast.makeText(getApplicationContext(), "Contacts", Toast.LENGTH_SHORT).show();
                 i = new Intent(MainActivity.this, Contacts.class);
-                startActivity(i);
-                break;
-            case R.id.createProfile:
-                Toast.makeText(getApplicationContext(), "Register", Toast.LENGTH_SHORT).show();
-                i = new Intent(MainActivity.this, CreateProfile.class);
                 startActivity(i);
                 break;
             case R.id.createOffer:Toast.makeText(getApplicationContext(), "Create Offer", Toast.LENGTH_SHORT).show();
@@ -115,6 +106,17 @@ public class MainActivity extends AppCompatActivity
                 i = new Intent(MainActivity.this, CreateRequest.class);
                 startActivity(i);
                 break;
+            case R.id.logout:
+                AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                alert.setTitle("Logout");
+                alert.setMessage("Do you really want to logout?");
+                alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        i = new Intent(MainActivity.this, LoginActivity.class);
+                        startActivity(i);
+                        }});
+                alert.setNegativeButton(android.R.string.no, null);
+                alert.show();
             default:
                 break;
         }

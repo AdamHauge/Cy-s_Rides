@@ -3,6 +3,8 @@ package cysrides.cysrides;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -93,6 +95,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+    }
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder alertbox = new AlertDialog.Builder(this);
+        alertbox.setTitle("Exit");
+        alertbox.setMessage("Are you sure exit?");
+        alertbox.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                finish();
+            }
+        });
+        alertbox.setNegativeButton("No", null);
+        alertbox.show();
     }
 
     private void populateAutoComplete() {

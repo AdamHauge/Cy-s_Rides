@@ -1,5 +1,5 @@
 <resources>
-    <!-- Strings related to main -->
+    <!-- Strings related to my_profile_button -->
     <string name="app_name">"Cy's Rides"</string>
     <string name="register">Register</string>
     <string name="login">Log in</string>

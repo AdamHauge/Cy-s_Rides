@@ -16,20 +16,8 @@
             app:showAsAction="always"/>
 
         <item
-            android:id="@+id/register"
-            android:title="@string/register" />
-
-        <item
-            android:id="@+id/login"
-            android:title="@string/login" />
-
-        <item
             android:id="@+id/contacts"
             android:title="@string/contacts" />
-
-        <item
-            android:id="@+id/createProfile"
-            android:title="Create Profile" />
 
         <item
             android:id="@+id/createOffer"
