@@ -75,7 +75,16 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle("Discard Request");
+            alert.setMessage("This will discard your current offer. Continue anyway?");
+            alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                i = new Intent(CreateOffer.this, MainActivity.class);
+                startActivity(i);
+            }});
+            alert.setNegativeButton(android.R.string.no, null);
+            alert.show();
         }
     }
 
@@ -105,43 +114,56 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
+    public boolean onNavigationItemSelected(MenuItem menuItem) {
+        final MenuItem item = menuItem;
+        AlertDialog.Builder alert;
 
-        switch(id)
-        {
+        switch(item.getItemId()) {
             case R.id.profile:
-                Toast.makeText(getApplicationContext(), "My Profile", Toast.LENGTH_SHORT).show();
-                i = new Intent(CreateOffer.this, ViewProfile.class);
-                startActivity(i);
-                break;
             case R.id.requests:
-                Toast.makeText(getApplicationContext(), "Register", Toast.LENGTH_SHORT).show();
-                i = new Intent(CreateOffer.this, RideRequests.class);
-                startActivity(i);
-                break;
-            case R.id.login:
-                Toast.makeText(getApplicationContext(), "Login", Toast.LENGTH_SHORT).show();
-                i = new Intent(CreateOffer.this, ViewProfile.class);
-                startActivity(i);
-                break;
             case R.id.contacts:
-                Toast.makeText(getApplicationContext(), "Contacts", Toast.LENGTH_SHORT).show();
-                i = new Intent(CreateOffer.this, Contacts.class);
-                startActivity(i);
-                break;
-            case R.id.createOffer:Toast.makeText(getApplicationContext(), "Create Offer", Toast.LENGTH_SHORT).show();
-                i = new Intent(CreateOffer.this, CreateOffer.class);
-                startActivity(i);
-                break;
+            case R.id.createOffer:
             case R.id.createRequest:
-                Toast.makeText(getApplicationContext(), "Create Request", Toast.LENGTH_SHORT).show();
-                i = new Intent(CreateOffer.this, CreateRequest.class);
-                startActivity(i);
+                alert = new AlertDialog.Builder(this);
+                alert.setTitle("Discard Request");
+                alert.setMessage("This will discard your current offer. Continue anyway?");
+                alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        int id = item.getItemId();
+                        switch (id) {
+                            case R.id.profile:
+                                Toast.makeText(getApplicationContext(), "My Profile", Toast.LENGTH_SHORT).show();
+                                i = new Intent(CreateOffer.this, ViewProfile.class);
+                                startActivity(i);
+                                break;
+                            case R.id.requests:
+                                Toast.makeText(getApplicationContext(), "Register", Toast.LENGTH_SHORT).show();
+                                i = new Intent(CreateOffer.this, RideRequests.class);
+                                startActivity(i);
+                                break;
+                            case R.id.contacts:
+                                Toast.makeText(getApplicationContext(), "Contacts", Toast.LENGTH_SHORT).show();
+                                i = new Intent(CreateOffer.this, Contacts.class);
+                                startActivity(i);
+                                break;
+                            case R.id.createOffer:
+                                Toast.makeText(getApplicationContext(), "Create Offer", Toast.LENGTH_SHORT).show();
+                                break;
+                            case R.id.createRequest:
+                                Toast.makeText(getApplicationContext(), "Create Request", Toast.LENGTH_SHORT).show();
+                                i = new Intent(CreateOffer.this, CreateRequest.class);
+                                startActivity(i);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                });
+                alert.setNegativeButton(android.R.string.no, null);
+                alert.show();
                 break;
             case R.id.logout:
-                AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                alert = new AlertDialog.Builder(this);
                 alert.setTitle("Logout");
                 alert.setMessage("Do you really want to logout?");
                 alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -151,10 +173,10 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
                     }});
                 alert.setNegativeButton(android.R.string.no, null);
                 alert.show();
+                break;
             default:
                 break;
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

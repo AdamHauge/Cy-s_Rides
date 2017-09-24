@@ -19,18 +19,28 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class Contacts extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+import domain.Offer;
+import domain.UserInfo;
+import domain.UserType;
+import service.OfferService;
+import service.OfferServiceImpl;
+
+public class RideOffers extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    OfferService offerService = new OfferServiceImpl();
 
     private ListView listView;
-    private ArrayList list = new ArrayList();
     private ArrayAdapter adapter;
+    private List<Offer> list = offerService.getOfferRequests(new UserInfo("userName", "password", "email", UserType.DRIVER, "firstName", "lastName", "venmoName", 4, null));
+    private List<String> destinationAndDescriptionList = new ArrayList<>();
     private Intent i;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_contacts);
+        setContentView(R.layout.activity_ride_requests);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -42,21 +52,22 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        listView = (ListView)findViewById(R.id.contacts_list);
-
-        for(int i = 0; i < 20; i++) { //TODO the number needs to match the amount of contacts
-            list.add("Item #" + (i + 1)); //TODO this needs to be changed to match the contact names
-        }
-
-        adapter = new ArrayAdapter(Contacts.this, android.R.layout.simple_list_item_1, list);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getApplicationContext(), list.get(position).toString(), Toast.LENGTH_SHORT).show();
-            }
-        });
+//        listView = (ListView)findViewById(R.id.ride_offers_list);
+//
+//        for(int i=0 ; i<list.size() ; i++) {
+//            String destinationAndDescription = "";
+//            destinationAndDescription += list.get(i).getDescription() + " " + list.get(i).getDestination();
+//            destinationAndDescriptionList.add(destinationAndDescription);
+//        }
+//
+//        adapter = new ArrayAdapter(RideOffers.this, android.R.layout.simple_list_item_1, destinationAndDescriptionList);
+//        listView.setAdapter(adapter);
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Toast.makeText(getApplicationContext(), destinationAndDescriptionList.get(position).toString(), Toast.LENGTH_SHORT).show();
+//            }
+//        });
     }
 
     @Override
@@ -65,7 +76,7 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            i = new Intent(Contacts.this, MainActivity.class);
+            i = new Intent(RideOffers.this, MainActivity.class);
             startActivity(i);
         }
     }
@@ -102,29 +113,29 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
         {
             case R.id.profile:
                 Toast.makeText(getApplicationContext(), "My Profile", Toast.LENGTH_SHORT).show();
-                i = new Intent(Contacts.this, ViewProfile.class);
+                i = new Intent(RideOffers.this, ViewProfile.class);
                 startActivity(i);
                 break;
             case R.id.requests:
                 Toast.makeText(getApplicationContext(), "Register", Toast.LENGTH_SHORT).show();
-                i = new Intent(Contacts.this, RideRequests.class);
+                i = new Intent(RideOffers.this, RideRequests.class);
                 startActivity(i);
                 break;
             case R.id.offers:
-                Toast.makeText(getApplicationContext(), "Register", Toast.LENGTH_SHORT).show();
-                i = new Intent(Contacts.this, RideOffers.class);
-                startActivity(i);
+                Toast.makeText(getApplicationContext(), "Register", Toast.LENGTH_SHORT).show();;
                 break;
             case R.id.contacts:
                 Toast.makeText(getApplicationContext(), "Contacts", Toast.LENGTH_SHORT).show();
+                i = new Intent(RideOffers.this, Contacts.class);
+                startActivity(i);
                 break;
             case R.id.createOffer:Toast.makeText(getApplicationContext(), "Create Offer", Toast.LENGTH_SHORT).show();
-                i = new Intent(Contacts.this, CreateOffer.class);
+                i = new Intent(RideOffers.this, CreateOffer.class);
                 startActivity(i);
                 break;
             case R.id.createRequest:
                 Toast.makeText(getApplicationContext(), "Create Request", Toast.LENGTH_SHORT).show();
-                i = new Intent(Contacts.this, CreateRequest.class);
+                i = new Intent(RideOffers.this, CreateRequest.class);
                 startActivity(i);
                 break;
             case R.id.logout:
@@ -133,7 +144,7 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
                 alert.setMessage("Do you really want to logout?");
                 alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        i = new Intent(Contacts.this, LoginActivity.class);
+                        i = new Intent(RideOffers.this, LoginActivity.class);
                         startActivity(i);
                     }});
                 alert.setNegativeButton(android.R.string.no, null);

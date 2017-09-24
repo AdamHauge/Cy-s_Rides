@@ -76,7 +76,8 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            i = new Intent(RideRequests.this, MainActivity.class);
+            startActivity(i);
         }
     }
 
@@ -117,12 +118,10 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.requests:
                 Toast.makeText(getApplicationContext(), "Register", Toast.LENGTH_SHORT).show();
-                i = new Intent(RideRequests.this, RideRequests.class);
-                startActivity(i);
                 break;
-            case R.id.login:
-                Toast.makeText(getApplicationContext(), "Login", Toast.LENGTH_SHORT).show();
-                i = new Intent(RideRequests.this, ViewProfile.class);
+            case R.id.offers:
+                Toast.makeText(getApplicationContext(), "Register", Toast.LENGTH_SHORT).show();
+                i = new Intent(RideRequests.this, RideOffers.class);
                 startActivity(i);
                 break;
             case R.id.contacts:

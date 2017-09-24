@@ -104,7 +104,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         alertbox.setMessage("Are you sure exit?");
         alertbox.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                finish();
+                moveTaskToBack(true);
             }
         });
         alertbox.setNegativeButton("No", null);

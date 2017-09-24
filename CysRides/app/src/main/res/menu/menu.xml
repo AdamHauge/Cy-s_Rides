@@ -15,16 +15,20 @@
         app:showAsAction="always"/>
 
     <item
+        android:id="@+id/offers"
+        android:title="@string/offers" />
+
+    <item
         android:id="@+id/contacts"
         android:title="@string/contacts" />
 
     <item
         android:id="@+id/createOffer"
-        android:title="Create Ride Offer" />
+        android:title="@string/create_offer" />
 
     <item
         android:id="@+id/createRequest"
-        android:title="Create Ride Request" />
+        android:title="@string/create_request" />
 
     <item
         android:id="@+id/logout"

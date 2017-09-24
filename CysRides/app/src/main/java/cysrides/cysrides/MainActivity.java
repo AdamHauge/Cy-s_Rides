@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
+            finish();
             super.onBackPressed();
         }
     }
@@ -87,9 +88,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 i = new Intent(MainActivity.this, RideRequests.class);
                 startActivity(i);
                 break;
-            case R.id.login:
-                Toast.makeText(getApplicationContext(), "Login", Toast.LENGTH_SHORT).show();
-                i = new Intent(MainActivity.this, ViewProfile.class);
+            case R.id.offers:
+                Toast.makeText(getApplicationContext(), "Register", Toast.LENGTH_SHORT).show();
+                i = new Intent(MainActivity.this, RideOffers.class);
                 startActivity(i);
                 break;
             case R.id.contacts:

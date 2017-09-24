@@ -16,6 +16,10 @@
             app:showAsAction="always"/>
 
         <item
+            android:id="@+id/offers"
+            android:title="@string/offers" />
+
+        <item
             android:id="@+id/contacts"
             android:title="@string/contacts" />
 

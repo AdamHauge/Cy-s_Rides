@@ -35,7 +35,11 @@
         <activity
             android:name=".RideRequests"
             android:label="@string/title_activity_ride_requests"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".RideOffers"
+            android:label="@string/offers"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ViewProfile"
             android:label="@string/profile"
@@ -56,7 +60,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity android:name=".ViewRequest" />
-        <activity android:name=".ViewOffer"></activity>
+        <activity android:name=".ViewOffer" />
     </application>
 
 </manifest>

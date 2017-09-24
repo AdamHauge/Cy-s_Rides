@@ -7,7 +7,9 @@
     <string name="profile">My Profile</string>
     <string name="contacts">My Contacts</string>
     <string name="requests">Ride Requests</string>
-    <string name="offers">Offer Rides</string>
+    <string name="offers">Ride Offers</string>
+    <string name="create_request">Create Ride Request</string>
+    <string name="create_offer">Create Ride Offer</string>
     <string name="title_activity_login">Sign in</string>
 
     <!-- Strings related to login -->
