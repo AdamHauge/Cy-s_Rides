@@ -15,7 +15,6 @@ public class CreateProfile extends AppCompatActivity {
         setContentView(R.layout.activity_create_profile);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
     }
 
     public void onRadioButtonClicked(View view) {
