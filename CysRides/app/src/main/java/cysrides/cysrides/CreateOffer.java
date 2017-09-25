@@ -80,6 +80,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
             alert.setMessage("This will discard your current offer. Continue anyway?");
             alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
+                finish();
                 i = new Intent(CreateOffer.this, MainActivity.class);
                 startActivity(i);
             }});

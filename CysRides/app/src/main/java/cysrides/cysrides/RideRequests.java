@@ -76,6 +76,7 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
+            finish();
             i = new Intent(RideRequests.this, MainActivity.class);
             startActivity(i);
         }

@@ -65,6 +65,7 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
+            finish();
             i = new Intent(Contacts.this, MainActivity.class);
             startActivity(i);
         }

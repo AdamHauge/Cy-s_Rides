@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.IntentCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 
@@ -101,7 +102,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     public void onBackPressed() {
         AlertDialog.Builder alertbox = new AlertDialog.Builder(this);
         alertbox.setTitle("Exit");
-        alertbox.setMessage("Are you sure exit?");
+        alertbox.setMessage("Are you sure you want to exit?");
         alertbox.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 moveTaskToBack(true);

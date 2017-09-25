@@ -76,6 +76,7 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
+            finish();
             i = new Intent(RideOffers.this, MainActivity.class);
             startActivity(i);
         }

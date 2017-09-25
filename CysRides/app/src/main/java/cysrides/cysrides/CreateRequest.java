@@ -83,8 +83,9 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
             alert.setMessage("This will discard your current request. Continue anyway?");
             alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
-                i = new Intent(CreateRequest.this, MainActivity.class);
-                startActivity(i);
+                    finish();
+                    i = new Intent(CreateRequest.this, MainActivity.class);
+                    startActivity(i);
             }});
             alert.setNegativeButton(android.R.string.no, null);
             alert.show();
@@ -129,7 +130,7 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
             case R.id.createRequest:
                 alert = new AlertDialog.Builder(this);
                 alert.setTitle("Discard Request");
-                alert.setMessage("This will discard your current offer. Continue anyway?");
+                alert.setMessage("This will discard your current request. Continue anyway?");
                 alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         int id = item.getItemId();
