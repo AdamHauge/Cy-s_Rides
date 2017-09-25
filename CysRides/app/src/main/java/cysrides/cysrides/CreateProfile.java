@@ -16,8 +16,6 @@ public class CreateProfile extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        System.out.print("Test commit");
-
     }
 
     public void onRadioButtonClicked(View view) {
