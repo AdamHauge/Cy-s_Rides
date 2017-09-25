@@ -20,7 +20,8 @@
             android:id="@+id/First_Name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="First Name" />
+            android:hint="First Name"
+            android:visibility="visible" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -37,7 +38,8 @@
             android:id="@+id/Last_Name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Last Name" />
+            android:hint="Last Name"
+            android:visibility="visible" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -54,7 +56,8 @@
             android:id="@+id/NetID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Net-ID" />
+            android:hint="Net-ID"
+            android:visibility="visible" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -71,7 +74,8 @@
             android:id="@+id/Venmo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Venmo" />
+            android:hint="Venmo"
+            android:visibility="visible" />
     </android.support.design.widget.TextInputLayout>
 
 </android.support.constraint.ConstraintLayout>

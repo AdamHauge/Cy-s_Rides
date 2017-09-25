@@ -28,7 +28,16 @@ public class Request {
         this.date = date;
     }
 
-
+    @Override
+    public String toString() {
+        return "Request{" +
+                "num_bags=" + num_bags +
+                ", user=" + user +
+                ", destination='" + destination + '\'' +
+                ", description='" + description + '\'' +
+                ", date='" + date + '\'' +
+                '}';
+    }
 
     public double getNumBags() {
         return num_bags;

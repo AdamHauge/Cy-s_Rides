@@ -1,38 +1,78 @@
 package domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserInfo {
 
-    private String username;
+    private String netID;
     private String password;
-    private String email;
-    private UserType userType;
+    private int confirmationCode;
     private String firstName;
     private String lastName;
     private String venmoName;
+    private String profileDescription;
+    private UserType userType;
     private float userRating;
     private List<Offer> offers;
+    private List<Request> requests;
 
-    public UserInfo(String username, String password, String email, UserType userType, String firstName, String lastName,
-                    String venmoName, float userRating, List<Offer> offers){
-        this.username = username;
+    public UserInfo(String netID, String password, int confirmationCode, String firstName, String lastName, String venmoName,
+                    String profileDescription, UserType userType, float userRating, List<Offer> offers, List<Request> requests){
+        this.netID = netID;
         this.password = password;
-        this.email = email;
-        this.userType = userType;
+        this.confirmationCode = confirmationCode;
         this.firstName = firstName;
         this.lastName = lastName;
         this.venmoName = venmoName;
+        this.profileDescription = profileDescription;
+        this.userType = userType;
         this.userRating = userRating;
         this.offers = offers;
+        this.requests = requests;
     }
 
-    public String getUsername() {
-        return username;
+    public UserInfo toUserInfo(String userInfoString){
+        String netID = "";
+        String password = "";
+        int confirmationCode = 0;
+        String firstName = "";
+        String lastName = "";
+        String venmoName = "";
+        String profileDescription = "";
+        UserType userType = UserType.PASSENGER;
+        float userRating = 0;
+        List<Offer> offers = new ArrayList<Offer>();
+        List<Request> requests = new ArrayList<Request>();
+
+        UserInfo userInfo = new UserInfo(netID, password, confirmationCode, firstName, lastName, venmoName,
+                                profileDescription, userType, userRating, offers, requests);
+        return userInfo;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    @Override
+    public String toString() {
+        return "UserInfo{" +
+                "netID='" + netID + '\'' +
+                ", password='" + password + '\'' +
+                ", confirmationCode='" + confirmationCode + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", venmoName='" + venmoName + '\'' +
+                ", profileDescription='" + profileDescription + '\'' +
+                ", userType=" + userType +
+                ", userRating=" + userRating +
+                ", offers=" + offers +
+                ", requests=" + requests +
+                '}';
+    }
+
+    public String getNetID() {
+        return netID;
+    }
+
+    public void setNetID(String netID) {
+        this.netID = netID;
     }
 
     public String getPassword() {
@@ -43,20 +83,12 @@ public class UserInfo {
         this.password = password;
     }
 
-    public String getEmail() {
-        return email;
+    public int getConfirmationCode() {
+        return confirmationCode;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public UserType getUserType() {
-        return userType;
-    }
-
-    public void setUserType(UserType userType) {
-        this.userType = userType;
+    public void setConfirmationCode(int confirmationCode) {
+        this.confirmationCode = confirmationCode;
     }
 
     public String getFirstName() {
@@ -83,6 +115,22 @@ public class UserInfo {
         this.venmoName = venmoName;
     }
 
+    public String getProfileDescription() {
+        return profileDescription;
+    }
+
+    public void setProfileDescription(String profileDescription) {
+        this.profileDescription = profileDescription;
+    }
+
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
+    }
+
     public float getUserRating() {
         return userRating;
     }
@@ -98,4 +146,13 @@ public class UserInfo {
     public void setOffers(List<Offer> offers) {
         this.offers = offers;
     }
+
+    public List<Request> getRequests() {
+        return requests;
+    }
+
+    public void setRequests(List<Request> requests) {
+        this.requests = requests;
+    }
+
 }

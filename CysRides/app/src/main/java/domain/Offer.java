@@ -25,6 +25,18 @@ public class Offer {
         this.date = date;
     }
 
+    @Override
+    public String toString() {
+        return "Offer{" +
+                "userType=" + userType +
+                ", cost=" + cost +
+                ", user=" + user +
+                ", destination='" + destination + '\'' +
+                ", description='" + description + '\'' +
+                ", date='" + date + '\'' +
+                '}';
+    }
+
     public UserType getUserType() {
         return userType;
     }

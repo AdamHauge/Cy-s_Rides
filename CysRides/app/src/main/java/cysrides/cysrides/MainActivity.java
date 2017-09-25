@@ -107,6 +107,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 i = new Intent(MainActivity.this, CreateRequest.class);
                 startActivity(i);
                 break;
+            case R.id.createProfile:
+                i = new Intent(MainActivity.this, CreateProfile.class);
+                startActivity(i);
+                break;
             case R.id.logout:
                 AlertDialog.Builder alert = new AlertDialog.Builder(this);
                 alert.setTitle("Logout");
