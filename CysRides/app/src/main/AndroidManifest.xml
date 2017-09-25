@@ -30,8 +30,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".LoginActivity"
-            android:clearTaskOnLaunch="true"
-            android:label="@string/title_activity_login" />
+            android:label="@string/title_activity_login"
+            android:clearTaskOnLaunch="true" />
         <activity
             android:name=".RideRequests"
             android:label="@string/title_activity_ride_requests"
@@ -45,6 +45,12 @@
             android:label="@string/profile"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".CreateProfile"
+            android:label="@string/register" />
+        <activity
+            android:name=".Registration"
+            android:label="@string/register" />
+        <activity
             android:name=".CreateOffer"
             android:label="Create Offer"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -52,12 +58,9 @@
             android:name=".CreateRequest"
             android:label="Create Request"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity android:name=".ViewRequest" />
         <activity android:name=".ViewOffer" />
-        <activity
-            android:name=".CreateProfile"
-            android:label="@string/title_activity_create_profile"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
