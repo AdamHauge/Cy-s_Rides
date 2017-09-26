@@ -75,11 +75,14 @@
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/register_button"
+                style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:onClick="onRegisterClick"
-                android:text="REGISTER" />
+                android:text="REGISTER"
+                android:textStyle="bold" />/>
 
         </LinearLayout>
     </ScrollView>

@@ -80,6 +80,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == R.id.login || id == EditorInfo.IME_NULL) {
                     attemptLogin();
+                    attemptRegister();
                     return true;
                 }
                 return false;
@@ -93,6 +94,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 attemptLogin();
             }
         });
+
+        Button mRegisterSignInButton = (Button) findViewById(R.id.register_button);
+        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                attemptRegister();
+            }
+        });
+
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
@@ -157,7 +167,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
 
     /**
-     * Attempts to sign in or register the account specified by the login form.
+     * Attempts to sign in the account specified by the login form.
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
@@ -177,9 +187,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         boolean cancel = false;
         View focusView = null;
 
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
+        // Check for a valid password
+        if (TextUtils.isEmpty(password)) {
+            mEmailView.setError("This field is required");
+            focusView = mEmailView;
+            cancel = true;
+        } else if (!isPasswordValid(password)) {
+            mPasswordView.setError("This password is too short or does not contain a number");
             focusView = mPasswordView;
             cancel = true;
         }
@@ -190,7 +204,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             focusView = mEmailView;
             cancel = true;
         } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
+            mEmailView.setError("This email is not an iastate.edu email");
             focusView = mEmailView;
             cancel = true;
         }
@@ -222,6 +236,62 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         }
         return false;
+    }
+
+    /**
+     * Attempts to register the account specified by the register form.
+     * If there are form errors (invalid email, missing fields, etc.), the
+     * errors are presented and no actual register attempt is made.
+     */
+    private void attemptRegister() {
+        if (mAuthTask != null) {
+            return;
+        }
+
+        // Reset errors.
+        mEmailView.setError(null);
+        mPasswordView.setError(null);
+
+        // Store values at the time of the register attempt.
+        String email = mEmailView.getText().toString();
+        String password = mPasswordView.getText().toString();
+
+        boolean cancel = false;
+        View focusView = null;
+
+        // Check for a valid password
+        if (TextUtils.isEmpty(password)) {
+            mEmailView.setError("This field is required");
+            focusView = mEmailView;
+            cancel = true;
+        } else if (!isPasswordValid(password)) {
+            mPasswordView.setError("This password is too short or does not contain a number");
+            focusView = mPasswordView;
+            cancel = true;
+        }
+
+        // Check for a valid email address.
+        if (TextUtils.isEmpty(email)) {
+            mEmailView.setError(getString(R.string.error_field_required));
+            focusView = mEmailView;
+            cancel = true;
+        } else if (!isEmailValid(email)) {
+            mEmailView.setError("This email is not an iastate.edu email");
+            focusView = mEmailView;
+            cancel = true;
+        }
+
+        if (cancel) {
+            // There was an error; don't attempt login and focus the first
+            // form field with an error.
+            focusView.requestFocus();
+        } else {
+            // Show a progress spinner, and kick off a background task to
+            // perform the user login attempt.
+            showProgress(true);
+            mAuthTask = new UserLoginTask(email, password);
+            mAuthTask.execute((Void) null);
+        }
     }
 
 
