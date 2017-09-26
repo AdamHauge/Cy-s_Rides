@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import domain.Offer;
+import domain.Request;
 import domain.UserInfo;
 import domain.UserType;
 import jdbc.OfferJdbc;
@@ -35,7 +36,9 @@ public class OfferServiceImplTest extends EasyMockSupport {
 
     @Before
     public void setup() {
-        userInfo = new UserInfo("username", "password", "email", UserType.ADMIN, "firstName", "lastName", "venmoName", 4, new ArrayList<Offer>());
+        userInfo = new UserInfo("rcerveny@iastate.edu", "password", 42, "Ryan", "Cerveny",
+                "venmo","description", UserType.DRIVER, (float) 5.0,
+                new ArrayList<Offer>(), new ArrayList<Request>());
     }
 
     @Test
