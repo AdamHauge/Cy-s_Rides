@@ -25,6 +25,7 @@ public class Offer {
         this.date = date;
     }
 
+    //TODO Check if it prints correctly
     @Override
     public String toString() {
         return "Offer{" +

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import domain.Offer;
+import domain.Request;
 import domain.UserInfo;
 import domain.UserType;
 import service.OfferService;
@@ -33,7 +34,9 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
 
     private ListView listView;
     private ArrayAdapter adapter;
-    private List<Offer> list = offerService.getOfferRequests(new UserInfo("userName", "password", "email", UserType.DRIVER, "firstName", "lastName", "venmoName", 4, null));
+    private List<Offer> list = offerService.getOfferRequests(new UserInfo("rcerveny@iastate.edu", "password", 42, "Ryan", "Cerveny",
+                                                            "venmo","description", UserType.DRIVER, (float) 5.0,
+                                                             new ArrayList<Offer>(), new ArrayList<Request>()));
     private List<String> destinationAndDescriptionList = new ArrayList<>();
     private Intent i;
 

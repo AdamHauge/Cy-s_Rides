@@ -32,6 +32,7 @@ public class UserInfo {
         this.requests = requests;
     }
 
+    //TODO fix dummy fields
     public UserInfo toUserInfo(String userInfoString){
         String netID = "";
         String password = "";

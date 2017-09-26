@@ -63,8 +63,9 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
                 temp = (EditText)findViewById(R.id.dateInput);
                 String date = temp.getText().toString();
 
-                UserInfo ui = new UserInfo("username", "password", "rcerveny@iastate.edu", UserType.DRIVER, "Ryan",
-                        "Cerveny", "Venmo", (float)5.0 , new ArrayList<Offer>());
+                UserInfo ui = new UserInfo("rcerveny@iastate.edu", "password", 42, "Ryan", "Cerveny",
+                                             "venmo","description", UserType.DRIVER, (float) 5.0,
+                                                new ArrayList<Offer>(), new ArrayList<Request>());
 
                 Request r = new Request(numBags, ui, dest, description, date);
 

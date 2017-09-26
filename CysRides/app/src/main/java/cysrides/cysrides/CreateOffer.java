@@ -60,8 +60,9 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
                 temp = (EditText)findViewById(R.id.LeaveDate);
                 String date = temp.getText().toString();
 
-                UserInfo ui = new UserInfo("username", "password", "rcerveny@iastate.edu", UserType.PASSENGER, "Ryan",
-                        "Cerveny", "Venmo", (float)5.0 , new ArrayList<Offer>());
+                UserInfo ui = new UserInfo("rcerveny@iastate.edu", "password", 42, "Ryan", "Cerveny",
+                                           "venmo","description", UserType.DRIVER, (float) 5.0,
+                                            new ArrayList<Offer>(), new ArrayList<Request>());
 
                 Offer o = new Offer(UserType.DRIVER, cost, ui, dest, description, date);
 
