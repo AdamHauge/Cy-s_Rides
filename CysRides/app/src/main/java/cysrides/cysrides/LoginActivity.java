@@ -32,6 +32,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -442,6 +443,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
+    public void sendEmail(View view){
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.setType("message/rfc822");
+        i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"cathens@iastate.edu"});
+        i.putExtra(Intent.EXTRA_SUBJECT, "subject of 309 email");
+        i.putExtra(Intent.EXTRA_TEXT   , "body of 309 email");
+        try {
+            startActivity(Intent.createChooser(i, "Send mail..."));
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(LoginActivity.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
     public void onSignInClick(View view){
         Intent i;
         i = new Intent(LoginActivity.this, MainActivity.class);
@@ -449,9 +464,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     public void onRegisterClick(View view){
+        sendEmail(view);
+
         Intent i;
-        i = new Intent(LoginActivity.this, CreateProfile.class);
-        startActivity(i);
+        //i = new Intent(LoginActivity.this, CreateProfile.class);
+        //startActivity(i);
     }
 }
 
