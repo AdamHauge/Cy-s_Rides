@@ -36,6 +36,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -443,12 +444,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
+    public String generateCode(){
+        Random rand = new Random();
+
+        return String.format("%04d", rand.nextInt(10000));
+    }
+
     public void sendEmail(View view){
         Intent i = new Intent(Intent.ACTION_SEND);
+        String email = mEmailView.getText().toString();
+        String emailArray[] = email.split(" ");
         i.setType("message/rfc822");
-        i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"cathens@iastate.edu"});
-        i.putExtra(Intent.EXTRA_SUBJECT, "subject of 309 email");
-        i.putExtra(Intent.EXTRA_TEXT   , "body of 309 email");
+        i.putExtra(Intent.EXTRA_EMAIL  , emailArray);
+        i.putExtra(Intent.EXTRA_SUBJECT, "Welcome to Cy's Rides!");
+        i.putExtra(Intent.EXTRA_TEXT   , "Here's your confirmation code: " + generateCode());
         try {
             startActivity(Intent.createChooser(i, "Send mail..."));
         } catch (android.content.ActivityNotFoundException ex) {
