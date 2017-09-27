@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(i);
                 break;
             case R.id.createProfile:
+                // FIXME This is temporary right?
                 i = new Intent(MainActivity.this, CreateProfile.class);
                 startActivity(i);
                 break;
