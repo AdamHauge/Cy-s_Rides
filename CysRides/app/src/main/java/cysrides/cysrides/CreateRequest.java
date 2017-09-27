@@ -187,6 +187,7 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
         switch(item.getItemId()) {
             case R.id.profile:
             case R.id.requests:
+            case R.id.offers:
             case R.id.contacts:
             case R.id.createOffer:
             case R.id.createRequest:
@@ -205,6 +206,11 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
                             case R.id.requests:
                                 Toast.makeText(getApplicationContext(), "Register", Toast.LENGTH_SHORT).show();
                                 i = new Intent(CreateRequest.this, RideRequests.class);
+                                startActivity(i);
+                                break;
+                            case R.id.offers:
+                                Toast.makeText(getApplicationContext(), "Register", Toast.LENGTH_SHORT).show();
+                                i = new Intent(CreateRequest.this, RideOffers.class);
                                 startActivity(i);
                                 break;
                             case R.id.contacts:
