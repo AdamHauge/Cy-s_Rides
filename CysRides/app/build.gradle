@@ -45,4 +45,5 @@ dependencies {
     compile 'com.android.support:design:26.+'
     testCompile 'junit:junit:4.12'
     testCompile 'org.easymock:easymock:3.5'
+    compile files('libs/ojdbc14.jar')
 }

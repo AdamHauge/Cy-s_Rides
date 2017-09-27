@@ -11,18 +11,22 @@ public class Offer {
 
     private UserType userType;
     private double cost;
-    private UserInfo user;
+    private String email;
     private String destination;
     private String description;
     private String date;
 
-    public Offer(UserType userType, double cost, UserInfo user, String destination, String description, String date) {
+    public Offer(UserType userType, double cost, String email, String destination, String description, String date) {
         this.userType = userType;
         this.cost = cost;
-        this.user = user;
+        this.email = email;
         this.destination = destination;
         this.description = description;
         this.date = date;
+    }
+
+    public Offer() {
+
     }
 
     //TODO Check if it prints correctly
@@ -31,7 +35,7 @@ public class Offer {
         return "Offer{" +
                 "userType=" + userType +
                 ", cost=" + cost +
-                ", user=" + user +
+                ", email=" + email +
                 ", destination='" + destination + '\'' +
                 ", description='" + description + '\'' +
                 ", date='" + date + '\'' +
@@ -54,12 +58,12 @@ public class Offer {
         this.cost = cost;
     }
 
-    public UserInfo getUser() {
-        return user;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUser(UserInfo user) {
-        this.user = user;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getDestination() {
@@ -82,10 +86,15 @@ public class Offer {
 
     public String getDate(){return date;}
 
+    /*Sorry for messing with your code, but I didn't think about the database when designing this Object,
+    and it would make the database a lot more complicated than it needed to be to have a UserInfo
+    Object in the Offer Object, so I changed it to email. We can get the first and last name by passing
+    the email through the database later.*/
     public void viewOffer(Offer o, Activity c){
 
         Intent i = new Intent(c , ViewOffer.class);
-        i.putExtra("UserName", o.getUser().getFirstName() + " " + o.getUser().getLastName());
+//        i.putExtra("UserName", o.getUser().getFirstName() + " " + o.getUser().getLastName());
+        i.putExtra("Email", o.getEmail());
         i.putExtra("Dest", o.getDestination());
         i.putExtra("Cost", Double.toString(o.getCost()));
         i.putExtra("Date", o.getDate());
