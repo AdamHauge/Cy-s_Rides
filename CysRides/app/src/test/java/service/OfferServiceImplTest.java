@@ -44,7 +44,7 @@ public class OfferServiceImplTest extends EasyMockSupport {
     @Test
     public void testGetOfferRequests_passenger() {
         userInfo.setUserType(UserType.PASSENGER);
-        Offer offer = new Offer(UserType.PASSENGER, 20, userInfo, "destination", "description", "date");
+        Offer offer = new Offer(UserType.PASSENGER, 20, userInfo.getNetID(), "destination", "description", "date");
         List<Offer> offerList = new ArrayList<>();
         offerList.add(offer);
         offerList.add(offer);
@@ -58,7 +58,7 @@ public class OfferServiceImplTest extends EasyMockSupport {
     @Test
     public void testGetOfferRequests_driver() {
         userInfo.setUserType(UserType.DRIVER);
-        Offer offer = new Offer(UserType.DRIVER, 20, userInfo, "destination", "description", "date");
+        Offer offer = new Offer(UserType.DRIVER, 20, userInfo.getNetID(), "destination", "description", "date");
         List<Offer> offerList = new ArrayList<>();
         offerList.add(offer);
         offerList.add(offer);

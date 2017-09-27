@@ -120,7 +120,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
                                            "venmo","description", UserType.DRIVER, (float) 5.0,
                                             new ArrayList<Offer>(), new ArrayList<Request>());
                 if(validDest && validDate) {
-                    Offer o = new Offer(UserType.DRIVER, cost, ui, dest, description, date);
+                    Offer o = new Offer(UserType.DRIVER, cost, ui.getNetID(), dest, description, date);
                     o.viewOffer(o, CreateOffer.this);
                 }
             }
