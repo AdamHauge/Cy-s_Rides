@@ -52,24 +52,77 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
             public void onClick(View v){
 
                 EditText temp = (EditText)findViewById(R.id.numBagsInput);
-                int numBags = Integer.parseInt(temp.getText().toString());
+                int numBags = 0;
+                if(temp.getText().toString().matches("^[0-9]+")){
+                    numBags = Integer.parseInt(temp.getText().toString());
+                }
 
                 temp = (EditText)findViewById(R.id.destInput);
                 String dest = temp.getText().toString();
+                boolean validDest = true;
+                String splitDest[] = dest.split(",");
+                if(dest.equals("")){
+                    Toast.makeText(getApplicationContext(), "Destination is required", Toast.LENGTH_SHORT).show();
+                    validDest = false;
+                }else {
+                    if(splitDest.length == 2) {
+                        if (splitDest[1].charAt(0) != ' ') {
+                            validDest = false;
+                        }
+                        if (!splitDest[0].matches("^[a-zA-Z ]+")) {
+                            validDest = false;
+                        }
+                        if (!splitDest[1].matches("^[a-zA-Z ]+")) {
+                            validDest = false;
+                        }
+                    } else{
+                        validDest = false;
+                    }
+                    if(!validDest){
+                        Toast.makeText(getApplicationContext(), "Make sure destination is correctly formated", Toast.LENGTH_SHORT).show();
+                    }
+                }
 
                 temp = (EditText)findViewById(R.id.discriptionInput);
                 String description = temp.getText().toString();
 
                 temp = (EditText)findViewById(R.id.dateInput);
                 String date = temp.getText().toString();
+                String[] splitDate = date.split("/");
+                boolean validDate = true;
+                if(date.equals("")){
+                    Toast.makeText(getApplicationContext(), "Date is required", Toast.LENGTH_SHORT).show();
+                    validDate = false;
+                }
+                if(splitDate.length == 3 ){
+                    if(!((splitDate[0].length() < 3 && splitDate[0].length() > 0)) || !splitDate[0].matches("^[0-9]+")){
+                        Toast.makeText(getApplicationContext(), "split 1", Toast.LENGTH_SHORT).show();
+                        validDate = false;
+                    }
+                    if(!((splitDate[1].length() < 3 && splitDate[1].length() > 0)) || !splitDate[1].matches("^[0-9]+")){
+                        Toast.makeText(getApplicationContext(), "split2", Toast.LENGTH_SHORT).show();
+                        validDate = false;
+                    }
+                    if(!(splitDate[2].length() == 4  || splitDate[2].length() == 2) || !splitDate[2].matches("^[0-9]+")){
+                        Toast.makeText(getApplicationContext(), "split 3", Toast.LENGTH_SHORT).show();
+                        validDate = false;
+                    }
+                }
+                else{
+                    validDate = false;
+                }
+                if(!validDate){
+                    Toast.makeText(getApplicationContext(), "Date format is incorrect", Toast.LENGTH_SHORT).show();
+                }
 
                 UserInfo ui = new UserInfo("rcerveny@iastate.edu", "password", 42, "Ryan", "Cerveny",
                                              "venmo","description", UserType.DRIVER, (float) 5.0,
                                                 new ArrayList<Offer>(), new ArrayList<Request>());
+                if(validDest && validDate) {
+                    Request r = new Request(numBags, ui, dest, description, date);
 
-                Request r = new Request(numBags, ui, dest, description, date);
-
-                r.viewRequest(r, CreateRequest.this);
+                    r.viewRequest(r, CreateRequest.this);
+                }
             }
         });
     }

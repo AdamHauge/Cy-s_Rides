@@ -46,13 +46,43 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
 
         Button submit = (Button) findViewById(R.id.Submit);
         submit.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
+            public void onClick(View v) {
 
-                EditText temp = (EditText)findViewById(R.id.Cost);
-                double cost = Double.parseDouble(temp.getText().toString());
+                EditText temp = (EditText) findViewById(R.id.Cost);
+                double cost = 0.00;
+                if (!temp.getText().toString().equals("")){
+                    cost = Double.parseDouble(temp.getText().toString());
+                    long factor = (long) Math.pow(10, 2);
+                    cost = cost * factor;
+                    long tmp = Math.round(cost);
+                    cost = (double) tmp / factor;
+                }
 
                 temp = (EditText)findViewById(R.id.Dest);
                 String dest = temp.getText().toString();
+                boolean validDest = true;
+                String splitDest[] = dest.split(",");
+                if(dest.equals("")){
+                    Toast.makeText(getApplicationContext(), "Destination is required", Toast.LENGTH_SHORT).show();
+                    validDest = false;
+                }else {
+                    if(splitDest.length == 2) {
+                        if (splitDest[1].charAt(0) != ' ') {
+                            validDest = false;
+                           }
+                        if (!splitDest[0].matches("^[a-zA-Z ]+")) {
+                            validDest = false;
+                           }
+                        if (!splitDest[1].matches("^[a-zA-Z ]+")) {
+                            validDest = false;
+                        }
+                    } else{
+                            validDest = false;
+                        }
+                    if(!validDest){
+                        Toast.makeText(getApplicationContext(), "Make sure destination is correctly formated", Toast.LENGTH_SHORT).show();
+                    }
+                }
 
                 temp = (EditText)findViewById(R.id.Description);
                 String description = temp.getText().toString();
@@ -60,13 +90,39 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
                 temp = (EditText)findViewById(R.id.LeaveDate);
                 String date = temp.getText().toString();
 
+                String[] splitDate = date.split("/");
+                boolean validDate = true;
+                if(date.equals("")){
+                    Toast.makeText(getApplicationContext(), "Date is required", Toast.LENGTH_SHORT).show();
+                    validDate = false;
+                }
+                if(splitDate.length == 3 ){
+                    if(!((splitDate[0].length() < 3 && splitDate[0].length() > 0)) || !splitDate[0].matches("^[0-9]+")){
+                        Toast.makeText(getApplicationContext(), "split 1", Toast.LENGTH_SHORT).show();
+                        validDate = false;
+                    }
+                    if(!((splitDate[1].length() < 3 && splitDate[1].length() > 0)) || !splitDate[1].matches("^[0-9]+")){
+                        Toast.makeText(getApplicationContext(), "split2", Toast.LENGTH_SHORT).show();
+                        validDate = false;
+                    }
+                    if(!(splitDate[2].length() == 4  || splitDate[2].length() == 2) || !splitDate[2].matches("^[0-9]+")){
+                        Toast.makeText(getApplicationContext(), "split 3", Toast.LENGTH_SHORT).show();
+                        validDate = false;
+                    }
+                }
+                else{
+                    validDate = false;
+                }
+                if(!validDate){
+                        Toast.makeText(getApplicationContext(), "Date format is incorrect", Toast.LENGTH_SHORT).show();
+                }
                 UserInfo ui = new UserInfo("rcerveny@iastate.edu", "password", 42, "Ryan", "Cerveny",
                                            "venmo","description", UserType.DRIVER, (float) 5.0,
                                             new ArrayList<Offer>(), new ArrayList<Request>());
-
-                Offer o = new Offer(UserType.DRIVER, cost, ui, dest, description, date);
-
-                o.viewOffer(o, CreateOffer.this);
+                if(validDest && validDate) {
+                    Offer o = new Offer(UserType.DRIVER, cost, ui, dest, description, date);
+                    o.viewOffer(o, CreateOffer.this);
+                }
             }
         });
     }

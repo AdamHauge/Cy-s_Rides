@@ -18,7 +18,7 @@ public class ViewOffer extends AppCompatActivity {
         temp.setText(getIntent().getExtras().getString("Dest"));
 
         temp = (EditText)findViewById(R.id.Cost);
-        temp.setText(getIntent().getStringExtra("Cost"));
+        temp.setText("$" + getIntent().getStringExtra("Cost"));
 
         temp = (EditText)findViewById(R.id.LeaveDate);
         temp.setText(getIntent().getStringExtra("Date"));
