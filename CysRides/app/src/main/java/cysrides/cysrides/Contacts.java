@@ -86,8 +86,10 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.my_profile) {
+            Toast.makeText(getApplicationContext(), "My Profile", Toast.LENGTH_SHORT).show();
+            i = new Intent(Contacts.this, ViewProfile.class);
+            startActivity(i);
         }
 
         return super.onOptionsItemSelected(item);
