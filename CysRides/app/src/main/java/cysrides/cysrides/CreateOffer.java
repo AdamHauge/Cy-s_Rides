@@ -169,6 +169,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
                 public void onClick(DialogInterface dialog, int whichButton) {
                     finish();
                     i = new Intent(CreateOffer.this, ViewProfile.class);
+                    i.putExtra("caller", "Create Offer");
                     startActivity(i);
                 }});
             alert.setNegativeButton(android.R.string.no, null);

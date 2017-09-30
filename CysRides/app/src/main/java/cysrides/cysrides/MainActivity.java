@@ -41,8 +41,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            finish();
-            super.onBackPressed();
+            moveTaskToBack(true);
         }
     }
 
@@ -64,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.my_profile) {
             Toast.makeText(getApplicationContext(), "My Profile", Toast.LENGTH_SHORT).show();
             i = new Intent(MainActivity.this, ViewProfile.class);
+            i.putExtra("caller", "Main Activity");
             startActivity(i);
         }
 

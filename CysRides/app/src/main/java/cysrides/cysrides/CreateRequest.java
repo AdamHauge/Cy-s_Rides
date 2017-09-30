@@ -169,6 +169,7 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
                 public void onClick(DialogInterface dialog, int whichButton) {
                     finish();
                     i = new Intent(CreateRequest.this, ViewProfile.class);
+                    i.putExtra("caller", "Create Request");
                     startActivity(i);
                 }});
             alert.setNegativeButton(android.R.string.no, null);

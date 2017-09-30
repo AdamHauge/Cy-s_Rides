@@ -103,6 +103,7 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
         if (id == R.id.my_profile) {
             Toast.makeText(getApplicationContext(), "My Profile", Toast.LENGTH_SHORT).show();
             i = new Intent(RideRequests.this, ViewProfile.class);
+            i.putExtra("caller", "Ride Requests");
             startActivity(i);
         }
 

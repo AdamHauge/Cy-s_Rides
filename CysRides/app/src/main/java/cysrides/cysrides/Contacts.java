@@ -89,6 +89,7 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
         if (id == R.id.my_profile) {
             Toast.makeText(getApplicationContext(), "My Profile", Toast.LENGTH_SHORT).show();
             i = new Intent(Contacts.this, ViewProfile.class);
+            i.putExtra("caller", "Contacts");
             startActivity(i);
         }
 
