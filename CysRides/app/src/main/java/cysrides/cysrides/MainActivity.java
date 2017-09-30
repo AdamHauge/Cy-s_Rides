@@ -11,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -21,11 +22,20 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
 
     private Intent i;
     private boolean backPressed = false;
+    private GoogleMap googleMap;
+    private PlaceAutocompleteFragment placeAutoComplete;
+    ArrayList<Place> places = new ArrayList();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +53,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        placeAutoComplete = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete);
+        placeAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                Log.d("Maps", "Place selected: " + place.getName());
+                places.add(place);
+                onMapReady(googleMap);
+            }
+
+            @Override
+            public void onError(Status status) {
+                Log.d("Maps", "An error occurred: " + status);
+            }
+        });
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
@@ -50,10 +75,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onMapReady(GoogleMap googleMap) {
         //TODO all code dealing with maps goes here
-        LatLng ames = new LatLng(42.0266187, -93.64646540000001);
-        float zoomLevel = 16.0f; //zoom can go up to 21
-        googleMap.addMarker(new MarkerOptions().position(ames).title("Iowa State University"));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ames, zoomLevel));
+        if(places.size() > 0) {
+            LatLng location = places.get(places.size() - 1).getLatLng();//new LatLng(42.0266187, -93.64646540000001);
+            float zoomLevel = 16.0f; //zoom can go up to 21
+            googleMap.clear();
+            googleMap.addMarker(new MarkerOptions().position(location).title("My place"));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, zoomLevel));
+        }
+        this.googleMap = googleMap;
     }
 
     @Override
