@@ -14,6 +14,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -24,40 +28,51 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".Contacts"
             android:label="@string/contacts"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".LoginActivity"
             android:clearTaskOnLaunch="true"
             android:label="@string/title_activity_login" />
+
         <activity
             android:name=".RideRequests"
             android:label="@string/title_activity_ride_requests"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".RideOffers"
             android:label="@string/offers"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".ViewProfile"
             android:label="@string/profile"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".CreateOffer"
             android:label="Create Offer"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".CreateRequest"
             android:label="Create Request"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity android:name=".ViewRequest" />
+
         <activity android:name=".ViewOffer" />
+
         <activity
             android:name=".CreateProfile"
             android:label="@string/title_activity_create_profile"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+
     </application>
 
 </manifest>
