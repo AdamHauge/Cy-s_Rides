@@ -15,9 +15,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
 
@@ -47,6 +50,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onMapReady(GoogleMap googleMap) {
         //TODO all code dealing with maps goes here
+        LatLng ames = new LatLng(42.0266187, -93.64646540000001);
+        float zoomLevel = 16.0f; //zoom can go up to 21
+        googleMap.addMarker(new MarkerOptions().position(ames).title("Iowa State University"));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ames, zoomLevel));
     }
 
     @Override
