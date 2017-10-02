@@ -5,7 +5,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -14,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -53,6 +56,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                places = new ArrayList<Place>();
+                googleMap.clear();
+                onMapReady(googleMap);
+            }
+        });
+
         placeAutoComplete = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete);
         placeAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
@@ -81,6 +94,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             googleMap.clear();
             googleMap.addMarker(new MarkerOptions().position(location).title("My place"));
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, zoomLevel));
+        }
+        else {
+            LatLng ames = new LatLng(42.0266187, -93.64646540000001);
+            float zoomLevel = 16.0f;
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ames, zoomLevel));
         }
         this.googleMap = googleMap;
     }
