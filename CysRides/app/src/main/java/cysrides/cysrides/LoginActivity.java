@@ -38,6 +38,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import service.GmailSenderServiceImpl;
+
 import static android.Manifest.permission.READ_CONTACTS;
 
 /**
@@ -451,18 +453,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     public void sendEmail(View view){
-        Intent i = new Intent(Intent.ACTION_SEND);
-        String email = mEmailView.getText().toString();
-        String emailArray[] = email.split(" ");
-        i.setType("message/rfc822");
-        i.putExtra(Intent.EXTRA_EMAIL  , emailArray);
-        i.putExtra(Intent.EXTRA_SUBJECT, "Welcome to Cy's Rides!");
-        i.putExtra(Intent.EXTRA_TEXT   , "Here's your confirmation code: " + generateCode());
-        try {
-            startActivity(Intent.createChooser(i, "Send mail..."));
-        } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(LoginActivity.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
-        }
+        String to = mEmailView.getText().toString();
+        String from = "cysrides@iastate.edu";
+        String subject = "Welcome to Cy's Rides!";
+        String body = "Here's your confirmation code: " + generateCode();
+
+
+        GmailSenderServiceImpl gmailSenderService = new GmailSenderServiceImpl();
+        gmailSenderService.sendEmail(to, from, subject, body);
 
     }
 
