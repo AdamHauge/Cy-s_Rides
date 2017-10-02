@@ -3,6 +3,7 @@ package cysrides.cysrides;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -175,13 +176,12 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
             alert.setNegativeButton(android.R.string.no, null);
             alert.show();
         }
-//TODO Adam: backing out of profile after create offer page should return user to main screen
         return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem menuItem) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         final MenuItem item = menuItem;
         AlertDialog.Builder alert;
 
