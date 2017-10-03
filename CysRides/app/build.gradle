@@ -45,6 +45,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:11.0.4'
     compile 'com.google.android.gms:play-services-location:11.0.4'
     compile 'com.google.android.gms:play-services-places:11.0.4'
+    compile 'com.android.volley:volley:1.0.0'
     testCompile 'junit:junit:4.12'
     testCompile 'org.easymock:easymock:3.5'
     compile files('libs/javax.mail.jar')
