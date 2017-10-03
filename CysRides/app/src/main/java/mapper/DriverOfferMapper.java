@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import domain.Offer;
 import domain.UserType;
 
-public class DriverOfferMapper {
+public class DriverOfferMapper implements RowMapper<Offer> {
 
     public Offer mapRow(ResultSet rs, int rowNum) throws SQLException {
         Offer offer = new Offer();
