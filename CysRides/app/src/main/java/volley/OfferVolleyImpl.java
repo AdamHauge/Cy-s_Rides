@@ -17,7 +17,7 @@ import cysrides.cysrides.CreateOffer;
 
 public class OfferVolleyImpl {
 
-    private String serverUrl = "http://ineedtheip/createOffer.php";
+    private String serverUrl = "http://proj-309-sa-b-5.cs.iastate.edu/createOffer.php";
 
     public void createOffer(final AlertDialog.Builder builder) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, serverUrl,
