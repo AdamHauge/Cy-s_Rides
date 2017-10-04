@@ -1,5 +1,12 @@
 <?php
 
+$user_type = $_POST["userType"];
+$cost = $_POST["cost"];
+$email = $_POST["email"];
+$destination = $_POST["destination"];
+$description = $_POST["description"];
+$date =$_POST["date"]
+
 $user = "dbu309sab5";
 $password = "VRCc@3V2";
 $host = "mysql.cs.iastate.edu";
