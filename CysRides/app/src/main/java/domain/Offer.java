@@ -11,15 +11,13 @@ import cysrides.cysrides.ViewRequest;
 
 public class Offer {
 
-    private UserType userType;
     private double cost;
     private String email;
     private String destination;
     private String description;
     private Date date;
 
-    public Offer(UserType userType, double cost, String email, String destination, String description, Date date) {
-        this.userType = userType;
+    public Offer(double cost, String email, String destination, String description, Date date) {
         this.cost = cost;
         this.email = email;
         this.destination = destination;
@@ -31,25 +29,16 @@ public class Offer {
 
     }
 
-    //TODO Check if it prints correctly I changed date to a Date instead of a String, my b
+    //TODO Check if it prints correctly I changed date to a Date instead of a String and got rid of usertype, my b
     @Override
     public String toString() {
         return "Offer{" +
-                "userType=" + userType +
                 ", cost=" + cost +
                 ", email=" + email +
                 ", destination='" + destination + '\'' +
                 ", description='" + description + '\'' +
                 ", date='" + date + '\'' +
                 '}';
-    }
-
-    public UserType getUserType() {
-        return userType;
-    }
-
-    public void setUserType(UserType userType) {
-        this.userType = userType;
     }
 
     public double getCost() {

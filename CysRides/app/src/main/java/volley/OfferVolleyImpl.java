@@ -1,7 +1,9 @@
 package volley;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -15,13 +17,16 @@ import java.util.Map;
 
 import domain.Offer;
 
-public class OfferVolleyImpl {
+public class OfferVolleyImpl implements OfferVolley {
 
     private String serverUrl = "http://proj-309-sa-b-5.cs.iastate.edu/createOffer.php";
     private Offer newOffer;
+    private Context currentContext;
 
-    public void createOffer(final AlertDialog.Builder builder, Offer offer) {
+    @Override
+    public void createOffer(final AlertDialog.Builder builder, Context context, Offer offer) {
         newOffer = offer;
+        currentContext = context;
         StringRequest stringRequest = new StringRequest(Request.Method.POST, serverUrl,
                 new Response.Listener<String>() {
                     @Override
@@ -41,7 +46,7 @@ public class OfferVolleyImpl {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-//                        Toast.makeText(CreateOffer.this, "Error...",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(currentContext, "Error...",Toast.LENGTH_SHORT).show();
                         error.printStackTrace();
                     }
                 }){
@@ -49,7 +54,6 @@ public class OfferVolleyImpl {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("userType", newOffer.getUserType().name());
                 params.put("cost", newOffer.getCost()+"");
                 params.put("email", newOffer.getEmail());
                 params.put("destination", newOffer.getDestination());
@@ -59,7 +63,7 @@ public class OfferVolleyImpl {
             }
         };
 
-//        MySingleton.getInstance(CreateOffer.this).addToRequestQueue(stringRequest);
+        MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
 
 }

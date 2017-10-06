@@ -1,6 +1,5 @@
 <?php
 
-$user_type = $_POST["userType"];
 $cost = $_POST["cost"];
 $email = $_POST["email"];
 $destination = $_POST["destination"];

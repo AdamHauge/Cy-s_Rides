@@ -121,8 +121,9 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
                                            "venmo","description", UserType.DRIVER, (float) 5.0,
                                             new ArrayList<Offer>(), new ArrayList<Request>());
                 if(validDest && validDate) {
-                    Offer o = new Offer(UserType.DRIVER, cost, ui.getNetID(), dest, description, date);
-                    o.viewOffer(o, CreateOffer.this);
+                 //I got rid of the userType from the offer because it's already implied, and changed date from a string to a date, sorry
+//                    Offer o = new Offer(cost, ui.getNetID(), dest, description, date);
+//                    o.viewOffer(o, CreateOffer.this);
                 }
             }
         });
