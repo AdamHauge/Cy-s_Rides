@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import java.util.Date;
+
 import cysrides.cysrides.ViewOffer;
 import cysrides.cysrides.ViewRequest;
 
@@ -14,9 +16,9 @@ public class Offer {
     private String email;
     private String destination;
     private String description;
-    private String date;
+    private Date date;
 
-    public Offer(UserType userType, double cost, String email, String destination, String description, String date) {
+    public Offer(UserType userType, double cost, String email, String destination, String description, Date date) {
         this.userType = userType;
         this.cost = cost;
         this.email = email;
@@ -29,7 +31,7 @@ public class Offer {
 
     }
 
-    //TODO Check if it prints correctly
+    //TODO Check if it prints correctly I changed date to a Date instead of a String, my b
     @Override
     public String toString() {
         return "Offer{" +
@@ -82,9 +84,9 @@ public class Offer {
         this.description = description;
     }
 
-    public void setDate(String date) {this.date = date;}
+    public void setDate(Date date) {this.date = date;}
 
-    public String getDate(){return date;}
+    public Date getDate(){return date;}
 
     /*Sorry for messing with your code, but I didn't think about the database when designing this Object,
     and it would make the database a lot more complicated than it needed to be to have a UserInfo
