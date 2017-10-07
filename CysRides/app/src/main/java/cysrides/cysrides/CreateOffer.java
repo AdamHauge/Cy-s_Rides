@@ -19,11 +19,13 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import domain.Offer;
 import domain.Request;
 import domain.UserInfo;
 import domain.UserType;
+import volley.OfferVolleyImpl;
 
 public class CreateOffer extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -106,7 +108,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
                         Toast.makeText(getApplicationContext(), "split2", Toast.LENGTH_SHORT).show();
                         validDate = false;
                     }
-                    if(!(splitDate[2].length() == 4  || splitDate[2].length() == 2) || !splitDate[2].matches("^[0-9]+")){
+                    if(!(splitDate[2].length() == 4) || !splitDate[2].matches("^[0-9]+")){
                         Toast.makeText(getApplicationContext(), "split 3", Toast.LENGTH_SHORT).show();
                         validDate = false;
                     }
@@ -122,8 +124,12 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
                                             new ArrayList<Offer>(), new ArrayList<Request>());
                 if(validDest && validDate) {
                  //I got rid of the userType from the offer because it's already implied, and changed date from a string to a date, sorry
-//                    Offer o = new Offer(cost, ui.getNetID(), dest, description, date);
-//                    o.viewOffer(o, CreateOffer.this);
+//                   Offer o = new Offer(cost, ui.getNetID(), dest, description,
+//                           new Date(Integer.parseInt(splitDate[0]),
+//                                   Integer.parseInt(splitDate[2]),
+//                                   Integer.parseInt(splitDate[1])));
+////                    o.viewOffer(o, CreateOffer.this);
+//                    OfferVolleyImpl ovi = new OfferVolleyImpl(new AlertDialog.Builder(),,o);
                 }
             }
         });

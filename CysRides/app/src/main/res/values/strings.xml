@@ -30,7 +30,7 @@
     <string name="cost">Ride Cost</string>
     <string name="description">Description</string>
     <string name="num_bags">Number of Bags</string>
-    <string name="leave_date">Leave Date (mm/dd/yy)</string>
+    <string name="leave_date">Leave Date (mm/dd/yyyy)</string>
     <string name="enter">Enter</string>
 
     <!-- Strings related to profile -->
