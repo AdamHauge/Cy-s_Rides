@@ -17,7 +17,7 @@ public class Offer {
     private String description;
     private Date date;
 
-    public Offer(double cost, String email, String destination, String description, Date date) {
+    public Offer(UserType user, double cost, String email, String destination, String description, Date date) {
         this.cost = cost;
         this.email = email;
         this.destination = destination;
