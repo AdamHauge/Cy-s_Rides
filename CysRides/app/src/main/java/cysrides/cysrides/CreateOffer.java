@@ -18,16 +18,22 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import domain.Offer;
 import domain.Request;
 import domain.UserInfo;
 import domain.UserType;
+import volley.OfferVolley;
+import volley.OfferVolleyImpl;
 
 public class CreateOffer extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private Intent i;
+    private OfferVolley offerVolley = new OfferVolleyImpl();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,41 +95,49 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
                 String description = temp.getText().toString();
 
                 temp = (EditText)findViewById(R.id.LeaveDate);
-                String date = temp.getText().toString();
 
-                String[] splitDate = date.split("/");
-                boolean validDate = true;
-                if(date.equals("")){
-                    Toast.makeText(getApplicationContext(), "Date is required", Toast.LENGTH_SHORT).show();
-                    validDate = false;
+                Date realDate = new Date();
+                try{
+                    realDate = new SimpleDateFormat("MM/dd/yy").parse(temp.getText().toString());
+                } catch (ParseException e) {
+                    e.printStackTrace();
                 }
-                if(splitDate.length == 3 ){
-                    if(!((splitDate[0].length() < 3 && splitDate[0].length() > 0)) || !splitDate[0].matches("^[0-9]+")){
-                        Toast.makeText(getApplicationContext(), "split 1", Toast.LENGTH_SHORT).show();
-                        validDate = false;
-                    }
-                    if(!((splitDate[1].length() < 3 && splitDate[1].length() > 0)) || !splitDate[1].matches("^[0-9]+")){
-                        Toast.makeText(getApplicationContext(), "split2", Toast.LENGTH_SHORT).show();
-                        validDate = false;
-                    }
-                    if(!(splitDate[2].length() == 4  || splitDate[2].length() == 2) || !splitDate[2].matches("^[0-9]+")){
-                        Toast.makeText(getApplicationContext(), "split 3", Toast.LENGTH_SHORT).show();
-                        validDate = false;
-                    }
-                }
-                else{
-                    validDate = false;
-                }
-                if(!validDate){
-                        Toast.makeText(getApplicationContext(), "Date format is incorrect", Toast.LENGTH_SHORT).show();
-                }
+
+//                String date = temp.getText().toString();
+//                String[] splitDate = date.split("/");
+//                boolean validDate = true;
+//                if(date.equals("")){
+//                    Toast.makeText(getApplicationContext(), "Date is required", Toast.LENGTH_SHORT).show();
+//                    validDate = false;
+//                }
+//                if(splitDate.length == 3 ){
+//                    if(!((splitDate[0].length() < 3 && splitDate[0].length() > 0)) || !splitDate[0].matches("^[0-9]+")){
+//                        Toast.makeText(getApplicationContext(), "split 1", Toast.LENGTH_SHORT).show();
+//                        validDate = false;
+//                    }
+//                    if(!((splitDate[1].length() < 3 && splitDate[1].length() > 0)) || !splitDate[1].matches("^[0-9]+")){
+//                        Toast.makeText(getApplicationContext(), "split2", Toast.LENGTH_SHORT).show();
+//                        validDate = false;
+//                    }
+//                    if(!(splitDate[2].length() == 4  || splitDate[2].length() == 2) || !splitDate[2].matches("^[0-9]+")){
+//                        Toast.makeText(getApplicationContext(), "split 3", Toast.LENGTH_SHORT).show();
+//                        validDate = false;
+//                    }
+//                }
+//                else{
+//                    validDate = false;
+//                }
+//                if(!validDate){
+//                        Toast.makeText(getApplicationContext(), "Date format is incorrect", Toast.LENGTH_SHORT).show();
+//                }
                 UserInfo ui = new UserInfo("rcerveny@iastate.edu", "password", 42, "Ryan", "Cerveny",
                                            "venmo","description", UserType.DRIVER, (float) 5.0,
                                             new ArrayList<Offer>(), new ArrayList<Request>());
-                if(validDest && validDate) {
+                if(validDest/* && validDate*/) {
                  //I got rid of the userType from the offer because it's already implied, and changed date from a string to a date, sorry
-//                    Offer o = new Offer(cost, ui.getNetID(), dest, description, date);
-//                    o.viewOffer(o, CreateOffer.this);
+                    Offer o = new Offer(cost, ui.getNetID(), dest, description, realDate);
+                    offerVolley.createOffer(CreateOffer.this, o);
+                    o.viewOffer(o, CreateOffer.this);
                 }
             }
         });

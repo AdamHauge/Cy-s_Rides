@@ -24,23 +24,23 @@ public class OfferVolleyImpl implements OfferVolley {
     private Context currentContext;
 
     @Override
-    public void createOffer(final AlertDialog.Builder builder, Context context, Offer offer) {
+    public void createOffer(Context context, Offer offer) {
         newOffer = offer;
         currentContext = context;
         StringRequest stringRequest = new StringRequest(Request.Method.POST, serverUrl,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        builder.setTitle("Server Response");
-                        builder.setMessage("Response : " + response);
-                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //He clears the text here
-                            }
-                        });
-                        AlertDialog alertDialog = builder.create();
-                        alertDialog.show();
+//                        builder.setTitle("Server Response");
+//                        builder.setMessage("Response : " + response);
+//                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                //He clears the text here
+//                            }
+//                        });
+//                        AlertDialog alertDialog = builder.create();
+//                        alertDialog.show();
                     }
                 },
                 new Response.ErrorListener() {
@@ -58,7 +58,7 @@ public class OfferVolleyImpl implements OfferVolley {
                 params.put("email", newOffer.getEmail());
                 params.put("destination", newOffer.getDestination());
                 params.put("description", newOffer.getDescription());
-                params.put("date", String.format("%s '%s'", "TIMESTAMP", new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(newOffer.getDate())));
+                params.put("date", String.format("%s '%s'", "DATE", new SimpleDateFormat("YYYY-MM-DD").format(newOffer.getDate())));
                 return params;
             }
         };

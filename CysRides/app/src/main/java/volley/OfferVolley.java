@@ -8,5 +8,5 @@ import java.util.List;
 import domain.Offer;
 
 public interface OfferVolley {
-    void createOffer(final AlertDialog.Builder builder, Context context, Offer offer);
+    void createOffer(Context context, Offer offer);
 }
