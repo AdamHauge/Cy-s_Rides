@@ -56,7 +56,7 @@ public class OfferVolleyImpl implements OfferVolley {
                 Map<String, String> params = new HashMap<>();
                 params.put("cost", newOffer.getCost()+"");
                 params.put("email", newOffer.getEmail());
-                params.put("destination", newOffer.getDestination());
+                params.put("destination", newOffer.getDestination().getName().toString());
                 params.put("description", newOffer.getDescription());
                 params.put("date", String.format("%s '%s'", "DATE", new SimpleDateFormat("YYYY-MM-DD").format(newOffer.getDate())));
                 return params;

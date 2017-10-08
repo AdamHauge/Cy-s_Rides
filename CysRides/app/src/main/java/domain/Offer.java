@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.google.android.gms.location.places.Place;
+
 import java.util.Date;
 
 import cysrides.cysrides.ViewOffer;
@@ -13,11 +15,11 @@ public class Offer {
 
     private double cost;
     private String email;
-    private String destination;
+    private Place destination;
     private String description;
     private Date date;
 
-    public Offer(double cost, String email, String destination, String description, Date date) {
+    public Offer(double cost, String email, Place destination, String description, Date date) {
         this.cost = cost;
         this.email = email;
         this.destination = destination;
@@ -57,11 +59,11 @@ public class Offer {
         this.email = email;
     }
 
-    public String getDestination() {
+    public Place getDestination() {
         return destination;
     }
 
-    public void setDestination(String destination) {
+    public void setDestination(Place destination) {
         this.destination = destination;
     }
 
@@ -86,7 +88,7 @@ public class Offer {
         Intent i = new Intent(c , ViewOffer.class);
 //        i.putExtra("UserName", o.getUser().getFirstName() + " " + o.getUser().getLastName());
         i.putExtra("Email", o.getEmail());
-        i.putExtra("Dest", o.getDestination());
+        i.putExtra("Dest", o.getDestination().getName());
         i.putExtra("Cost", Double.toString(o.getCost()));
         i.putExtra("Date", o.getDate());
         i.putExtra("Description", o.getDescription());

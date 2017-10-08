@@ -1,8 +1,11 @@
 package cysrides.cysrides;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -11,14 +14,22 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -30,6 +41,12 @@ import domain.UserType;
 
 public class CreateRequest extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    private EditText displayDate;
+    private DatePickerDialog.OnDateSetListener dateSetListener;
+    private Place destination;
+    private int year, month, day;
+    private String description;
+    private double numBags;
     private Intent i;
 
     @Override
@@ -48,85 +65,64 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Button submit = (Button) findViewById(R.id.CreateRequestButton);
-        submit.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
+        PlaceAutocompleteFragment placeAutoComplete;
+        placeAutoComplete = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete);
+        placeAutoComplete.setHint("Destination");
+        placeAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                destination = place;
+                Log.d("Maps", "Place selected: " + place.getName());
+            }
 
-                EditText temp = (EditText)findViewById(R.id.numBagsInput);
-                int numBags = 0;
-                if(temp.getText().toString().matches("^[0-9]+")){
-                    numBags = Integer.parseInt(temp.getText().toString());
-                }
-
-                temp = (EditText)findViewById(R.id.destInput);
-                String dest = temp.getText().toString();
-                boolean validDest = true;
-                String splitDest[] = dest.split(",");
-                if(dest.equals("")){
-                    Toast.makeText(getApplicationContext(), "Destination is required", Toast.LENGTH_SHORT).show();
-                    validDest = false;
-                }else {
-                    if(splitDest.length == 2) {
-                        if (splitDest[1].charAt(0) != ' ') {
-                            validDest = false;
-                        }
-                        if (!splitDest[0].matches("^[a-zA-Z ]+")) {
-                            validDest = false;
-                        }
-                        if (!splitDest[1].matches("^[a-zA-Z ]+")) {
-                            validDest = false;
-                        }
-                    } else{
-                        validDest = false;
-                    }
-                    if(!validDest){
-                        Toast.makeText(getApplicationContext(), "Make sure destination is correctly formated", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                temp = (EditText)findViewById(R.id.discriptionInput);
-                String description = temp.getText().toString();
-
-                temp = (EditText)findViewById(R.id.dateInput);
-                String date = temp.getText().toString();
-                String[] splitDate = date.split("/");
-                boolean validDate = true;
-                if(date.equals("")){
-                    Toast.makeText(getApplicationContext(), "Date is required", Toast.LENGTH_SHORT).show();
-                    validDate = false;
-                }
-                if(splitDate.length == 3 ){
-                    if(!((splitDate[0].length() < 3 && splitDate[0].length() > 0)) || !splitDate[0].matches("^[0-9]+")){
-                        Toast.makeText(getApplicationContext(), "split 1", Toast.LENGTH_SHORT).show();
-                        validDate = false;
-                    }
-                    if(!((splitDate[1].length() < 3 && splitDate[1].length() > 0)) || !splitDate[1].matches("^[0-9]+")){
-                        Toast.makeText(getApplicationContext(), "split2", Toast.LENGTH_SHORT).show();
-                        validDate = false;
-                    }
-                    if(!(splitDate[2].length() == 4  || splitDate[2].length() == 2) || !splitDate[2].matches("^[0-9]+")){
-                        Toast.makeText(getApplicationContext(), "split 3", Toast.LENGTH_SHORT).show();
-                        validDate = false;
-                    }
-                }
-                else{
-                    validDate = false;
-                }
-                if(!validDate){
-                    Toast.makeText(getApplicationContext(), "Date format is incorrect", Toast.LENGTH_SHORT).show();
-                }
-
-                UserInfo ui = new UserInfo("rcerveny@iastate.edu", "password", 42, "Ryan", "Cerveny",
-                                             "venmo","description", UserType.DRIVER, (float) 5.0,
-                                                new ArrayList<Offer>(), new ArrayList<Request>());
-                if(validDest && validDate) {
-                    Request r = new Request(numBags, ui, dest, description, date);
-
-                    r.viewRequest(r, CreateRequest.this);
-                }
+            @Override
+            public void onError(Status status) {
+                Log.d("Maps", "An error occurred: " + status);
             }
         });
+
+        displayDate = (EditText) findViewById(R.id.LeaveDate);
+        displayDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar cal = Calendar.getInstance();
+                year = cal.get(Calendar.YEAR);
+                month = cal.get(Calendar.MONTH);
+                day = cal.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(CreateRequest.this,
+                        android.R.style.Theme_Holo_Dialog_NoActionBar_MinWidth,
+                        dateSetListener, year, month, day);
+                datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                datePickerDialog.show();
+            }
+        });
+        dateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                month++;
+                Log.d("CreateOffer", "onDateSet date: " + month + "/" + day + "/" + year);
+                String date = month + "/" + day + "/" + year;
+                displayDate.setText(date);
+            }
+        };
+
+        Button submit = (Button) findViewById(R.id.submit);
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditText data = (EditText) findViewById(R.id.numBags);
+                numBags = Integer.valueOf(data.getText().toString());
+
+                data = (EditText) findViewById(R.id.description);
+                description = data.getText().toString();
+            }
+        });
+//        UserInfo ui = new UserInfo("rcerveny@iastate.edu", "password", 42, "Ryan", "Cerveny",
+//                "venmo","description", UserType.DRIVER, (float) 5.0,
+//                new ArrayList<Offer>(), new ArrayList<Request>());
     }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
