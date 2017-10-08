@@ -93,17 +93,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
         if(null == networkInfo) {
-            Snackbar mySnackbar = Snackbar.make(findViewById(R.id.drawer_layout),
-                    "Cy's Rides Requires Internet Connection", Snackbar.LENGTH_INDEFINITE);
-            
-            mySnackbar.setAction("Connect WIFI", new View.OnClickListener() {
+            Snackbar snackbar = Snackbar.make(findViewById(R.id.drawer_layout),
+                    "Cy's Rides Requires\nInternet Connection", Snackbar.LENGTH_INDEFINITE);
+
+            snackbar.setAction("Connect WIFI", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
                     wifi.setWifiEnabled(true);
                 }
             });
-            mySnackbar.show();
+            snackbar.show();
         }
     }
 
