@@ -12,7 +12,6 @@
   $description = $_GET["description"];
   $date =$_GET["date"];
 
-
   $host="mysql.cs.iastate.edu";
   $port=3306;
   $socket="";

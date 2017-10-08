@@ -31,16 +31,7 @@ public class OfferVolleyImpl implements OfferVolley {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-//                        builder.setTitle("Server Response");
-//                        builder.setMessage("Response : " + response);
-//                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                //He clears the text here
-//                            }
-//                        });
-//                        AlertDialog alertDialog = builder.create();
-//                        alertDialog.show();
+                        Toast.makeText(currentContext, "It works",Toast.LENGTH_SHORT).show();
                     }
                 },
                 new Response.ErrorListener() {

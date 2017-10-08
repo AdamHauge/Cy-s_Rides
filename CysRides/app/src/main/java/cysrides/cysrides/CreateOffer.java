@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -13,7 +14,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -23,20 +23,15 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 
-import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import domain.Offer;
-import domain.Request;
-import domain.UserInfo;
-import domain.UserType;
 import volley.OfferVolley;
 import volley.OfferVolleyImpl;
 
@@ -157,6 +152,8 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
 
                 if (allValid) {
                     //TODO submit to database
+                    Offer o = new Offer(cost, "email", destination, description, new GregorianCalendar(day, month, year).getTime());
+                    offerVolley.createOffer(CreateOffer.this, o);
                     finish();
                     startActivity(getIntent());
                 }
