@@ -9,7 +9,11 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
+
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -19,7 +23,8 @@ import domain.Offer;
 
 public class OfferVolleyImpl implements OfferVolley {
 
-    private String serverUrl = "http://proj-309-sa-b-5.cs.iastate.edu/createOffer.php";
+    private String createOfferUrl = "http://proj-309-sa-b-5.cs.iastate.edu/createOffer.php";
+    private String getOffersUrl = "http://proj-309-sa-b-5.cs.iastate.edu/getOffer.php";
     private Offer newOffer;
     private Context currentContext;
 
@@ -27,7 +32,7 @@ public class OfferVolleyImpl implements OfferVolley {
     public void createOffer(Context context, Offer offer) {
         newOffer = offer;
         currentContext = context;
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, serverUrl,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, createOfferUrl,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -55,6 +60,27 @@ public class OfferVolleyImpl implements OfferVolley {
         };
 
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
+    }
+    public Offer[] GetOffers() {
+        Offer[] offers = {};
+        JsonObjectRequest jsonRequest = new JsonObjectRequest(getOffersUrl,new JSONObject(),
+              new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response){
+                    //DO STUFF
+
+                }
+              },
+              new Response.ErrorListener(){
+                 @Override
+                  public void onErrorResponse(VolleyError error){
+                     VolleyLog.e("Error: ", error.getMessage());
+                 }
+              });
+
+
+        MySingleton.getInstance(currentContext).addToRequestQueue(jsonRequest);
+        return offers;
     }
 
 }
