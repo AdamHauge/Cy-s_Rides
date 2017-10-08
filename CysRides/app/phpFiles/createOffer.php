@@ -20,12 +20,12 @@
 
         $conn = new mysqli($host, $username, $password, $dbname, $port, $socket) or die('Could not connect to database server'.mysqli_connect_error);
 
-        $sql = "INSERT INTO OFFER_TABLE (COST, EMAIL, DESTINATION, DESCRIPTION, DATE) VALUES('".$cost."','".$email."','".$destination."','".$description."','".$date."');";
+        $sql = "INSERT INTO OFFER_TABLE (COST, EMAIL, DESTINATION, DESCRIPTION, DATE) VALUES (".$cost.",'".$email."','".$destination."','".$description."',".$date.");";
 
         if(mysqli_query($conn,$sql)) {
             echo "Data insertion success...";
         } else {
-            echo "Error while insertion..." . $cost . $email. $destination. $description . $date;
+            echo "Error while insertion..." . $sql;
         }
 
         mysqli_close($conn);
