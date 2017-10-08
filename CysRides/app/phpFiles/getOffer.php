@@ -1,6 +1,11 @@
-<?php
 
+<html>
+<head>
+  <title>get Offers</title>
+</head>
 
+<body>
+  <?php
   $cost = $_GET["cost"];
   $email = $_GET["email"];
   $destination = $_GET["destination"];
@@ -17,8 +22,18 @@
 
   $conn = new mysqli($host, $username, $password, $dbname, $port, $socket) or die('Could not connect to database server'.mysqli_connect_error);
 
-  $sql = 'SELECT '
+  $sql = mysqli_query('SELECT * FROM OFFER_TABLE');
+  $rows = array();
 
-    echo "YAY";
-    mysqli_close($conn);
-?>
+  while($r = mysqli_fetch_assoc($sql)){
+    $rows[] = $r;
+  }
+
+  echo json_encode($rows);
+
+  mysqli_close($conn);
+  ?>
+</body>
+
+
+</html>
