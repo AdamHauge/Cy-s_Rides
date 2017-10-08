@@ -42,7 +42,7 @@ public class OfferVolleyImpl implements OfferVolley {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        
+
                     }
                 },
                 new Response.ErrorListener() {

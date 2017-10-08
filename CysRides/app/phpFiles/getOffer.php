@@ -15,13 +15,18 @@
       $dbname = 'db309sab5';
 
       $conn = new mysqli($host, $username, $password, $dbname, $port, $socket) or die('Could not connect to database server'.mysqli_connect_error);
-      echo "HELLO!";
 
       $sql = 'SELECT * FROM OFFER_TABLE;';
-      $result = mysql_query($sql);
+      $result = $conn->query($sql);
 
-      echo mysql_fetch_array($conn, $result);
-      echo "fin";
+      if ($result->num_rows > 0) {
+        // output data of each row
+        while($row = $result->fetch_assoc()) {
+            echo "cost: " . $row["COST"]. " - Email: " . $row["EMAIL"]. "<br>";
+        }
+      } else {
+          echo "0 results";
+      }
 
 
 
@@ -50,7 +55,8 @@
       // ));
       //
       // echo json_encode(array("result" =>$result));
-      // mysqli_close($conn);
+//       mysqli_close($conn);
+       $conn->close();
       ?>
     </body>
 </html>
