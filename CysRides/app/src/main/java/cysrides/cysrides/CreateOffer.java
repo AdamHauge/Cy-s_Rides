@@ -37,7 +37,6 @@ import volley.OfferVolleyImpl;
 
 public class CreateOffer extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private EditText displayDate;
     private DatePickerDialog.OnDateSetListener dateSetListener;
     private Place destination;
     private int year, month, day;
@@ -65,7 +64,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
 
         PlaceAutocompleteFragment placeAutoComplete;
         placeAutoComplete = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete);
-        placeAutoComplete.setHint("Destination");
+        placeAutoComplete.setHint("Where are you going?");
         placeAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
@@ -78,8 +77,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
                 Log.d("Maps", "An error occurred: " + status);
             }
         });
-
-        displayDate = (EditText) findViewById(R.id.LeaveDate);
+        EditText displayDate = (EditText) findViewById(R.id.LeaveDate);
         displayDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -98,7 +96,6 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
                 datePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == DialogInterface.BUTTON_NEGATIVE) {
-                            EditText editText = (EditText)findViewById(R.id.LeaveDate);
                             if(!dateChanged) {
                                 year = 0;
                                 month = 0;
@@ -107,7 +104,9 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
                         }
                     }
                 });
-                datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                if(null != datePickerDialog.getWindow()) {
+                    datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                }
                 datePickerDialog.show();
             }
         });
@@ -150,7 +149,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
                     description = data.getText().toString();
                 }
 
-                if (allValid) {
+                if(allValid) {
                     //TODO submit to database
                     Offer o = new Offer(cost, "email", destination, description, new GregorianCalendar(day, month, year).getTime());
                     offerVolley.createOffer(CreateOffer.this, o);

@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
-            android:paddingTop="10dp"/>
+            android:layout_marginTop="10dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -37,32 +37,34 @@
             <EditText android:id="@+id/Cost"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
+                android:layout_marginTop="10dp"
                 android:inputType="numberDecimal"
-                android:hint="Cost" />
+                android:hint="@string/cost" />
 
             <EditText android:id="@+id/LeaveDate"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
+                android:layout_marginTop="10dp"
                 android:focusable="false"
-                android:hint="Leave Date"
-                />
+                android:inputType="date"
+                android:hint="@string/leave_date" />
 
             <EditText android:id="@+id/Description"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginTop="10dp"
                 android:inputType="textMultiLine"
                 android:lines="8"
                 android:minLines="6"
-                android:gravity="top|left"
+                android:gravity="bottom|start"
                 android:maxLines="10"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
                 android:scrollbars="vertical"
-                android:hint="Description"/>
+                android:hint="@string/description"/>
 
             <Button android:id="@+id/submit"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:text="Submit" />
-
+                android:text="@string/submit" />
         </LinearLayout>
     </LinearLayout>
 

@@ -30,8 +30,6 @@ import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 
 import java.util.Calendar;
 
-
-
 import domain.Offer;
 import domain.Request;
 import domain.UserInfo;
@@ -39,7 +37,6 @@ import domain.UserType;
 
 public class CreateRequest extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private EditText displayDate;
     private DatePickerDialog.OnDateSetListener dateSetListener;
     private Place destination;
     private int year, month, day;
@@ -66,7 +63,7 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
 
         PlaceAutocompleteFragment placeAutoComplete;
         placeAutoComplete = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete);
-        placeAutoComplete.setHint("Destination");
+        placeAutoComplete.setHint("Where do you need to go?");
         placeAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
@@ -80,7 +77,7 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
             }
         });
 
-        displayDate = (EditText) findViewById(R.id.LeaveDate);
+        EditText displayDate = (EditText) findViewById(R.id.LeaveDate);
         displayDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -99,7 +96,6 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
                 datePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == DialogInterface.BUTTON_NEGATIVE) {
-                            EditText editText = (EditText)findViewById(R.id.LeaveDate);
                             if(!dateChanged) {
                                 year = 0;
                                 month = 0;
@@ -108,7 +104,9 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
                         }
                     }
                 });
-                datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                if(null != datePickerDialog.getWindow()) {
+                    datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                }
                 datePickerDialog.show();
             }
         });

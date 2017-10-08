@@ -1,8 +1,11 @@
 package cysrides.cysrides;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -84,6 +87,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        ConnectivityManager connMgr = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if(null != networkInfo.getTypeName()) {
+            Snackbar.make(findViewById(R.id.drawer_layout), "Cy's Rides Requires Internet Access", Snackbar.LENGTH_INDEFINITE).show();
+        }
     }
 
     @Override
