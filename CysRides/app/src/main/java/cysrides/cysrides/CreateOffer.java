@@ -112,8 +112,10 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
         });
         dateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                month++;
+            public void onDateSet(DatePicker datePicker, int y, int m, int d) {
+                month = m + 1;
+                day = d;
+                year = y;
                 Log.d("CreateOffer", "onDateSet date: " + month + "/" + day + "/" + year);
                 String date = month + "/" + day + "/" + year;
                 EditText editText = (EditText)findViewById(R.id.LeaveDate);
