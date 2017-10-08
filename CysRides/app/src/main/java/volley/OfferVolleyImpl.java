@@ -42,9 +42,7 @@ public class OfferVolleyImpl implements OfferVolley {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-//                        Snackbar.make(currentView, response, Snackbar.LENGTH_INDEFINITE);
-//                        Toast.makeText(currentContext, response,Toast.LENGTH_LONG).show();
-                        Log.d("Response", response);
+                        
                     }
                 },
                 new Response.ErrorListener() {
