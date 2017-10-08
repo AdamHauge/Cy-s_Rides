@@ -112,9 +112,13 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
             @Override
             public void onClick(View view) {
                 EditText data = (EditText) findViewById(R.id.numBags);
-                numBags = Integer.valueOf(data.getText().toString());
-
-                data = (EditText) findViewById(R.id.description);
+                try {
+                    numBags = Integer.valueOf(data.getText().toString());
+                }
+                catch(Exception e) {
+                    numBags = 0;
+                }
+                data = (EditText) findViewById(R.id.Description);
                 description = data.getText().toString();
             }
         });

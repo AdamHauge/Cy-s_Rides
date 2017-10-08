@@ -113,10 +113,15 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditText data = (EditText) findViewById(R.id.numBags);
-                cost = Double.parseDouble(data.getText().toString());
+                EditText data = (EditText) findViewById(R.id.Cost);
+                try {
+                    cost = Double.parseDouble(data.getText().toString());
+                }
+                catch(Exception e) {
+                    cost = 0;
+                }
 
-                data = (EditText) findViewById(R.id.description);
+                data = (EditText) findViewById(R.id.Description);
                 description = data.getText().toString();
             }
         });
