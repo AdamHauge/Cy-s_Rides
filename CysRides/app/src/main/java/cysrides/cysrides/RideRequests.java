@@ -102,7 +102,6 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.my_profile) {
-            Toast.makeText(getApplicationContext(), "My Profile", Toast.LENGTH_SHORT).show();
             i = new Intent(RideRequests.this, ViewProfile.class);
             i.putExtra("caller", "Ride Requests");
             startActivity(i);
@@ -120,29 +119,24 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
         switch(id)
         {
             case R.id.profile:
-                Toast.makeText(getApplicationContext(), "My Profile", Toast.LENGTH_SHORT).show();
                 i = new Intent(RideRequests.this, ViewProfile.class);
                 startActivity(i);
                 break;
             case R.id.requests:
-                Toast.makeText(getApplicationContext(), "Register", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.offers:
-                Toast.makeText(getApplicationContext(), "Register", Toast.LENGTH_SHORT).show();
                 i = new Intent(RideRequests.this, RideOffers.class);
                 startActivity(i);
                 break;
             case R.id.contacts:
-                Toast.makeText(getApplicationContext(), "Contacts", Toast.LENGTH_SHORT).show();
                 i = new Intent(RideRequests.this, Contacts.class);
                 startActivity(i);
                 break;
-            case R.id.createOffer:Toast.makeText(getApplicationContext(), "Create Offer", Toast.LENGTH_SHORT).show();
+            case R.id.createOffer:
                 i = new Intent(RideRequests.this, CreateOffer.class);
                 startActivity(i);
                 break;
             case R.id.createRequest:
-                Toast.makeText(getApplicationContext(), "Create Request", Toast.LENGTH_SHORT).show();
                 i = new Intent(RideRequests.this, CreateRequest.class);
                 startActivity(i);
                 break;

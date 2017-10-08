@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -17,7 +18,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -115,8 +115,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return;
             }
             backPressed = true;
-            Toast.makeText(this, "Tap back again to exit", Toast.LENGTH_SHORT).show();
-
+            Snackbar.make(findViewById(R.id.drawer_layout), "Tap back again to exit", Snackbar.LENGTH_SHORT).show();
             new Handler().postDelayed(new Runnable() {
 
                 @Override
@@ -143,7 +142,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.my_profile) {
-            Toast.makeText(getApplicationContext(), "My Profile", Toast.LENGTH_SHORT).show();
             i = new Intent(MainActivity.this, ViewProfile.class);
             i.putExtra("caller", "Main Activity");
             startActivity(i);
@@ -161,31 +159,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch(id)
         {
             case R.id.profile:
-                Toast.makeText(getApplicationContext(), "My Profile", Toast.LENGTH_SHORT).show();
                 i = new Intent(MainActivity.this, ViewProfile.class);
                 startActivity(i);
                 break;
             case R.id.requests:
-                Toast.makeText(getApplicationContext(), "Register", Toast.LENGTH_SHORT).show();
                 i = new Intent(MainActivity.this, RideRequests.class);
                 startActivity(i);
                 break;
             case R.id.offers:
-                Toast.makeText(getApplicationContext(), "Register", Toast.LENGTH_SHORT).show();
                 i = new Intent(MainActivity.this, RideOffers.class);
                 startActivity(i);
                 break;
             case R.id.contacts:
-                Toast.makeText(getApplicationContext(), "Contacts", Toast.LENGTH_SHORT).show();
                 i = new Intent(MainActivity.this, Contacts.class);
                 startActivity(i);
                 break;
-            case R.id.createOffer:Toast.makeText(getApplicationContext(), "Create Offer", Toast.LENGTH_SHORT).show();
+            case R.id.createOffer:
                 i = new Intent(MainActivity.this, CreateOffer.class);
                 startActivity(i);
                 break;
             case R.id.createRequest:
-                Toast.makeText(getApplicationContext(), "Create Request", Toast.LENGTH_SHORT).show();
                 i = new Intent(MainActivity.this, CreateRequest.class);
                 startActivity(i);
                 break;

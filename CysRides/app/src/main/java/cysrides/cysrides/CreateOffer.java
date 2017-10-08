@@ -22,7 +22,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -249,30 +248,24 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
                         int id = item.getItemId();
                         switch (id) {
                             case R.id.profile:
-                                Toast.makeText(getApplicationContext(), "My Profile", Toast.LENGTH_SHORT).show();
                                 i = new Intent(CreateOffer.this, ViewProfile.class);
                                 startActivity(i);
                                 break;
                             case R.id.requests:
-                                Toast.makeText(getApplicationContext(), "Register", Toast.LENGTH_SHORT).show();
                                 i = new Intent(CreateOffer.this, RideRequests.class);
                                 startActivity(i);
                                 break;
                             case R.id.offers:
-                                Toast.makeText(getApplicationContext(), "Register", Toast.LENGTH_SHORT).show();
                                 i = new Intent(CreateOffer.this, RideOffers.class);
                                 startActivity(i);
                                 break;
                             case R.id.contacts:
-                                Toast.makeText(getApplicationContext(), "Contacts", Toast.LENGTH_SHORT).show();
                                 i = new Intent(CreateOffer.this, Contacts.class);
                                 startActivity(i);
                                 break;
                             case R.id.createOffer:
-                                Toast.makeText(getApplicationContext(), "Create Offer", Toast.LENGTH_SHORT).show();
                                 break;
                             case R.id.createRequest:
-                                Toast.makeText(getApplicationContext(), "Create Request", Toast.LENGTH_SHORT).show();
                                 i = new Intent(CreateOffer.this, CreateRequest.class);
                                 startActivity(i);
                                 break;
