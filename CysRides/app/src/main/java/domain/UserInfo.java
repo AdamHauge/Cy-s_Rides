@@ -18,7 +18,7 @@ public class UserInfo {
     private List<Request> requests;
 
     public UserInfo(String netID, String password, int confirmationCode, String firstName, String lastName, String venmoName,
-                    String profileDescription, UserType userType, float userRating, List<Offer> offers, List<Request> requests){
+                    String profileDescription, UserType userType, float userRating, List<Offer> offers, List<Request> requests) {
         this.netID = netID;
         this.password = password;
         this.confirmationCode = confirmationCode;
@@ -33,7 +33,7 @@ public class UserInfo {
     }
 
     //TODO fix dummy fields
-    public UserInfo toUserInfo(String userInfoString){
+    public UserInfo toUserInfo(String userInfoString) {
         String netID = "";
         String password = "";
         int confirmationCode = 0;
@@ -47,8 +47,16 @@ public class UserInfo {
         List<Request> requests = new ArrayList<Request>();
 
         UserInfo userInfo = new UserInfo(netID, password, confirmationCode, firstName, lastName, venmoName,
-                                profileDescription, userType, userRating, offers, requests);
+                profileDescription, userType, userRating, offers, requests);
         return userInfo;
+    }
+
+    public String ratingToString(float userRating) {
+        return Float.toString(userRating);
+    }
+
+    public String confirmationCodeToString(int confirmationCode) {
+        return Integer.toString(confirmationCode);
     }
 
     @Override
