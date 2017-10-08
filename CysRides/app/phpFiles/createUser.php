@@ -6,6 +6,12 @@
 <body>
   <?php
 
+  $cost = $_POST["cost"];
+  $email = $_POST["email"];
+  $destination = $_POST["destination"];
+  $description = $_POST["description"];
+  $date =$_POST["date"];
+
   $host="mysql.cs.iastate.edu";
   $port=3306;
   $socket="";
@@ -15,11 +21,7 @@
 
   $conn = new mysqli($host, $username, $password, $dbname, $port, $socket) or die('Could not connect to database server'.mysqli_connect_error);
 
-  if(!$conn){
-    die("Connection failed: ", mysqli_connect_error());
-  }
-
-    echo "createProfile";
+    echo "createUser";
     mysqli_close($conn);
   ?>
 </body>

@@ -17,19 +17,8 @@ public class CreateProfile extends AppCompatActivity {
         setSupportActionBar(toolbar);
     }
 
-    public void onRadioButtonClicked(View view) {
-        // Is the button now checked?
-        /*boolean checked = ((RadioButton) view).isChecked();
+    public void onCreateProfileButtonClicked(View view) {
 
-        // Check which radio button was clicked
-        switch(view.getId()) {
-            case R.id.passengerRadioButton:
-                if (checked) {
-                    break;
-                }
-            case R.id.driverRadioButton:
-                if (checked)
-                    break;
-        }*/
+
     }
 }

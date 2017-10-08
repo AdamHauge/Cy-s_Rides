@@ -15,11 +15,7 @@
 
   $conn = new mysqli($host, $username, $password, $dbname, $port, $socket) or die('Could not connect to database server'.mysqli_connect_error);
 
-  if(!$conn){
-    die("Connection failed: ", mysqli_connect_error());
-  }
-
-    echo "viewProfile";
+    echo "getUser";
     mysqli_close($conn);
   ?>
 </body>
