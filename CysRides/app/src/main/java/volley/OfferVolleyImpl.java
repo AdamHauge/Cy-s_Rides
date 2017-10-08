@@ -3,6 +3,9 @@ package volley;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.design.widget.Snackbar;
+import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -19,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
+import cysrides.cysrides.R;
 import domain.Offer;
 
 public class OfferVolleyImpl implements OfferVolley {
@@ -27,16 +31,20 @@ public class OfferVolleyImpl implements OfferVolley {
     private String getOffersUrl = "http://proj-309-sa-b-5.cs.iastate.edu/getOffer.php";
     private Offer newOffer;
     private Context currentContext;
+    private View currentView;
 
     @Override
-    public void createOffer(Context context, Offer offer) {
+    public void createOffer(Context context, View view, Offer offer) {
         newOffer = offer;
         currentContext = context;
+        currentView = view;
         StringRequest stringRequest = new StringRequest(Request.Method.POST, createOfferUrl,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Toast.makeText(currentContext, "It works",Toast.LENGTH_SHORT).show();
+//                        Snackbar.make(currentView, response, Snackbar.LENGTH_INDEFINITE);
+//                        Toast.makeText(currentContext, response,Toast.LENGTH_LONG).show();
+                        Log.d("Response", response);
                     }
                 },
                 new Response.ErrorListener() {
@@ -54,7 +62,7 @@ public class OfferVolleyImpl implements OfferVolley {
                 params.put("email", newOffer.getEmail());
                 params.put("destination", newOffer.getDestination().getName().toString());
                 params.put("description", newOffer.getDescription());
-                params.put("date", String.format("%s '%s'", "DATE", new SimpleDateFormat("YYYY-MM-DD").format(newOffer.getDate())));
+                params.put("date", String.format("%s '%s'", "DATE", new SimpleDateFormat("yyyy-MM-dd").format(newOffer.getDate())));
                 return params;
             }
         };

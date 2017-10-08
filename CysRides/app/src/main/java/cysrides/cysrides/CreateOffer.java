@@ -151,8 +151,8 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
 
                 if(allValid) {
                     //TODO submit to database
-                    Offer o = new Offer(cost, "email", destination, description, new GregorianCalendar(day, month, year).getTime());
-                    offerVolley.createOffer(CreateOffer.this, o);
+                    Offer o = new Offer(cost, "email", destination, description, new GregorianCalendar(year, month, day).getTime());
+                    offerVolley.createOffer(CreateOffer.this, findViewById(R.id.drawer_layout), o);
                     finish();
                     startActivity(getIntent());
                 }
