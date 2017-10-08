@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -46,6 +47,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
     private DatePickerDialog.OnDateSetListener dateSetListener;
     private Place destination;
     private int year, month, day;
+    private boolean dateChanged = false;
     private String description;
     private double cost;
     private Intent i;
@@ -95,6 +97,22 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
                 DatePickerDialog datePickerDialog = new DatePickerDialog(CreateOffer.this,
                         android.R.style.Theme_Holo_Dialog_NoActionBar_MinWidth,
                         dateSetListener, year, month, day);
+
+                datePickerDialog.setCancelable(false);
+                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+
+                datePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == DialogInterface.BUTTON_NEGATIVE) {
+                            EditText editText = (EditText)findViewById(R.id.LeaveDate);
+                            if(!dateChanged) {
+                                year = 0;
+                                month = 0;
+                                day = 0;
+                            }
+                        }
+                    }
+                });
                 datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 datePickerDialog.show();
             }
@@ -105,7 +123,9 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
                 month++;
                 Log.d("CreateOffer", "onDateSet date: " + month + "/" + day + "/" + year);
                 String date = month + "/" + day + "/" + year;
-                displayDate.setText(date);
+                EditText editText = (EditText)findViewById(R.id.LeaveDate);
+                editText.setText(date);
+                dateChanged = true;
             }
         };
 
@@ -114,15 +134,33 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
             @Override
             public void onClick(View view) {
                 EditText data = (EditText) findViewById(R.id.Cost);
-                try {
-                    cost = Double.parseDouble(data.getText().toString());
+                boolean noDestination = null == destination;
+                boolean noCost = null == data.getText();
+                boolean noDate = 0 == year;
+                boolean allValid = false;
+
+                if (noDestination || noCost || noDate) {
+                    Snackbar.make(findViewById(R.id.submit), "All data fields required", Snackbar.LENGTH_LONG).show();
                 }
-                catch(Exception e) {
-                    cost = 0;
+                else {
+                    allValid = true;
+                    try {
+                        cost = Double.parseDouble(data.getText().toString());
+                    } catch (Exception e) {
+                        cost = 0;
+                        allValid = false;
+                        Snackbar.make(findViewById(R.id.submit), "Cost must be a decimal number", Snackbar.LENGTH_LONG).show();
+                    }
+
+                    data = (EditText) findViewById(R.id.Description);
+                    description = data.getText().toString();
                 }
 
-                data = (EditText) findViewById(R.id.Description);
-                description = data.getText().toString();
+                if (allValid) {
+                    //TODO submit to database
+                    finish();
+                    startActivity(getIntent());
+                }
             }
         });
 

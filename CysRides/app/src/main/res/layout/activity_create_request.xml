@@ -37,7 +37,7 @@
             <EditText android:id="@+id/numBags"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:inputType="numberDecimal"
+                android:inputType="numberSigned"
                 android:hint="Number of bags" />
 
             <EditText android:id="@+id/LeaveDate"
