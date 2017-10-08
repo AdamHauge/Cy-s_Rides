@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -90,8 +91,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         ConnectivityManager connMgr = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        if(null != networkInfo.getTypeName()) {
-            Snackbar.make(findViewById(R.id.drawer_layout), "Cy's Rides Requires Internet Access", Snackbar.LENGTH_INDEFINITE).show();
+
+        if(null == networkInfo) {
+            Snackbar mySnackbar = Snackbar.make(findViewById(R.id.drawer_layout),
+                    "Cy's Rides Requires Internet Connection", Snackbar.LENGTH_INDEFINITE);
+            
+            mySnackbar.setAction("Connect WIFI", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                    wifi.setWifiEnabled(true);
+                }
+            });
+            mySnackbar.show();
         }
     }
 
