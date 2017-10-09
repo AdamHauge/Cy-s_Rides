@@ -1,15 +1,20 @@
 package cysrides.cysrides;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +43,8 @@ public class CreateProfile extends AppCompatActivity {
     private String profileDescription;
 
     private UserVolley userVolley = new UserVolleyImpl();
+
+    private Intent i;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +76,34 @@ public class CreateProfile extends AppCompatActivity {
 
         userVolley.createUser(CreateProfile.this, findViewById(R.id.drawer_layout), user);
         finish();
-        startActivity(getIntent());
+        //i = new Intent(this, ConfirmationCodeDialog.class);
+        //startActivity(i);
+        //displayConfirmationInput();
+    }
+
+    public void displayConfirmationInput() {
+        AlertDialog.Builder builder;
+        builder = new AlertDialog.Builder(this);
+        final EditText input = new EditText(this);
+        builder.setView(input);
+        builder.setTitle("Confirmation Code")
+                .setMessage("Enter your four-digit confirmation code below: ")
+                .setPositiveButton("OKAY", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // continue with delete
+                        String inputCode = input.toString();
+                        if (inputCode.length() != 3) {
+                            Toast.makeText(CreateProfile.this, "You did not enter a four-digit number", Toast.LENGTH_LONG).show();
+                            //CROSS-REFERENCE CODE WITH USER CONFIRMATION CODE IN DATABASE
+                        }
+                    }
+                })
+                /*.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })*/
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 }
