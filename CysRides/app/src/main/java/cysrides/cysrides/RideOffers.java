@@ -13,18 +13,19 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import domain.Offer;
-import domain.Request;
-import domain.UserInfo;
-import domain.UserType;
 import service.OfferService;
 import service.OfferServiceImpl;
+import volley.OfferVolleyImpl;
 
 public class RideOffers extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -32,16 +33,17 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
 
     private ListView listView;
     private ArrayAdapter adapter;
-    private List<Offer> list = offerService.getOfferRequests(new UserInfo("rcerveny@iastate.edu", "password", 42, "Ryan", "Cerveny",
-                                                            "venmo","description", UserType.DRIVER, (float) 5.0,
-                                                            new ArrayList<Offer>(), new ArrayList<Request>()));
-    private List<String> destinationAndDescriptionList = new ArrayList<>();
+    private OfferVolleyImpl volley = new OfferVolleyImpl();
+    private List<Offer> list = new ArrayList<>();
+    private ArrayList<String> destinationAndDescriptionList = new ArrayList<>();
     private Intent i;
+
+    List<String> temp = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ride_requests);
+        setContentView(R.layout.activity_ride_offers);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -53,20 +55,32 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-//        listView = (ListView)findViewById(R.id.ride_offers_list);
+
+        listView = (ListView)findViewById(R.id.ride_offers_list);
+
+        for(int i = 0; i < 20; i++) {
+            temp.add("Item #" + (i + 1));
+        }
+
+        adapter = new ArrayAdapter(RideOffers.this, android.R.layout.simple_list_item_1, temp);
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getApplicationContext(), temp.get(position).toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+        //TODO this is blocked until volley.getOffers works
+//        list = volley.getOffers();
 //
-//        for(int i=0 ; i<list.size() ; i++) {
-//            String destinationAndDescription = "";
-//            destinationAndDescription += list.get(i).getDescription() + " " + list.get(i).getDestination();
-//            destinationAndDescriptionList.add(destinationAndDescription);
-//        }
-//
-//        adapter = new ArrayAdapter(RideOffers.this, android.R.layout.simple_list_item_1, destinationAndDescriptionList);
+//        adapter = new ArrayAdapter(RideOffers.this, android.R.layout.simple_list_item_1, list);
 //        listView.setAdapter(adapter);
 //        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //            @Override
 //            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Toast.makeText(getApplicationContext(), destinationAndDescriptionList.get(position).toString(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(), list.get(position).getDestination().getName(), Toast.LENGTH_SHORT).show();
 //            }
 //        });
     }
