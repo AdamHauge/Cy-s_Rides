@@ -18,16 +18,26 @@
 
       $sql = 'SELECT * FROM OFFER_TABLE;';
       $result = $conn->query($sql);
+      $jsonArr = array();
 
       if ($result->num_rows > 0) {
         // output data of each row
         while($row = $result->fetch_assoc()) {
-            echo "cost: " . $row["COST"]. " - Email: " . $row["EMAIL"]. "<br>";
+          array_push($jsonArr, $row);
         }
       } else {
           echo "0 results";
       }
+      
+      echo $json = json_encode($jsonArr);
 
+      // array_push($result, array(
+      //   "cost" => $rawResult['COST'],
+      //   "email" => $rawResult['EMAIL'],
+      //   "destination" => $rawResult['DESTINATION'],
+      //   "description" => $rawResult['DESCRIPTION'],
+      //   "date" => $rawResult['DATE']
+      // ));
 
 
 
