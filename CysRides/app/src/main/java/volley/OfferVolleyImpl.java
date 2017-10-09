@@ -16,7 +16,6 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
@@ -70,16 +69,15 @@ public class OfferVolleyImpl implements OfferVolley {
 
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
-    public List<Offer> GetOffers() {
+
+    @Override
+    public List<Offer> getOffers() {
         List<Offer> offers = new ArrayList<>();
         JsonObjectRequest jsonRequest = new JsonObjectRequest(getOffersUrl,new JSONObject(),
               new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response){
                     //DO STUFF
-
-
-                    
 
                 }
               },
