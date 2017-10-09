@@ -46,7 +46,7 @@ public class CreateProfile extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         netIDView = (EditText) findViewById(R.id.NetID);
-        passwordView = (EditText) findViewById(R.id.password);
+        passwordView = (EditText) findViewById(R.id.Password);
         fNameView = (EditText) findViewById(R.id.First_Name);
         lNameView = (EditText) findViewById(R.id.Last_Name);
         venmoView = (EditText) findViewById(R.id.Venmo);
@@ -54,7 +54,7 @@ public class CreateProfile extends AppCompatActivity {
     }
 
     public void onCreateProfileButtonClicked(View view) {
-        /*netID = netIDView.getText().toString();
+        netID = netIDView.getText().toString();
         password = passwordView.getText().toString();
         firstName = fNameView.getText().toString();
         lastName = lNameView.getText().toString();
@@ -69,6 +69,6 @@ public class CreateProfile extends AppCompatActivity {
 
         userVolley.createUser(CreateProfile.this, findViewById(R.id.drawer_layout), user);
         finish();
-        startActivity(getIntent());*/
+        startActivity(getIntent());
     }
 }

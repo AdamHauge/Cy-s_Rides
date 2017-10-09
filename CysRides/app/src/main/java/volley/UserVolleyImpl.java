@@ -41,7 +41,7 @@ public class UserVolleyImpl implements UserVolley {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("net-ID", user.getNetID()+"");
+                params.put("net-ID", user.getNetID());
                 params.put("password", user.getPassword());
                 params.put("confirmation code", user.confirmationCodeToString(user.getConfirmationCode()));
                 params.put("first name", user.getFirstName());
