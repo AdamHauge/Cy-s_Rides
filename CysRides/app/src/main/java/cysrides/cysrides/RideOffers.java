@@ -18,7 +18,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -50,7 +49,8 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
     private ListView listView;
     private ArrayAdapter adapter;
     private OfferVolleyImpl volley = new OfferVolleyImpl();
-    private List<Offer> list = new ArrayList<>();
+    private List<Offer> offers = new ArrayList<>();
+    private List<String> list = new ArrayList<>();
     private ArrayList<String> destinationAndDescriptionList = new ArrayList<>();
     private Intent i;
 
@@ -74,30 +74,16 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
 
         listView = (ListView)findViewById(R.id.ride_offers_list);
 
-        for(int i = 0; i < 20; i++) {
-            temp.add("Item #" + (i + 1));
-        }
-
-        adapter = new ArrayAdapter(RideOffers.this, android.R.layout.simple_list_item_1, temp);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getApplicationContext(), temp.get(position).toString(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
         //TODO this is blocked until volley.getOffers works
 
 //        volley.getOffers(RideOffers.this, new ListenerService() {
 //            @Override
 //            public void onResponseReceived(List<Offer> offers) {
 //                Log.d("response", offers.size()+"");
-//                list = offers;
+//                offers = offers;
 //            }
 //        });
-        list = new ArrayList<>();
+        offers = new ArrayList<>();
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, "http://proj-309-sa-b-5.cs.iastate.edu/getOffer.php", null,
                 new Response.Listener<JSONArray>() {
@@ -123,18 +109,27 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
                                     e.printStackTrace();
                                 }
                                 Offer offer = new Offer(cost, email, destination, description, date);
-                                list.add(offer);
-                                Log.d("size", list.size()+"");
+                                offers.add(offer);
+                                Log.d("size", offers.size()+"");
                             }
-                            Log.d("size2", list.size()+"");
+                            Log.d("size2", offers.size()+"");
+                            
+                            for(int i = 0; i < offers.size(); i++) {
+                                list.add(offers.get(i).getDescription());
+                            }
+
                             adapter = new ArrayAdapter(RideOffers.this, android.R.layout.simple_list_item_1, list);
                             listView.setAdapter(adapter);
-//                            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                                @Override
-//                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                                    Toast.makeText(getApplicationContext(), list.get(position).getDescription(), Toast.LENGTH_SHORT).show();
-//                                }
-//                            });
+                            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                    AlertDialog.Builder alert = new AlertDialog.Builder(RideOffers.this);
+                                    alert.setTitle("Offer Info");
+                                    alert.setMessage(offers.get(position).toString());
+                                    alert.setNegativeButton(android.R.string.no, null);
+                                    alert.show();
+                                }
+                            });
 
                         }catch (JSONException e){
                             e.printStackTrace();
@@ -152,12 +147,12 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
 
         MySingleton.getInstance(RideOffers.this).addToRequestQueue(jsonArrayRequest);
 
-//        adapter = new ArrayAdapter(RideOffers.this, android.R.layout.simple_list_item_1, list);
+//        adapter = new ArrayAdapter(RideOffers.this, android.R.layout.simple_list_item_1, offers);
 //        listView.setAdapter(adapter);
 //        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //            @Override
 //            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Toast.makeText(getApplicationContext(), list.get(position).getDescription(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(), offers.get(position).getDescription(), Toast.LENGTH_SHORT).show();
 //            }
 //        });
     }
