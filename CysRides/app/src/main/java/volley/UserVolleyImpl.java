@@ -16,12 +16,12 @@ import domain.UserInfo;
 public class UserVolleyImpl implements UserVolley {
     private String serverUrl = "http://proj-309-sa-b-5.cs.iastate.edu/createUser.php";
     private String serverUrl2 = "http://proj-309-sa-b-5.cs.iastate.edu/getUser.php";
-    private UserInfo user;
+    private UserInfo currentUser;
     private Context currentContext;
 
     @Override
-    public void createUser(Context context, View view, final UserInfo user) {
-        this.user = user;
+    public void createUser(Context context, final UserInfo user) {
+        currentUser = user;
         currentContext = context;
         StringRequest stringRequest = new StringRequest(Request.Method.POST, serverUrl,
                 new Response.Listener<String>() {
@@ -41,15 +41,15 @@ public class UserVolleyImpl implements UserVolley {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("net-ID", user.getNetID());
-                params.put("password", user.getPassword());
-                params.put("confirmation code", user.confirmationCodeToString(user.getConfirmationCode()));
-                params.put("first name", user.getFirstName());
-                params.put("last name", user.getLastName());
-                params.put("venmo name", user.getVenmoName());
-                params.put("profile description", user.getProfileDescription());
-                params.put("user type", user.getUserType().toString());
-                params.put("user rating", user.ratingToString(user.getUserRating()));
+                params.put("netID", currentUser.getNetID());
+                params.put("userPassword", currentUser.getPassword());
+                params.put("confirmationCode", currentUser.getConfirmationCode());
+                params.put("firstName", currentUser.getFirstName());
+                params.put("lastName", currentUser.getLastName());
+                params.put("venmo", currentUser.getVenmoName());
+                params.put("profileDescription", currentUser.getProfileDescription());
+                params.put("userType", currentUser.getUserType().toString());
+                params.put("userRating", currentUser.ratingToString(currentUser.getUserRating()));
                 return params;
             }
         };

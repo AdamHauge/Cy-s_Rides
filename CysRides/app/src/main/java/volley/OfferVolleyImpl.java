@@ -1,9 +1,6 @@
 package volley;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -13,18 +10,22 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
+import com.google.android.gms.location.places.Place;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cysrides.cysrides.R;
 import domain.Offer;
 
 public class OfferVolleyImpl implements OfferVolley {
@@ -34,6 +35,7 @@ public class OfferVolleyImpl implements OfferVolley {
     private Offer newOffer;
     private Context currentContext;
     private View currentView;
+    private List<Offer> offers;
 
     @Override
     public void createOffer(Context context, View view, Offer offer) {
@@ -71,25 +73,53 @@ public class OfferVolleyImpl implements OfferVolley {
     }
 
     @Override
-    public List<Offer> getOffers() {
-        List<Offer> offers = new ArrayList<>();
-        JsonObjectRequest jsonRequest = new JsonObjectRequest(getOffersUrl,new JSONObject(),
-              new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response){
-                    //DO STUFF
+    public List<Offer> getOffers(Context context) {
+        offers = new ArrayList<>();
 
+        currentContext = context;
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, getOffersUrl, null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try{
+                            for(int i=0;i<response.length();i++){
+                                Log.d("JOSN",response.toString());
+                                JSONObject jsonOffer = response.getJSONObject(i);
+
+                                String id = jsonOffer.getString("ID");
+                                String stringCost = jsonOffer.getString("COST");
+                                double cost = Double.parseDouble(stringCost);
+                                String email = jsonOffer.getString("EMAIL");
+                                String stringDestination = jsonOffer.getString("DESTINATION");
+                                Place destination = null;
+                                String description = jsonOffer.getString("DESCRIPTION");
+                                String stringDate = jsonOffer.getString("DATE");
+                                Date date =  new Date();
+                                try {
+                                    date = new SimpleDateFormat("yyyy-MM-dd").parse(stringDate);
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                                Offer offer = new Offer(cost, email, destination, description, date);
+                                offers.add(offer);
+                                Log.d("size", offers.size()+"");
+                            }
+                        }catch (JSONException e){
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error){
+                        VolleyLog.e("Error: ", error.getMessage());
+                        error.printStackTrace();
+                    }
                 }
-              },
-              new Response.ErrorListener(){
-                 @Override
-                  public void onErrorResponse(VolleyError error){
-                     VolleyLog.e("Error: ", error.getMessage());
-                 }
-              });
+        );
 
-
-        MySingleton.getInstance(currentContext).addToRequestQueue(jsonRequest);
+        MySingleton.getInstance(currentContext).addToRequestQueue(jsonArrayRequest);
+        Log.d("offers2.0",offers.size()+"");
         return offers;
     }
 

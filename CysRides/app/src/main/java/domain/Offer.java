@@ -32,15 +32,23 @@ public class Offer {
     }
 
     //TODO Check if it prints correctly I changed date to a Date instead of a String and got rid of usertype, my b
+//    @Override
+//    public String toString() {
+//        return "Offer{" +
+//                ", cost=" + cost +
+//                ", email=" + email +
+//                ", destination='" + destination + '\'' +
+//                ", description='" + description + '\'' +
+//                ", date='" + date + '\'' +
+//                '}';
+//    }
+
     @Override
     public String toString() {
-        return "Offer{" +
-                ", cost=" + cost +
-                ", email=" + email +
-                ", destination='" + destination + '\'' +
-                ", description='" + description + '\'' +
-                ", date='" + date + '\'' +
-                '}';
+        return "cost=" + cost +
+                "\nemail=" + email +
+                "\ndescription=" + description +
+                "\ndate=" + date;
     }
 
     public double getCost() {
