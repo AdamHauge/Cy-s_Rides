@@ -16,10 +16,13 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import cysrides.cysrides.R;
@@ -67,13 +70,16 @@ public class OfferVolleyImpl implements OfferVolley {
 
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
-    public Offer[] GetOffers() {
-        Offer[] offers = {};
+    public List<Offer> GetOffers() {
+        List<Offer> offers = new ArrayList<>();
         JsonObjectRequest jsonRequest = new JsonObjectRequest(getOffersUrl,new JSONObject(),
               new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response){
                     //DO STUFF
+
+
+                    
 
                 }
               },
