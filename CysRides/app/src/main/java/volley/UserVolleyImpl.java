@@ -43,7 +43,7 @@ public class UserVolleyImpl implements UserVolley {
                 Map<String, String> params = new HashMap<>();
                 params.put("netID", user.getNetID());
                 params.put("userPassword", user.getPassword());
-                params.put("confirmationCode", user.confirmationCodeToString(user.getConfirmationCode()));
+                params.put("confirmationCode", user.getConfirmationCode());
                 params.put("firstName", user.getFirstName());
                 params.put("lastName", user.getLastName());
                 params.put("venmo", user.getVenmoName());

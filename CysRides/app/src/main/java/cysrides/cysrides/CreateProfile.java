@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import domain.Offer;
 import domain.Request;
@@ -41,6 +42,7 @@ public class CreateProfile extends AppCompatActivity {
     private String lastName;
     private String venmo;
     private String profileDescription;
+    private String confirmationCode;
 
     private UserVolley userVolley = new UserVolleyImpl();
 
@@ -62,23 +64,32 @@ public class CreateProfile extends AppCompatActivity {
 
     public void onCreateProfileButtonClicked(View view) {
         netID = netIDView.getText().toString();
+        if(!isEmailValid(netID)){
+            Toast.makeText(CreateProfile.this, "You did not enter an iastate.edu email", Toast.LENGTH_LONG).show();
+        }
         password = passwordView.getText().toString();
+        if(!isPasswordValid(password)){
+            Toast.makeText(CreateProfile.this, "You did not enter a valid password", Toast.LENGTH_LONG).show();
+        }
         firstName = fNameView.getText().toString();
         lastName = lNameView.getText().toString();
         venmo = venmoView.getText().toString();
         profileDescription = profileDescriptionView.getText().toString();
+        Random rand = new Random();
+        confirmationCode = String.format("%04d", rand.nextInt(10000));
 
         List<Offer> offers = new ArrayList<Offer>();
         List<Request> requests = new ArrayList<Request>();
 
-        UserInfo user = new UserInfo(netID, password, 1111, firstName, lastName, venmo, profileDescription,
-                UserType.DRIVER, 5, offers, requests);
-
-        userVolley.createUser(CreateProfile.this, findViewById(R.id.drawer_layout), user);
-        finish();
-        //i = new Intent(this, ConfirmationCodeDialog.class);
-        //startActivity(i);
-        //displayConfirmationInput();
+        if(isEmailValid(netID) && isPasswordValid(password)){
+            UserInfo user = new UserInfo(netID, password, confirmationCode, firstName, lastName, venmo, profileDescription,
+                    UserType.DRIVER, 5, offers, requests);
+            userVolley.createUser(CreateProfile.this, findViewById(R.id.drawer_layout), user);
+            finish();
+            //i = new Intent(this, ConfirmationCodeDialog.class);
+            //startActivity(i);
+            displayConfirmationInput();
+        }
     }
 
     public void displayConfirmationInput() {
@@ -98,12 +109,28 @@ public class CreateProfile extends AppCompatActivity {
                         }
                     }
                 })
-                /*.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                .setNegativeButton("BACK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // do nothing
                     }
-                })*/
+                })
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
+    }
+
+    private boolean isEmailValid(String email) {
+        return email.contains("@iastate.edu");
+    }
+
+
+    private boolean isPasswordValid(String password) {
+        if (password.length() > 8){
+            for (int i = 0; i < password.length(); i++) {
+                if (Character.isDigit(password.charAt(i))) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

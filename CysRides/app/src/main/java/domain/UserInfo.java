@@ -7,7 +7,7 @@ public class UserInfo {
 
     private String netID;
     private String password;
-    private int confirmationCode;
+    private String confirmationCode;
     private String firstName;
     private String lastName;
     private String venmoName;
@@ -17,7 +17,7 @@ public class UserInfo {
     private List<Offer> offers;
     private List<Request> requests;
 
-    public UserInfo(String netID, String password, int confirmationCode, String firstName, String lastName, String venmoName,
+    public UserInfo(String netID, String password, String confirmationCode, String firstName, String lastName, String venmoName,
                     String profileDescription, UserType userType, float userRating, List<Offer> offers, List<Request> requests) {
         this.netID = netID;
         this.password = password;
@@ -36,7 +36,7 @@ public class UserInfo {
     public UserInfo toUserInfo(String userInfoString) {
         String netID = "";
         String password = "";
-        int confirmationCode = 0;
+        String confirmationCode = "";
         String firstName = "";
         String lastName = "";
         String venmoName = "";
@@ -92,11 +92,11 @@ public class UserInfo {
         this.password = password;
     }
 
-    public int getConfirmationCode() {
+    public String getConfirmationCode() {
         return confirmationCode;
     }
 
-    public void setConfirmationCode(int confirmationCode) {
+    public void setConfirmationCode(String confirmationCode) {
         this.confirmationCode = confirmationCode;
     }
 
