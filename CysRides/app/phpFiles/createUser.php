@@ -24,14 +24,12 @@
 
         $conn = new mysqli($host, $username, $password, $dbname, $port, $socket) or die('Could not connect to database server'.mysqli_connect_error);
 
-        $sql = "INSERT INTO USER_TABLE (NETID, PASSWORD, CONFIRMATION_CODE, FIRST_NAME, LAST_NAME, VENMO, PROFILE_DESCRIPTION, USER_TYPE, USER_RATING)
-                VALUES('".$netID."','".$password."',".$confirmationCode.",'".$firstName."','".$lastName."','".$venmo."','".$profileDescription."',
-                '".$userType."',".$userRating.");";
+        $sql = "INSERT INTO USER_TABLE (NETID, PASSWORD, CONFIRMATION_CODE, FIRST_NAME, LAST_NAME, VENMO, PROFILE_DESCRIPTION, USER_TYPE, USER_RATING) VALUES('".$netID."','".$password."',".$confirmationCode.",'".$firstName."','".$lastName."','".$venmo."','".$profileDescription."','".$userType."',".$userRating.");";
 
         if(mysqli_query($conn,$sql)) {
             echo "Data insertion success...";
         } else {
-            echo "Error while insertion..." . $cost . $email. $destination. $description . $date;
+            echo "Error while insertion..." . $sql;
         }
 
         mysqli_close($conn);

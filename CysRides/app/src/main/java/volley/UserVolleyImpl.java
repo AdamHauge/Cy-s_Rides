@@ -1,6 +1,7 @@
 package volley;
 
 import android.content.Context;
+import android.view.View;
 import android.widget.Toast;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -19,7 +20,7 @@ public class UserVolleyImpl implements UserVolley {
     private Context currentContext;
 
     @Override
-    public void createUser(Context context, final UserInfo user) {
+    public void createUser(Context context, View view, final UserInfo user) {
         this.user = user;
         currentContext = context;
         StringRequest stringRequest = new StringRequest(Request.Method.POST, serverUrl,
@@ -40,7 +41,7 @@ public class UserVolleyImpl implements UserVolley {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("net-ID", user.getNetID()+"");
+                params.put("net-ID", user.getNetID());
                 params.put("password", user.getPassword());
                 params.put("confirmation code", user.confirmationCodeToString(user.getConfirmationCode()));
                 params.put("first name", user.getFirstName());
@@ -57,7 +58,7 @@ public class UserVolleyImpl implements UserVolley {
     }
 
     @Override
-    public void getUser(Context context, final UserInfo user) {
+    public void getUser(Context context, View view, final UserInfo user) {
 
 
     }
