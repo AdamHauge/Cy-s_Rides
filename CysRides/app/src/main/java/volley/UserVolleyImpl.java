@@ -20,7 +20,7 @@ public class UserVolleyImpl implements UserVolley {
     private Context currentContext;
 
     @Override
-    public void createUser(Context context, View view, final UserInfo user) {
+    public void createUser(Context context, final UserInfo user) {
         currentUser = user;
         currentContext = context;
         StringRequest stringRequest = new StringRequest(Request.Method.POST, serverUrl,
@@ -49,7 +49,7 @@ public class UserVolleyImpl implements UserVolley {
                 params.put("venmo", currentUser.getVenmoName());
                 params.put("profileDescription", currentUser.getProfileDescription());
                 params.put("userType", currentUser.getUserType().toString());
-                params.put("userRating", currentUser.ratingToString(user.getUserRating()));
+                params.put("userRating", currentUser.ratingToString(currentUser.getUserRating()));
                 return params;
             }
         };

@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class CreateProfile extends AppCompatActivity {
     private EditText lNameView;
     private EditText venmoView;
     private EditText profileDescriptionView;
+    private RadioButton driverRadioButton;
 
     private String netID;
     private String password;
@@ -43,6 +45,7 @@ public class CreateProfile extends AppCompatActivity {
     private String venmo;
     private String profileDescription;
     private String confirmationCode;
+    private UserType userType;
 
     private UserVolley userVolley = new UserVolleyImpl();
 
@@ -60,6 +63,7 @@ public class CreateProfile extends AppCompatActivity {
         lNameView = (EditText) findViewById(R.id.Last_Name);
         venmoView = (EditText) findViewById(R.id.Venmo);
         profileDescriptionView = (EditText) findViewById(R.id.Description);
+        driverRadioButton = (RadioButton) findViewById(R.id.driverRadioButton);
     }
 
     public void onCreateProfileButtonClicked(View view) {
@@ -77,19 +81,29 @@ public class CreateProfile extends AppCompatActivity {
         profileDescription = profileDescriptionView.getText().toString();
         Random rand = new Random();
         confirmationCode = String.format("%04d", rand.nextInt(10000));
+        if(driverRadioButton.isChecked()){
+            userType = UserType.DRIVER;
+        }
+        else{
+            userType = UserType.PASSENGER;
+        }
 
         List<Offer> offers = new ArrayList<Offer>();
         List<Request> requests = new ArrayList<Request>();
 
         if(isEmailValid(netID) && isPasswordValid(password)){
             UserInfo user = new UserInfo(netID, password, confirmationCode, firstName, lastName, venmo, profileDescription,
-                    UserType.DRIVER, 5, offers, requests);
-            userVolley.createUser(CreateProfile.this, findViewById(R.id.drawer_layout), user);
+                    userType, 0, offers, requests);
+            userVolley.createUser(CreateProfile.this, user);
             finish();
             //i = new Intent(this, ConfirmationCodeDialog.class);
             //startActivity(i);
             displayConfirmationInput();
+
+            i = new Intent(this, ViewProfile.class);
+            startActivity(i);
         }
+
     }
 
     public void displayConfirmationInput() {
