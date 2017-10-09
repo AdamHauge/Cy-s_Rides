@@ -115,7 +115,13 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
                             Log.d("size2", offers.size()+"");
                             
                             for(int i = 0; i < offers.size(); i++) {
-                                list.add(offers.get(i).getDescription());
+                                String desc = offers.get(i).getDescription();
+                                if(0 == desc.length()) {
+                                    list.add("**No description given**");
+                                }
+                                else {
+                                    list.add(desc);
+                                }
                             }
 
                             adapter = new ArrayAdapter(RideOffers.this, android.R.layout.simple_list_item_1, list);
