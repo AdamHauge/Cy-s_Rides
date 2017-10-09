@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,12 +20,27 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.google.android.gms.location.places.Place;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import domain.Offer;
 import service.OfferService;
 import service.OfferServiceImpl;
+import volley.MySingleton;
 import volley.OfferVolleyImpl;
 
 public class RideOffers extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -73,14 +89,75 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
 
 
         //TODO this is blocked until volley.getOffers works
-//        list = volley.getOffers();
-//
+
+//        volley.getOffers(RideOffers.this, new ListenerService() {
+//            @Override
+//            public void onResponseReceived(List<Offer> offers) {
+//                Log.d("response", offers.size()+"");
+//                list = offers;
+//            }
+//        });
+        list = new ArrayList<>();
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, "http://proj-309-sa-b-5.cs.iastate.edu/getOffer.php", null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try{
+                            for(int i=0;i<response.length();i++){
+                                Log.d("JOSN",response.toString());
+                                JSONObject jsonOffer = response.getJSONObject(i);
+
+                                String id = jsonOffer.getString("ID");
+                                String stringCost = jsonOffer.getString("COST");
+                                double cost = Double.parseDouble(stringCost);
+                                String email = jsonOffer.getString("EMAIL");
+                                String stringDestination = jsonOffer.getString("DESTINATION");
+                                Place destination = null;
+                                String description = jsonOffer.getString("DESCRIPTION");
+                                String stringDate = jsonOffer.getString("DATE");
+                                Date date =  new Date();
+                                try {
+                                    date = new SimpleDateFormat("yyyy-MM-dd").parse(stringDate);
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                                Offer offer = new Offer(cost, email, destination, description, date);
+                                list.add(offer);
+                                Log.d("size", list.size()+"");
+                            }
+                            Log.d("size2", list.size()+"");
+                            adapter = new ArrayAdapter(RideOffers.this, android.R.layout.simple_list_item_1, list);
+                            listView.setAdapter(adapter);
+//                            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                                @Override
+//                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                                    Toast.makeText(getApplicationContext(), list.get(position).getDescription(), Toast.LENGTH_SHORT).show();
+//                                }
+//                            });
+
+                        }catch (JSONException e){
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error){
+                        VolleyLog.e("Error: ", error.getMessage());
+                        error.printStackTrace();
+                    }
+                }
+        );
+
+        MySingleton.getInstance(RideOffers.this).addToRequestQueue(jsonArrayRequest);
+
 //        adapter = new ArrayAdapter(RideOffers.this, android.R.layout.simple_list_item_1, list);
 //        listView.setAdapter(adapter);
 //        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //            @Override
 //            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Toast.makeText(getApplicationContext(), list.get(position).getDestination().getName(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(), list.get(position).getDescription(), Toast.LENGTH_SHORT).show();
 //            }
 //        });
     }
