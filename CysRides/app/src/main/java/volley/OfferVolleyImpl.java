@@ -19,7 +19,9 @@ import com.android.volley.toolbox.StringRequest;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import cysrides.cysrides.R;
@@ -67,8 +69,10 @@ public class OfferVolleyImpl implements OfferVolley {
 
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
-    public Offer[] GetOffers() {
-        Offer[] offers = {};
+
+    @Override
+    public List<Offer> getOffers() {
+        List<Offer> offers = new ArrayList<>();
         JsonObjectRequest jsonRequest = new JsonObjectRequest(getOffersUrl,new JSONObject(),
               new Response.Listener<JSONObject>() {
                 @Override
