@@ -16,12 +16,12 @@ import domain.UserInfo;
 public class UserVolleyImpl implements UserVolley {
     private String serverUrl = "http://proj-309-sa-b-5.cs.iastate.edu/createUser.php";
     private String serverUrl2 = "http://proj-309-sa-b-5.cs.iastate.edu/getUser.php";
-    private UserInfo user;
+    private UserInfo currentUser;
     private Context currentContext;
 
     @Override
     public void createUser(Context context, View view, final UserInfo user) {
-        this.user = user;
+        currentUser = user;
         currentContext = context;
         StringRequest stringRequest = new StringRequest(Request.Method.POST, serverUrl,
                 new Response.Listener<String>() {
@@ -41,15 +41,15 @@ public class UserVolleyImpl implements UserVolley {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("netID", user.getNetID());
-                params.put("userPassword", user.getPassword());
-                params.put("confirmationCode", user.getConfirmationCode());
-                params.put("firstName", user.getFirstName());
-                params.put("lastName", user.getLastName());
-                params.put("venmo", user.getVenmoName());
-                params.put("profileDescription", user.getProfileDescription());
-                params.put("userType", user.getUserType().toString());
-                params.put("userRating", user.ratingToString(user.getUserRating()));
+                params.put("netID", currentUser.getNetID());
+                params.put("userPassword", currentUser.getPassword());
+                params.put("confirmationCode", currentUser.getConfirmationCode());
+                params.put("firstName", currentUser.getFirstName());
+                params.put("lastName", currentUser.getLastName());
+                params.put("venmo", currentUser.getVenmoName());
+                params.put("profileDescription", currentUser.getProfileDescription());
+                params.put("userType", currentUser.getUserType().toString());
+                params.put("userRating", currentUser.ratingToString(user.getUserRating()));
                 return params;
             }
         };
