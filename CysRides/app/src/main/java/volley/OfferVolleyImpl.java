@@ -73,7 +73,7 @@ public class OfferVolleyImpl implements OfferVolley {
     }
 
     @Override
-    public List<Offer> getOffers(Context context, final ListenerService listenerService) {
+    public List<Offer> getOffers(Context context) {
         offers = new ArrayList<>();
 
         currentContext = context;
@@ -107,7 +107,6 @@ public class OfferVolleyImpl implements OfferVolley {
                         }catch (JSONException e){
                             e.printStackTrace();
                         }
-                        listenerService.onResponseReceived(offers);
                     }
                 },
                 new Response.ErrorListener(){

@@ -9,5 +9,5 @@ import domain.Offer;
 
 public interface OfferVolley {
     void createOffer(Context context, View view, Offer offer);
-    List<Offer> getOffers(Context context, ListenerService listenerService);
+    List<Offer> getOffers(Context context);
 }
