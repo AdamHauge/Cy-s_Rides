@@ -34,14 +34,12 @@ public class OfferVolleyImpl implements OfferVolley {
     private String getOffersUrl = "http://proj-309-sa-b-5.cs.iastate.edu/getOffer.php";
     private Offer newOffer;
     private Context currentContext;
-    private View currentView;
     private List<Offer> offers;
 
     @Override
-    public void createOffer(Context context, View view, Offer offer) {
+    public void createOffer(Context context, Offer offer) {
         newOffer = offer;
         currentContext = context;
-        currentView = view;
         StringRequest stringRequest = new StringRequest(Request.Method.POST, createOfferUrl,
                 new Response.Listener<String>() {
                     @Override

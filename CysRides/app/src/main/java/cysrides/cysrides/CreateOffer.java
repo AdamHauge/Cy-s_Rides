@@ -32,6 +32,8 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import domain.Offer;
+import service.OfferService;
+import service.OfferServiceImpl;
 import volley.OfferVolley;
 import volley.OfferVolleyImpl;
 
@@ -44,7 +46,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
     private String description;
     private double cost;
     private Intent i;
-    private OfferVolley offerVolley = new OfferVolleyImpl();
+    private OfferService offerService = new OfferServiceImpl();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,7 +156,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
                 if(allValid) {
                     //TODO submit to database
                     Offer o = new Offer(cost, "email", destination, description, new GregorianCalendar(year, month, day).getTime());
-                    offerVolley.createOffer(CreateOffer.this, findViewById(R.id.drawer_layout), o);
+                    offerService.createOffer(CreateOffer.this, o);
                     finish();
                     startActivity(getIntent());
                 }

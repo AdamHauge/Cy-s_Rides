@@ -1,26 +1,22 @@
 package service;
 
+import android.content.Context;
+
 import java.util.List;
 
 import domain.Offer;
 import domain.UserInfo;
 import domain.UserType;
+import volley.OfferVolley;
+import volley.OfferVolleyImpl;
 
 public class OfferServiceImpl implements OfferService {
 
-    @Override
-    public List<Offer> getOfferRequests(UserInfo userInfo) {
-        List<Offer> offerList;
-        if(userInfo.getUserType().equals(UserType.DRIVER)) {
-            //offerList = getDriverOfferRequests();
-        } else if(userInfo.getUserType().equals(UserType.PASSENGER)) {
-            //offerList = getPassengerOfferRequests();
-        } else {
-            return null;
-        }
+    OfferVolley offerVolley = new OfferVolleyImpl();
 
-        return null;
-        //return offerList;
+    @Override
+    public void createOffer(Context context, Offer offer) {
+        offerVolley.createOffer(context, offer);
     }
 
     //protected List<Offer> getDriverOfferRequests() {
