@@ -1,10 +1,12 @@
 package service;
 
+import android.content.Context;
+
 import java.util.List;
 
 import domain.Offer;
 import domain.UserInfo;
 
 public interface OfferService {
-    List<Offer> getOfferRequests(UserInfo userInfo);
+    void createOffer(Context context, Offer offer);
 }

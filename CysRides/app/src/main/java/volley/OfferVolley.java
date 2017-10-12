@@ -8,6 +8,6 @@ import java.util.List;
 import domain.Offer;
 
 public interface OfferVolley {
-    void createOffer(Context context, View view, Offer offer);
+    void createOffer(Context context, Offer offer);
     List<Offer> getOffers(Context context);
 }
