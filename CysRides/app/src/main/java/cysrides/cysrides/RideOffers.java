@@ -25,6 +25,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.google.android.gms.location.places.Place;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -91,7 +92,6 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
                     public void onResponse(JSONArray response) {
                         try{
                             for(int i=0;i<response.length();i++){
-                                Log.d("JOSN",response.toString());
                                 JSONObject jsonOffer = response.getJSONObject(i);
 
                                 String id = jsonOffer.getString("ID");
@@ -99,6 +99,11 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
                                 double cost = Double.parseDouble(stringCost);
                                 String email = jsonOffer.getString("EMAIL");
                                 String destination = jsonOffer.getString("DESTINATION");
+                                String stringLat = jsonOffer.getString("LATITUDE");
+                                double latitude = Double.parseDouble(stringLat);
+                                String stringLng = jsonOffer.getString("LATITUDE");
+                                double longitude = Double.parseDouble(stringLng);
+                                LatLng coordinates = new LatLng(latitude, longitude);
                                 String description = jsonOffer.getString("DESCRIPTION");
                                 String stringDate = jsonOffer.getString("DATE");
                                 Date date =  new Date();
@@ -107,11 +112,10 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
                                 } catch (ParseException e) {
                                     e.printStackTrace();
                                 }
-                                Offer offer = new Offer(cost, email, destination, null, description, date);
+                                Offer offer = new Offer(cost, email, destination, coordinates, description, date);
+                                Log.d("Coordinates: ", coordinates.toString());
                                 offers.add(offer);
-                                Log.d("size", offers.size()+"");
                             }
-                            Log.d("size2", offers.size()+"");
                             
                             for(int i = 0; i < offers.size(); i++) {
                                 String desc = offers.get(i).getDescription();
@@ -123,7 +127,7 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
                                 }
                             }
 
-                            adapter = new ArrayAdapter(RideOffers.this, android.R.layout.simple_list_item_1, list);
+                            adapter = new ArrayAdapter<>(RideOffers.this, android.R.layout.simple_list_item_1, list);
                             listView.setAdapter(adapter);
                             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                 @Override

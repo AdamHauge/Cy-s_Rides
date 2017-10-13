@@ -92,6 +92,7 @@ public class Offer {
 //        i.putExtra("UserName", o.getUser().getFirstName() + " " + o.getUser().getLastName());
         i.putExtra("Email", o.getEmail());
         i.putExtra("Dest", o.getDestination());
+        i.putExtra("LatLng", o.getCoordinates());
         i.putExtra("Cost", Double.toString(o.getCost()));
         i.putExtra("Date", o.getDate());
         i.putExtra("Description", o.getDescription());

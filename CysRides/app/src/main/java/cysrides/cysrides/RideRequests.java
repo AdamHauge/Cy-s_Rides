@@ -35,9 +35,9 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
 
     private ListView listView;
     private ArrayAdapter adapter;
-    private List<Offer> list = offerService.getOfferRequests(new UserInfo("rcerveny@iastate.edu", "password", "0042", "Ryan", "Cerveny",
-                                                            "venmo","description", UserType.DRIVER, (float) 5.0,
-                                                             new ArrayList<Offer>(), new ArrayList<Request>()));
+    private List<Offer> list = null; //offerService.getOfferRequests(new UserInfo("rcerveny@iastate.edu", "password", "0042", "Ryan", "Cerveny",
+//                                                            "venmo","description", UserType.DRIVER, (float) 5.0,
+//                                                             new ArrayList<Offer>(), new ArrayList<Request>()));
     private List<String> destinationAndDescriptionList = new ArrayList<>();
     private Intent i;
 
