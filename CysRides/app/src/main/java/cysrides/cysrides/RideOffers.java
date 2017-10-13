@@ -98,8 +98,7 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
                                 String stringCost = jsonOffer.getString("COST");
                                 double cost = Double.parseDouble(stringCost);
                                 String email = jsonOffer.getString("EMAIL");
-                                String stringDestination = jsonOffer.getString("DESTINATION");
-                                Place destination = null;
+                                String destination = jsonOffer.getString("DESTINATION");
                                 String description = jsonOffer.getString("DESCRIPTION");
                                 String stringDate = jsonOffer.getString("DATE");
                                 Date date =  new Date();
@@ -108,7 +107,7 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
                                 } catch (ParseException e) {
                                     e.printStackTrace();
                                 }
-                                Offer offer = new Offer(cost, email, destination, description, date);
+                                Offer offer = new Offer(cost, email, destination, null, description, date);
                                 offers.add(offer);
                                 Log.d("size", offers.size()+"");
                             }

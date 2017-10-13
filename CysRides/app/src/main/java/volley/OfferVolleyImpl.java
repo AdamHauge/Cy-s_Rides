@@ -60,7 +60,7 @@ public class OfferVolleyImpl implements OfferVolley {
                 Map<String, String> params = new HashMap<>();
                 params.put("cost", newOffer.getCost()+"");
                 params.put("email", newOffer.getEmail());
-                params.put("destination", newOffer.getDestination().getName().toString());
+                params.put("destination", newOffer.getDestination());
                 params.put("description", newOffer.getDescription());
                 params.put("date", String.format("%s '%s'", "DATE", new SimpleDateFormat("yyyy-MM-dd").format(newOffer.getDate())));
                 return params;
@@ -89,7 +89,7 @@ public class OfferVolleyImpl implements OfferVolley {
                                 double cost = Double.parseDouble(stringCost);
                                 String email = jsonOffer.getString("EMAIL");
                                 String stringDestination = jsonOffer.getString("DESTINATION");
-                                Place destination = null;
+                                String destination = null;
                                 String description = jsonOffer.getString("DESCRIPTION");
                                 String stringDate = jsonOffer.getString("DATE");
                                 Date date =  new Date();
@@ -98,7 +98,7 @@ public class OfferVolleyImpl implements OfferVolley {
                                 } catch (ParseException e) {
                                     e.printStackTrace();
                                 }
-                                Offer offer = new Offer(cost, email, destination, description, date);
+                                Offer offer = new Offer(cost, email, destination, null, description, date);
                                 offers.add(offer);
                                 Log.d("size", offers.size()+"");
                             }
