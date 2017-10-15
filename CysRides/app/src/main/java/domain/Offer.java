@@ -82,14 +82,9 @@ public class Offer {
 
     public Date getDate(){return date;}
 
-    /*Sorry for messing with your code, but I didn't think about the database when designing this Object,
-    and it would make the database a lot more complicated than it needed to be to have a UserInfo
-    Object in the Offer Object, so I changed it to email. We can get the first and last name by passing
-    the email through the database later.*/
     public void viewOffer(Offer o, Activity c){
 
         Intent i = new Intent(c , ViewOffer.class);
-//        i.putExtra("UserName", o.getUser().getFirstName() + " " + o.getUser().getLastName());
         i.putExtra("Email", o.getEmail());
         i.putExtra("Dest", o.getDestination());
         i.putExtra("LatLng", o.getCoordinates());

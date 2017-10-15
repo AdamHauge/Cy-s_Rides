@@ -6,8 +6,9 @@ import android.view.View;
 import java.util.List;
 
 import domain.Offer;
+import service.ListenerService;
 
 public interface OfferVolley {
-    void createOffer(Context context, Offer offer);
-    List<Offer> getOffers(Context context);
+    void createOffer(Context context, Offer offer, String latLongName);
+    List<Offer> getOffers(Context context, ListenerService listenerService);
 }

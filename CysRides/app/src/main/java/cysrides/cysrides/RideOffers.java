@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -38,6 +39,7 @@ import java.util.Date;
 import java.util.List;
 
 import domain.Offer;
+import service.ListenerService;
 import service.OfferService;
 import service.OfferServiceImpl;
 import volley.MySingleton;
@@ -79,9 +81,9 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
 
 //        volley.getOffers(RideOffers.this, new ListenerService() {
 //            @Override
-//            public void onResponseReceived(List<Offer> offers) {
-//                Log.d("response", offers.size()+"");
-//                offers = offers;
+//            public void onResponseReceived(List<Offer> o) {
+//                Log.d("response", o.size()+"");
+//                offers = o;
 //            }
 //        });
         offers = new ArrayList<>();
@@ -92,18 +94,18 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
                     public void onResponse(JSONArray response) {
                         try{
                             for(int i=0;i<response.length();i++){
+                                Log.d("JOSN",response.toString());
                                 JSONObject jsonOffer = response.getJSONObject(i);
 
                                 String id = jsonOffer.getString("ID");
                                 String stringCost = jsonOffer.getString("COST");
                                 double cost = Double.parseDouble(stringCost);
                                 String email = jsonOffer.getString("EMAIL");
-                                String destination = jsonOffer.getString("DESTINATION");
-                                String stringLat = jsonOffer.getString("LATITUDE");
-                                double latitude = Double.parseDouble(stringLat);
-                                String stringLng = jsonOffer.getString("LATITUDE");
-                                double longitude = Double.parseDouble(stringLng);
-                                LatLng coordinates = new LatLng(latitude, longitude);
+
+                                String stringDestination = jsonOffer.getString("DESTINATION");
+                                String destinationName = getDestinationName(stringDestination);
+                                LatLng latitudeLongitude = getLatLngFromDatabase(stringDestination);
+
                                 String description = jsonOffer.getString("DESCRIPTION");
                                 String stringDate = jsonOffer.getString("DATE");
                                 Date date =  new Date();
@@ -112,34 +114,23 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
                                 } catch (ParseException e) {
                                     e.printStackTrace();
                                 }
-                                Offer offer = new Offer(cost, email, destination, coordinates, description, date);
-                                Log.d("Coordinates: ", coordinates.toString());
+                                Offer offer = new Offer(cost, email, destinationName, latitudeLongitude, description, date);
                                 offers.add(offer);
-                            }
-                            
-                            for(int i = 0; i < offers.size(); i++) {
-                                String desc = offers.get(i).getDescription();
-                                if(0 == desc.length()) {
-                                    list.add("**No description given**");
-                                }
-                                else {
-                                    list.add(desc);
-                                }
-                            }
+                                Log.d("size", offers.size()+"");
 
-                            adapter = new ArrayAdapter<>(RideOffers.this, android.R.layout.simple_list_item_1, list);
-                            listView.setAdapter(adapter);
-                            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                    AlertDialog.Builder alert = new AlertDialog.Builder(RideOffers.this);
-                                    alert.setTitle("Offer Info");
-                                    alert.setMessage(offers.get(position).toString());
-                                    alert.setNegativeButton(android.R.string.no, null);
-                                    alert.show();
-                                }
-                            });
-
+                                adapter = new ArrayAdapter<>(RideOffers.this, android.R.layout.simple_list_item_1, offers);
+                                listView.setAdapter(adapter);
+                                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                        AlertDialog.Builder alert = new AlertDialog.Builder(RideOffers.this);
+                                        alert.setTitle("Offer Info");
+                                        alert.setMessage(offers.get(position).toString());
+                                        alert.setNegativeButton(android.R.string.no, null);
+                                        alert.show();
+                                    }
+                                });
+                            }
                         }catch (JSONException e){
                             e.printStackTrace();
                         }
@@ -156,14 +147,30 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
 
         MySingleton.getInstance(RideOffers.this).addToRequestQueue(jsonArrayRequest);
 
-//        adapter = new ArrayAdapter(RideOffers.this, android.R.layout.simple_list_item_1, offers);
-//        listView.setAdapter(adapter);
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Toast.makeText(getApplicationContext(), offers.get(position).getDescription(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
+        adapter = new ArrayAdapter(RideOffers.this, android.R.layout.simple_list_item_1, offers);
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getApplicationContext(), offers.get(position).getDescription(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private String getDestinationName(String stringDestination) {
+        return stringDestination.split(" lat/lng: ")[0];
+    }
+
+    private LatLng getLatLngFromDatabase(String stringDestination) {
+        String latLong = stringDestination.split(" lat/lng: ")[1];
+        StringBuilder sb = new StringBuilder(latLong);
+        sb.deleteCharAt(latLong.length()-1);
+        sb.deleteCharAt(0);
+        latLong = sb.toString();
+        String[] splitLatLong = latLong.split(",");
+        double latitude = Double.parseDouble(splitLatLong[0]);
+        double longitude = Double.parseDouble(splitLatLong[1]);
+        return new LatLng(latitude, longitude);
     }
 
     @Override

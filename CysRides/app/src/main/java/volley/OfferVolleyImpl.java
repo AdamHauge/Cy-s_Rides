@@ -13,6 +13,7 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.google.android.gms.location.places.Place;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import domain.Offer;
+import service.ListenerService;
 
 public class OfferVolleyImpl implements OfferVolley {
 
@@ -35,11 +37,13 @@ public class OfferVolleyImpl implements OfferVolley {
     private Offer newOffer;
     private Context currentContext;
     private List<Offer> offers;
+    private String latitudeLongitudeName;
 
     @Override
-    public void createOffer(Context context, Offer offer) {
+    public void createOffer(Context context, Offer offer, String latLongName) {
         newOffer = offer;
         currentContext = context;
+        latitudeLongitudeName = latLongName;
         StringRequest stringRequest = new StringRequest(Request.Method.POST, createOfferUrl,
                 new Response.Listener<String>() {
                     @Override
@@ -60,7 +64,7 @@ public class OfferVolleyImpl implements OfferVolley {
                 Map<String, String> params = new HashMap<>();
                 params.put("cost", newOffer.getCost()+"");
                 params.put("email", newOffer.getEmail());
-                params.put("destination", newOffer.getDestination());
+                params.put("destination", latitudeLongitudeName);
                 params.put("description", newOffer.getDescription());
                 params.put("date", String.format("%s '%s'", "DATE", new SimpleDateFormat("yyyy-MM-dd").format(newOffer.getDate())));
                 return params;
@@ -71,7 +75,7 @@ public class OfferVolleyImpl implements OfferVolley {
     }
 
     @Override
-    public List<Offer> getOffers(Context context) {
+    public List<Offer> getOffers(Context context, ListenerService listenerService) {
         offers = new ArrayList<>();
 
         currentContext = context;
@@ -88,8 +92,11 @@ public class OfferVolleyImpl implements OfferVolley {
                                 String stringCost = jsonOffer.getString("COST");
                                 double cost = Double.parseDouble(stringCost);
                                 String email = jsonOffer.getString("EMAIL");
+
                                 String stringDestination = jsonOffer.getString("DESTINATION");
-                                String destination = null;
+                                String destinationName = getDestinationName(stringDestination);
+                                LatLng latitudeLongitude = getLatLngFromDatabase(stringDestination);
+
                                 String description = jsonOffer.getString("DESCRIPTION");
                                 String stringDate = jsonOffer.getString("DATE");
                                 Date date =  new Date();
@@ -98,7 +105,7 @@ public class OfferVolleyImpl implements OfferVolley {
                                 } catch (ParseException e) {
                                     e.printStackTrace();
                                 }
-                                Offer offer = new Offer(cost, email, destination, null, description, date);
+                                Offer offer = new Offer(cost, email, destinationName, latitudeLongitude, description, date);
                                 offers.add(offer);
                                 Log.d("size", offers.size()+"");
                             }
@@ -119,6 +126,22 @@ public class OfferVolleyImpl implements OfferVolley {
         MySingleton.getInstance(currentContext).addToRequestQueue(jsonArrayRequest);
         Log.d("offers2.0",offers.size()+"");
         return offers;
+    }
+
+    private String getDestinationName(String stringDestination) {
+        String[] splitDestination = stringDestination.split(" lat/lng: ");
+        return splitDestination[0];
+    }
+
+    private LatLng getLatLngFromDatabase(String stringDestination) {
+        String[] splitDestination = stringDestination.split(" lat/lng: ");
+        String latLong = splitDestination[1];
+        latLong.replace("(","");
+        latLong.replace(")","");
+        String[] splitLatLong = latLong.split(",");
+        double latitude = Double.parseDouble(splitLatLong[0]);
+        double longitude = Double.parseDouble(splitLatLong[1]);
+        return new LatLng(latitude, longitude);
     }
 
 }
