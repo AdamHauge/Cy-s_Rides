@@ -42,6 +42,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private boolean backPressed = false;
     private GoogleMap googleMap;
     ArrayList<Place> places = new ArrayList<>();
+    ConnectivityManager connMgr;
+    NetworkInfo networkInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,8 +91,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        ConnectivityManager connMgr = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        connMgr = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        networkInfo = connMgr.getActiveNetworkInfo();
 
         if(null == networkInfo) {
             Snackbar snackbar = Snackbar.make(findViewById(R.id.drawer_layout),
@@ -181,32 +183,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         {
             case R.id.profile:
                 i = new Intent(MainActivity.this, ViewProfile.class);
-                startActivity(i);
                 break;
             case R.id.requests:
                 i = new Intent(MainActivity.this, RideRequests.class);
-                startActivity(i);
                 break;
             case R.id.offers:
                 i = new Intent(MainActivity.this, RideOffers.class);
-                startActivity(i);
                 break;
             case R.id.contacts:
                 i = new Intent(MainActivity.this, Contacts.class);
-                startActivity(i);
                 break;
             case R.id.createOffer:
                 i = new Intent(MainActivity.this, CreateOffer.class);
-                startActivity(i);
                 break;
             case R.id.createRequest:
                 i = new Intent(MainActivity.this, CreateRequest.class);
-                startActivity(i);
                 break;
             case R.id.createProfile:
-                // FIXME Claudia, this is temporary right?
                 i = new Intent(MainActivity.this, CreateProfile.class);
-                startActivity(i);
                 break;
             case R.id.logout:
                 AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -223,8 +217,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+        connMgr = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        networkInfo = connMgr.getActiveNetworkInfo();
+
+        if(null == networkInfo) {
+            Snackbar snackbar = Snackbar.make(findViewById(R.id.drawer_layout),
+                    "Cy's Rides Requires\nInternet Connection", Snackbar.LENGTH_INDEFINITE);
+
+            snackbar.setAction("Connect WIFI", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                    wifi.setWifiEnabled(true);
+                }
+            });
+            snackbar.show();
+            return false;
+        }
+        else {
+            startActivity(i);
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+            return true;
+        }
     }
 }

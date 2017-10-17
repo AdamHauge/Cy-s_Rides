@@ -119,10 +119,6 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
         callback.call(offers);
     }
 
-    private ArrayList<Offer> getOffersList() {
-        return offers;
-    }
-
     @Override
     protected JSONArray doInBackground(Void... aVoid) {
         HttpURLConnection urlConnection = null;
