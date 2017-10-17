@@ -27,7 +27,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
@@ -36,14 +38,18 @@ import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 
 import java.util.ArrayList;
 
+import domain.Offer;
+import volley.OfferVolleyImpl;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
 
     private Intent i;
     private boolean backPressed = false;
     private GoogleMap googleMap;
-    ArrayList<Place> places = new ArrayList<>();
-    ConnectivityManager connMgr;
-    NetworkInfo networkInfo;
+    private ConnectivityManager connMgr;
+    private NetworkInfo networkInfo;
+    private LatLng iowaState = new LatLng(42.0266187, -93.64646540000001);
+    private float defaultZoom = 16.0f;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,9 +72,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                places = new ArrayList<>();
-                googleMap.clear();
-                onMapReady(googleMap);
+                populateMap();
             }
         });
 
@@ -77,9 +81,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         placeAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                Log.d("Maps", "Place selected: " + place.getName());
-                places.add(place);
-                onMapReady(googleMap);
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), defaultZoom));
             }
 
             @Override
@@ -90,6 +92,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        populateMap();
 
         connMgr = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         networkInfo = connMgr.getActiveNetworkInfo();
@@ -111,20 +115,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        //TODO all code dealing with maps goes here
-        if(places.size() > 0) {
-            LatLng location = places.get(places.size() - 1).getLatLng();//new LatLng(42.0266187, -93.64646540000001);
-            float zoomLevel = 16.0f; //zoom can go up to 21
-            googleMap.clear();
-            googleMap.addMarker(new MarkerOptions().position(location).title("My place"));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, zoomLevel));
-        }
-        else {
-            LatLng ames = new LatLng(42.0266187, -93.64646540000001);
-            float zoomLevel = 16.0f;
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ames, zoomLevel));
-        }
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(iowaState, defaultZoom));
+        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                //TODO go to specific offer page
+                return false;
+            }
+        });
         this.googleMap = googleMap;
+    }
+
+    public void populateMap() {
+        OfferVolleyImpl volley = new OfferVolleyImpl(new Callback() {
+            public void call(ArrayList<Offer> result) {
+                Log.d("Array", result.toString());
+                googleMap.clear();
+                for(int i = 0; i < result.size(); i++) {
+                    LatLng coordinates = result.get(i).getCoordinates();
+                    String name = result.get(i).getDestination();
+                    String description = result.get(i).getDescription();
+                    googleMap.addMarker(new MarkerOptions()
+                            .position(coordinates)
+                            .title(name)
+                            .snippet(description)
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+                }
+                onMapReady(googleMap);
+            }
+        });
+        volley.execute();
+        //TODO get pins for all ride requests. Add them to map if only user has car.
     }
 
     @Override
@@ -220,7 +241,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         connMgr = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         networkInfo = connMgr.getActiveNetworkInfo();
 
-        if(null == networkInfo) {
+        if(null == networkInfo && R.id.logout != id) {
             Snackbar snackbar = Snackbar.make(findViewById(R.id.drawer_layout),
                     "Cy's Rides Requires\nInternet Connection", Snackbar.LENGTH_INDEFINITE);
 
@@ -233,6 +254,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             });
             snackbar.show();
             return false;
+        }
+        else if(R.id.logout == id) {
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+            return true;
         }
         else {
             startActivity(i);
