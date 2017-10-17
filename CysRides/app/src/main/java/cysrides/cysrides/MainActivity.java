@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ConnectivityManager connMgr;
     private NetworkInfo networkInfo;
     private LatLng iowaState = new LatLng(42.0266187, -93.64646540000001);
-    private float defaultZoom = 16.0f;
+    private float defaultZoom = 16.0f; //TODO determine a good zoom value
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -75,7 +75,6 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
                 for(int i = 0; i < offers.size(); i++) {
                     destinations.add(offers.get(i).getDestination());
                 }
-                adapter.addAll(destinations);
                 adapter.notifyDataSetChanged();
             }
         });
