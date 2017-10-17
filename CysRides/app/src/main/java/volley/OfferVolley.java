@@ -10,5 +10,4 @@ import service.ListenerService;
 
 public interface OfferVolley {
     void createOffer(Context context, Offer offer, String latLongName);
-    List<Offer> getOffers(Context context, ListenerService listenerService);
 }

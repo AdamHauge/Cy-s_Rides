@@ -20,29 +20,16 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.maps.model.LatLng;
-
 import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import domain.Offer;
-import service.ListenerService;
 import service.OfferService;
 import service.OfferServiceImpl;
-import volley.MySingleton;
+import volley.OfferVolley;
 import volley.OfferVolleyImpl;
 
 public class RideOffers extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -51,9 +38,9 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
 
     private ListView listView;
     private ArrayAdapter adapter;
-    private OfferVolleyImpl volley = new OfferVolleyImpl();
+    private OfferVolleyImpl volley;
     private List<Offer> offers = new ArrayList<>();
-    private List<String> list = new ArrayList<>();
+    private List<String> destinations = new ArrayList<>();
     private ArrayList<String> destinationAndDescriptionList = new ArrayList<>();
     private Intent i;
 
@@ -75,102 +62,38 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        getOffersList();
+
         listView = (ListView)findViewById(R.id.ride_offers_list);
-
-        //TODO this is blocked until volley.getOffers works
-
-//        volley.getOffers(RideOffers.this, new ListenerService() {
-//            @Override
-//            public void onResponseReceived(List<Offer> o) {
-//                Log.d("response", o.size()+"");
-//                offers = o;
-//            }
-//        });
-        offers = new ArrayList<>();
-
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, "http://proj-309-sa-b-5.cs.iastate.edu/getOffer.php", null,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        try{
-                            for(int i=0;i<response.length();i++){
-                                Log.d("JOSN",response.toString());
-                                JSONObject jsonOffer = response.getJSONObject(i);
-
-                                String id = jsonOffer.getString("ID");
-                                String stringCost = jsonOffer.getString("COST");
-                                double cost = Double.parseDouble(stringCost);
-                                String email = jsonOffer.getString("EMAIL");
-
-                                String stringDestination = jsonOffer.getString("DESTINATION");
-                                String destinationName = getDestinationName(stringDestination);
-                                LatLng latitudeLongitude = getLatLngFromDatabase(stringDestination);
-
-                                String description = jsonOffer.getString("DESCRIPTION");
-                                String stringDate = jsonOffer.getString("DATE");
-                                Date date =  new Date();
-                                try {
-                                    date = new SimpleDateFormat("yyyy-MM-dd").parse(stringDate);
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                }
-                                Offer offer = new Offer(cost, email, destinationName, latitudeLongitude, description, date);
-                                offers.add(offer);
-                                Log.d("size", offers.size()+"");
-
-                                adapter = new ArrayAdapter<>(RideOffers.this, android.R.layout.simple_list_item_1, offers);
-                                listView.setAdapter(adapter);
-                                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                    @Override
-                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                        AlertDialog.Builder alert = new AlertDialog.Builder(RideOffers.this);
-                                        alert.setTitle("Offer Info");
-                                        alert.setMessage(offers.get(position).toString());
-                                        alert.setNegativeButton(android.R.string.no, null);
-                                        alert.show();
-                                    }
-                                });
-                            }
-                        }catch (JSONException e){
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener(){
-                    @Override
-                    public void onErrorResponse(VolleyError error){
-                        VolleyLog.e("Error: ", error.getMessage());
-                        error.printStackTrace();
-                    }
-                }
-        );
-
-        MySingleton.getInstance(RideOffers.this).addToRequestQueue(jsonArrayRequest);
-
         adapter = new ArrayAdapter(RideOffers.this, android.R.layout.simple_list_item_1, offers);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getApplicationContext(), offers.get(position).getDescription(), Toast.LENGTH_SHORT).show();
+                AlertDialog.Builder alert = new AlertDialog.Builder(RideOffers.this);
+                alert.setTitle("Offer Info");
+                alert.setMessage(offers.get(position).toString());
+                alert.setNegativeButton(android.R.string.no, null);
+                alert.show();
             }
         });
     }
 
-    private String getDestinationName(String stringDestination) {
-        return stringDestination.split(" lat/lng: ")[0];
-    }
-
-    private LatLng getLatLngFromDatabase(String stringDestination) {
-        String latLong = stringDestination.split(" lat/lng: ")[1];
-        StringBuilder sb = new StringBuilder(latLong);
-        sb.deleteCharAt(latLong.length()-1);
-        sb.deleteCharAt(0);
-        latLong = sb.toString();
-        String[] splitLatLong = latLong.split(",");
-        double latitude = Double.parseDouble(splitLatLong[0]);
-        double longitude = Double.parseDouble(splitLatLong[1]);
-        return new LatLng(latitude, longitude);
+    public void getOffersList() {
+        OfferVolleyImpl volley = new OfferVolleyImpl(new Callback() {
+            public void call(ArrayList<Offer> result) {
+                Log.d("Array", result.toString());
+                offers = result;
+                adapter.clear();
+                destinations.clear();
+                for(int i = 0; i < offers.size(); i++) {
+                    destinations.add(offers.get(i).getDestination());
+                }
+                adapter.addAll(destinations);
+                adapter.notifyDataSetChanged();
+            }
+        });
+        volley.execute();
     }
 
     @Override
