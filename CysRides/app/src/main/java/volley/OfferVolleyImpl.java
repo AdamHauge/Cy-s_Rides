@@ -12,16 +12,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.android.gms.maps.model.LatLng;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -33,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import cysrides.cysrides.Callback;
@@ -81,7 +74,7 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
                 params.put("email", newOffer.getEmail());
                 params.put("destination", latitudeLongitudeName);
                 params.put("description", newOffer.getDescription());
-                params.put("date", String.format("%s '%s'", "DATE", new SimpleDateFormat("yyyy-MM-dd").format(newOffer.getDate())));
+                params.put("date", String.format("%s '%s'", "DATE", new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(newOffer.getDate())));
                 return params;
             }
         };
@@ -89,66 +82,12 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
 
-//    @Override
-//    public List<Offer> getOffers(Context context, ListenerService listenerService) {
-//        offers = new ArrayList<>();
-//
-//        currentContext = context;
-//        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, getOffersUrl, null,
-//                new Response.Listener<JSONArray>() {
-//                    @Override
-//                    public void onResponse(JSONArray response) {
-//                        try{
-//                            for(int i=0;i<response.length();i++){
-//                                Log.d("JOSN",response.toString());
-//                                JSONObject jsonOffer = response.getJSONObject(i);
-//
-//                                String id = jsonOffer.getString("ID");
-//                                String stringCost = jsonOffer.getString("COST");
-//                                double cost = Double.parseDouble(stringCost);
-//                                String email = jsonOffer.getString("EMAIL");
-//
-//                                String stringDestination = jsonOffer.getString("DESTINATION");
-//                                String destinationName = getDestinationName(stringDestination);
-//                                LatLng latitudeLongitude = getLatLngFromDatabase(stringDestination);
-//
-//                                String description = jsonOffer.getString("DESCRIPTION");
-//                                String stringDate = jsonOffer.getString("DATE");
-//                                Date date =  new Date();
-//                                try {
-//                                    date = new SimpleDateFormat("yyyy-MM-dd").parse(stringDate);
-//                                } catch (ParseException e) {
-//                                    e.printStackTrace();
-//                                }
-//                                Offer offer = new Offer(cost, email, destinationName, latitudeLongitude, description, date);
-//                                offers.add(offer);
-//                                Log.d("size", offers.size()+"");
-//                            }
-//                        }catch (JSONException e){
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                },
-//                new Response.ErrorListener(){
-//                    @Override
-//                    public void onErrorResponse(VolleyError error){
-//                        VolleyLog.e("Error: ", error.getMessage());
-//                        error.printStackTrace();
-//                    }
-//                }
-//        );
-//
-//        MySingleton.getInstance(currentContext).addToRequestQueue(jsonArrayRequest);
-//        Log.d("offers2.0",offers.size()+"");
-//        return offers;
-//    }
-
     @Override
     protected void onPostExecute(JSONArray jsonArray) {
         try{
             offers = new ArrayList<>();
             for(int i=0; i < jsonArray.length();i++){
-                Log.d("JOSN",jsonArray.toString());
+                Log.d("JSON",jsonArray.toString());
                 JSONObject jsonOffer = jsonArray.getJSONObject(i);
 
                 String id = jsonOffer.getString("ID");
@@ -165,7 +104,7 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
                 Date date =  new Date();
 
                 try {
-                    date = new SimpleDateFormat("yyyy-MM-dd").parse(stringDate);
+                    date = new SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(stringDate);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -206,7 +145,9 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
         }
         finally {
             try {
-                urlConnection.disconnect();
+                if(null != urlConnection) {
+                    urlConnection.disconnect();
+                }
             }catch(NullPointerException e) {
                 e.printStackTrace();
             }

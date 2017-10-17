@@ -18,33 +18,19 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import org.json.JSONArray;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 import domain.Offer;
-import service.OfferService;
-import service.OfferServiceImpl;
-import volley.OfferVolley;
 import volley.OfferVolleyImpl;
 
 public class RideOffers extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    OfferService offerService = new OfferServiceImpl();
-
-    private ListView listView;
-    private ArrayAdapter adapter;
-    private OfferVolleyImpl volley;
+    private ArrayAdapter<String> adapter;
     private List<Offer> offers = new ArrayList<>();
     private List<String> destinations = new ArrayList<>();
-    private ArrayList<String> destinationAndDescriptionList = new ArrayList<>();
     private Intent i;
-
-    List<String> temp = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,8 +50,8 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
 
         getOffersList();
 
-        listView = (ListView)findViewById(R.id.ride_offers_list);
-        adapter = new ArrayAdapter(RideOffers.this, android.R.layout.simple_list_item_1, offers);
+        ListView listView = (ListView)findViewById(R.id.ride_offers_list);
+        adapter = new ArrayAdapter<>(RideOffers.this, android.R.layout.simple_list_item_1, destinations);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
