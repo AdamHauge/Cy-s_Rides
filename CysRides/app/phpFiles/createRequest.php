@@ -1,6 +1,6 @@
 <?php
 
-$cost = $_POST["cost"];
+$numBags = $_POST["numBags"];
 $email = $_POST["email"];
 $destination = $_POST["destination"];
 $description = $_POST["description"];
@@ -15,7 +15,7 @@ $dbname = 'db309sab5';
 
 $con = new mysqli($host, $username, $password, $dbname, $port, $socket) or die('Could not connect to database server'.mysqli_connect_error);
 
-$sql = "insert into OFFER_TABLE (COST, EMAIL, DESTINATION, DESCRIPTION, DATE) values('".$cost."','".$email."','".$destination."','".$description."',".$date.");";
+$sql = "INSERT INTO REQUEST_TABLE (NUM_BAGS, EMAIL, DESTINATION, DESCRIPTION, DATE) VALUES ('".$numBags."','".$email."','".$destination."','".$description."',".$date.");";
 
 if(mysqli_query($con,$sql)) {
     echo "Data insertion success...";

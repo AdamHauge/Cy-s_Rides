@@ -1,12 +1,12 @@
 package domain;
 
-/**
- * Created by Ryan on 9/13/2017.
- */
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+
+import com.google.android.gms.maps.model.LatLng;
+
+import java.util.Date;
 
 import cysrides.cysrides.CreateRequest;
 import cysrides.cysrides.ViewRequest;
@@ -14,16 +14,18 @@ import cysrides.cysrides.ViewRequest;
 
 public class Request {
 
-    private int num_bags;
-    private UserInfo user;
+    private int numBags;
+    private String email;
     private String destination;
+    private LatLng coordinates;
     private String description;
-    private String date;
+    private Date date;
 
-    public Request(int num_bags, UserInfo user, String destination, String description, String date) {
-        this.num_bags = num_bags;
-        this.user = user;
+    public Request(int numBags, String email, String destination, LatLng coordinates, String description, Date date) {
+        this.numBags = numBags;
+        this.email = email;
         this.destination = destination;
+        this.coordinates = coordinates;
         this.description = description;
         this.date = date;
     }
@@ -31,28 +33,28 @@ public class Request {
     @Override
     public String toString() {
         return "Request{" +
-                "num_bags=" + num_bags +
-                ", user=" + user +
+                "num_bags=" + numBags +
+                ", user=" + email +
                 ", destination='" + destination + '\'' +
                 ", description='" + description + '\'' +
                 ", date='" + date + '\'' +
                 '}';
     }
 
-    public double getNumBags() {
-        return num_bags;
+    public int getNumBags() {
+        return numBags;
     }
 
-    public void setNum_bags(int num_bags) {
-        this.num_bags = num_bags;
+    public void setNumBags(int numBags) {
+        this.numBags = numBags;
     }
 
-    public UserInfo getUser() {
-        return user;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUser(UserInfo user) {
-        this.user = user;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getDestination() {
@@ -63,6 +65,14 @@ public class Request {
         this.destination = destination;
     }
 
+    public LatLng getCoordinates() {
+        return coordinates;
+    }
+
+    public void setCoordinates(LatLng coordinates) {
+        this.coordinates = coordinates;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -71,17 +81,21 @@ public class Request {
         this.description = description;
     }
 
-    public String getDate() {return date;}
+    public Date getDate() {
+        return date;
+    }
 
-    public void setDate(String date) {this.date = date;}
+    public void setDate(Date date) {
+        this.date = date;
+    }
 
     public void viewRequest(Request r, Activity a){
 
         Intent i = new Intent(a , ViewRequest.class);
         Bundle b = new Bundle();
-        i.putExtra("UserName", r.getUser().getFirstName() + " " + r.getUser().getLastName());
+//        i.putExtra("UserName", r.getUser().getFirstName() + " " + r.getUser().getLastName());
         i.putExtra("Dest", r.getDestination());
-        i.putExtra("NumBags", Integer.toString(r.num_bags));
+        i.putExtra("NumBags", Integer.toString(r.numBags));
         i.putExtra("Date", r.getDate());
         i.putExtra("Description", r.getDescription());
 

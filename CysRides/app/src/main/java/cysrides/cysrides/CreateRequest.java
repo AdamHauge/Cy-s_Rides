@@ -29,11 +29,14 @@ import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import domain.Offer;
 import domain.Request;
 import domain.UserInfo;
 import domain.UserType;
+import service.RequestService;
+import service.RequestServiceImpl;
 
 public class CreateRequest extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -42,8 +45,9 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
     private int year, month, day;
     private boolean dateChanged = false;
     private String description;
-    private double numBags;
+    private int numBags;
     private Intent i;
+    private RequestService requestService = new RequestServiceImpl();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,6 +156,8 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
                 }
 
                 if(allValid) {
+                    Request r = new Request(numBags, "email", (String) destination.getName(), destination.getLatLng(), description, new GregorianCalendar(year, month, day).getTime());
+                    requestService.createRequest(CreateRequest.this, r);
                     //TODO submit to database
                     finish();
                     startActivity(getIntent());
