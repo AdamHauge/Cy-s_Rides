@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -19,7 +20,7 @@ public class ViewProfile extends AppCompatActivity {
 
     private UserInfo user;
     //private String netID = getIntent().getStringExtra("NETID");
-    private EditText netIDView;
+    private TextView netIDView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,11 +29,17 @@ public class ViewProfile extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //netIDView.getText().append(netID);
+        getUser();
     }
 
     public void getUser() {
         UserVolleyImpl volley = new UserVolleyImpl();
-        user = volley.onPostExecute(volley.doInBackground());
+        //user = volley.onPostExecute(volley.doInBackground());
+    }
+
+    public void fillProfile(){
+        netIDView.append(user.getNetID());
+
     }
 
 

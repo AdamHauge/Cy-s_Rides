@@ -80,9 +80,6 @@ public class UserVolleyImpl implements UserVolley {
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
 
-
-
-
     public UserInfo onPostExecute(JSONObject jsonUser) {
         try{
             String netID = jsonUser.getString("NETID");
@@ -109,7 +106,7 @@ public class UserVolleyImpl implements UserVolley {
         //callback.callUser(user);
     }
 
-    public JSONObject doInBackground(Void... aVoid) {
+    public JSONObject doInBackground(String netID, Void... aVoid) {
         HttpURLConnection urlConnection = null;
         StringBuilder result = new StringBuilder();
 
@@ -117,6 +114,9 @@ public class UserVolleyImpl implements UserVolley {
             URL url = new URL(getUserUrl);
             urlConnection = (HttpURLConnection) url.openConnection();
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+
+            List<String> params = new ArrayList<String>();
+            params.add(netID);
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 

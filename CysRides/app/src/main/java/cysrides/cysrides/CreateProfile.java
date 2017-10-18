@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
@@ -37,6 +38,7 @@ public class CreateProfile extends AppCompatActivity {
     private EditText venmoView;
     private EditText profileDescriptionView;
     private RadioButton driverRadioButton;
+    private RadioButton passengerRadioButton;
 
     private String netID;
     private String password;
@@ -64,34 +66,45 @@ public class CreateProfile extends AppCompatActivity {
         venmoView = (EditText) findViewById(R.id.Venmo);
         profileDescriptionView = (EditText) findViewById(R.id.Description);
         driverRadioButton = (RadioButton) findViewById(R.id.driverRadioButton);
+        passengerRadioButton = (RadioButton) findViewById(R.id.passengerRadioButton);
     }
 
     public void onCreateProfileButtonClicked(View view) {
         netID = netIDView.getText().toString();
-        if(!isEmailValid(netID)){
+        if (!isEmailValid(netID)) {
             Toast.makeText(CreateProfile.this, "You did not enter an iastate.edu email", Toast.LENGTH_LONG).show();
         }
         password = passwordView.getText().toString();
-        if(!isPasswordValid(password)){
+        if (!isPasswordValid(password)) {
             Toast.makeText(CreateProfile.this, "You did not enter a valid password", Toast.LENGTH_LONG).show();
         }
         firstName = fNameView.getText().toString();
         lastName = lNameView.getText().toString();
+        if (!isNameValid(firstName, lastName)) {
+            Toast.makeText(CreateProfile.this, "You did not enter a valid name", Toast.LENGTH_LONG).show();
+        }
         venmo = venmoView.getText().toString();
+        if(!isVenmoValid(venmo)){
+            Toast.makeText(CreateProfile.this, "You did not enter a valid venmo", Toast.LENGTH_LONG).show();
+        }
         profileDescription = profileDescriptionView.getText().toString();
+        if(!isDescriptionValid(profileDescription)){
+            Toast.makeText(CreateProfile.this, "You did not enter a long enough profile description", Toast.LENGTH_LONG).show();
+        }
         Random rand = new Random();
         confirmationCode = String.format("%04d", rand.nextInt(10000));
-        if(driverRadioButton.isChecked()){
+        if (driverRadioButton.isChecked()) {
             userType = UserType.DRIVER;
-        }
-        else{
+        } else {
             userType = UserType.PASSENGER;
         }
-
+        if (!isTypeSelected()) {
+            Toast.makeText(CreateProfile.this, "You did not select a user type", Toast.LENGTH_LONG).show();
+        }
         List<Offer> offers = new ArrayList<Offer>();
         List<Request> requests = new ArrayList<Request>();
 
-        if(isEmailValid(netID) && isPasswordValid(password)){
+        if (inputsValid()) {
             UserInfo user = new UserInfo(netID, password, confirmationCode, firstName, lastName, venmo, profileDescription,
                     userType, 0, offers, requests);
             userVolley.createUser(CreateProfile.this, user);
@@ -139,7 +152,7 @@ public class CreateProfile extends AppCompatActivity {
 
 
     private boolean isPasswordValid(String password) {
-        if (password.length() > 8){
+        if (password.length() > 8) {
             for (int i = 0; i < password.length(); i++) {
                 if (Character.isDigit(password.charAt(i))) {
                     return true;
@@ -147,5 +160,46 @@ public class CreateProfile extends AppCompatActivity {
             }
         }
         return false;
+    }
+
+    private boolean isDescriptionValid(String profileDescription) {
+        if (profileDescription.length() > 10) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isNameValid(String firstName, String lastName) {
+        if (firstName.length() > 1 && lastName.length() > 1) {
+            for (int i = 0; i < firstName.length(); i++) {
+                if (Character.isDigit(firstName.charAt(i))) {
+                    return false;
+                }
+            }
+            for (int i = 0; i < lastName.length(); i++) {
+                if (Character.isDigit(lastName.charAt(i))) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean isVenmoValid(String venmo){
+        if(venmo.length() > 2){
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isTypeSelected(){
+        return (driverRadioButton.isSelected() || passengerRadioButton.isChecked());
+    }
+
+    private boolean inputsValid(){
+        return (isEmailValid(netID) && isPasswordValid(password) && isDescriptionValid(profileDescription) &&
+                isNameValid(firstName, lastName) && isVenmoValid(venmo) && isTypeSelected());
     }
 }
