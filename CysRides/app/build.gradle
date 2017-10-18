@@ -16,9 +16,10 @@ sourceSets {
 android {
     compileSdkVersion 26
     buildToolsVersion "26.0.1"
+    useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "cysrides.cysrides"
-        minSdkVersion 15
+        minSdkVersion 19
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -47,7 +48,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-location:11.0.4'
     compile 'com.google.android.gms:play-services-places:11.0.4'
     compile 'com.android.volley:volley:1.0.0'
-    compile 'com.google.code.gson:gson:2.8.1'
+    compile 'com.googlecode.json-simple:json-simple:1.1'
     testCompile 'junit:junit:4.12'
     testCompile 'org.easymock:easymock:3.5'
 }

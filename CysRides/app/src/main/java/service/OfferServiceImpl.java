@@ -16,7 +16,8 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     public void createOffer(Context context, Offer offer) {
-        offerVolley.createOffer(context, offer);
+        String latLongName = String.format("%s %s", offer.getDestination(), offer.getCoordinates().toString());
+        offerVolley.createOffer(context, offer, latLongName);
     }
 
     //protected List<Offer> getDriverOfferRequests() {

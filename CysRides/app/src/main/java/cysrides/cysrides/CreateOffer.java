@@ -154,24 +154,15 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
                 }
 
                 if(allValid) {
-                    //TODO submit to database
-                    Offer o = new Offer(cost, "email", destination, description, new GregorianCalendar(year, month, day).getTime());
+                    Offer o = new Offer(cost, "email", (String) destination.getName(), destination.getLatLng(), description, new GregorianCalendar(year, month, day).getTime());
                     offerService.createOffer(CreateOffer.this, o);
+
+                    /* Refresh the page */
                     finish();
                     startActivity(getIntent());
                 }
             }
         });
-
-//        UserInfo ui = new UserInfo("rcerveny@iastate.edu", "password", 42, "Ryan", "Cerveny",
-//                "venmo","description", UserType.DRIVER, (float) 5.0,
-//                new ArrayList<Offer>(), new ArrayList<Request>());
-
-//        Offer o = new Offer(UserType.ADMIN, cost, ui.getNetID(), destination, description, new Date(day, month, year));
-//        o.viewOffer(o, CreateOffer.this);
-//        OfferVolleyImpl ovi = new OfferVolleyImpl(new AlertDialog.Builder(), this,o);
-
-
     }
 
     @Override
