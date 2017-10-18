@@ -20,14 +20,24 @@ public class Offer {
     private LatLng coordinates;
     private String description;
     private Date date;
+    //private Group g;
+    /*
+        Im going to have to attach group to the offer. When an offer is created, ill automatically
+        create an Group and add the driver to it. Then as riders accept, they will be added to the
+        group.. unless yall can figure out a smarter way. Only writing this because its late and
+        didnt wanna forget what i was thinking in the morning. Also still need to be able to get
+        current user for adding to groups.
+        -Ryan
+     */
 
-    public Offer(double cost, String email, String destination, LatLng coordinates, String description, Date date) {
+    public Offer(double cost, String email, String destination, LatLng coordinates, String description, Date date/*,Group g*/) {
         this.cost = cost;
         this.email = email;
         this.destination = destination;
         this.coordinates = coordinates;
         this.description = description;
         this.date = date;
+        //this.g = g;
     }
 
     public Offer() {
