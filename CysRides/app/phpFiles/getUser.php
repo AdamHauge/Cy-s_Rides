@@ -1,10 +1,4 @@
-<html>
-<head>
-  <title>php server</title>
-</head>
-
-<body>
-  <?php
+<?php
 
         $host="mysql.cs.iastate.edu";
         $port=3306;
@@ -15,22 +9,17 @@
 
         $conn = new mysqli($host, $username, $password, $dbname, $port, $socket) or die('Could not connect to database server'.mysqli_connect_error);
 
-        $sql = 'SELECT * FROM OFFER_TABLE;';
+        $post_netid = mysqli_real_escape_string($conn, $_POST['netID']);
+
+        $sql = "SELECT * FROM USER_TABLE WHERE NETID='".$post_netid."'";
         $result = $conn->query($sql);
-        $jsonArr = array();
 
         if ($result->num_rows > 0) {
-         // output data of each row
-            while($row = $result->fetch_assoc()) {
-              array_push($jsonArr, $row);
-            }
-         } else {
-             echo "0 results";
+            $row = $result->fetch_assoc();
+            echo $json = json_encode($row);
+        } else {
+            echo "0 results";
         }
 
-        echo $json = json_encode($jsonArr);
         $conn->close();
-  ?>
-</body>
-
-</html>
+?>
