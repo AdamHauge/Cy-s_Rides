@@ -14,20 +14,17 @@ public class Group {
     public Group(UserInfo user){
         addUser(user);
         driver = user;
-        //Group corresponding to a trip group
-        groupType = 0;
-    }
+        }
 
     public Group(ArrayList<UserInfo> contacts){
         groupMembers = contacts;
-        //Group corresponding to a chat with contacts
-        groupType = 1;
+
     }
 
     //returns -1 if group is full
     public int addUser(UserInfo user){
         //return -1 if too many members in a trip group
-        if(groupMembers.size() >= 8 && groupType == 0){
+        if(groupMembers.size() >= 8){
             return -1;
         }
         groupMembers.add(user);

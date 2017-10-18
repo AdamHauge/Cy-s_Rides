@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,11 +56,18 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(RideOffers.this);
                 alert.setTitle("Offer Info");
                 alert.setMessage(offers.get(position).toString());
                 alert.setNegativeButton(android.R.string.no, null);
+                alert.setPositiveButton("Join Trip", new  DialogInterface.OnClickListener(){
+                   @Override
+                    public void onClick(DialogInterface dialogInterface, int i){
+                       Toast.makeText(RideOffers.this, "NEED TO JOIN TRIP", Toast.LENGTH_LONG).show();
+                       //offers.get(position).getGroup().addUser(ME);
+                    }
+                } );
                 alert.show();
             }
         });
