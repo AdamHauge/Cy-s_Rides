@@ -18,7 +18,7 @@ import volley.UserVolleyImpl;
 public class ViewProfile extends AppCompatActivity {
 
     private UserInfo user;
-    private String netID = getIntent().getStringExtra("NETID");
+    //private String netID = getIntent().getStringExtra("NETID");
     private EditText netIDView;
 
     @Override
