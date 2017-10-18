@@ -1,6 +1,7 @@
 package volley;
 
 import android.content.Context;
+import android.telecom.Call;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -24,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cysrides.cysrides.Callback;
 import domain.Offer;
 import domain.UserInfo;
 import domain.UserType;
@@ -33,6 +35,12 @@ public class UserVolleyImpl implements UserVolley {
     private String getUserUrl = "http://proj-309-sa-b-5.cs.iastate.edu/getUser.php";
     private UserInfo currentUser;
     private Context currentContext;
+    private UserInfo user;
+    private Callback callback;
+
+    public UserVolleyImpl(){
+
+    }
 
     @Override
     public void createUser(Context context, final UserInfo user) {
@@ -72,11 +80,11 @@ public class UserVolleyImpl implements UserVolley {
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
 
-    public void onPostExecute(JSONArray jsonArray) {
-        try{
-            Log.d("JSON",jsonArray.toString());
-            JSONObject jsonUser = jsonArray.getJSONObject(0);
 
+
+
+    public UserInfo onPostExecute(JSONObject jsonUser) {
+        try{
             String netID = jsonUser.getString("NETID");
             String userPassword = jsonUser.getString("PASSWORD");
             String confirmationCode = jsonUser.getString("CONFIRMATION_CODE");
@@ -91,13 +99,14 @@ public class UserVolleyImpl implements UserVolley {
             List<Offer> offers = new ArrayList<Offer>();
             List<domain.Request> requests = new ArrayList<domain.Request>();
 
-            UserInfo user = new UserInfo(netID, userPassword, confirmationCode, firstName, lastName,
+            user = new UserInfo(netID, userPassword, confirmationCode, firstName, lastName,
                             venmo, profileDescription, type, userRating, offers, requests);
 
         }catch (Exception e){
             e.printStackTrace();
         }
-        //callback.call(user);
+        return user;
+        //callback.callUser(user);
     }
 
     public JSONObject doInBackground(Void... aVoid) {

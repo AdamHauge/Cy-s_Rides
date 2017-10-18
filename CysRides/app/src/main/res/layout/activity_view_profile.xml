@@ -29,13 +29,15 @@
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-            <QuickContactBadge
-                android:id="@+id/quickContactBadge"
-                android:layout_width="102dp"
-                android:layout_height="104dp"
-                app:srcCompat="@drawable/ic_menu_gallery" />
-
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
+
+    <EditText
+        android:id="@+id/netID"
+        android:layout_width="match_parent"
+        android:layout_height="474dp"
+        android:ems="10"
+        android:hint="Net-ID"
+        android:inputType="textPersonName" />
 
 </android.support.design.widget.CoordinatorLayout>

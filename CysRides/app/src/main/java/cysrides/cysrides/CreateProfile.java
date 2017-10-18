@@ -98,9 +98,10 @@ public class CreateProfile extends AppCompatActivity {
             finish();
             //i = new Intent(this, ConfirmationCodeDialog.class);
             //startActivity(i);
-            displayConfirmationInput();
+            //displayConfirmationInput();
 
             i = new Intent(this, ViewProfile.class);
+            //i.putExtra("NETID", user.getNetID());
             startActivity(i);
         }
 
