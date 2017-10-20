@@ -66,6 +66,7 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
                     public void onClick(DialogInterface dialogInterface, int i){
                        Toast.makeText(RideOffers.this, "NEED TO JOIN TRIP", Toast.LENGTH_LONG).show();
                        //offers.get(position).getGroup().addUser(ME);
+                       //TEST
                     }
                 } );
                 alert.show();
