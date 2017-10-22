@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         networkInfo = connMgr.getActiveNetworkInfo();
 
         if(null == networkInfo) {
-            Snackbar snackbar = Snackbar.make(findViewById(R.id.drawer_layout),
+            Snackbar snackbar = Snackbar.make(findViewById(R.id.activity_main),
                     "Cy's Rides Requires\nInternet Connection", Snackbar.LENGTH_INDEFINITE);
 
             snackbar.setAction("Connect WIFI", new View.OnClickListener() {
@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public boolean onMarkerClick(Marker marker) {
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.add(R.id.activity_main, new ViewOffer());
+                fragmentTransaction.replace(R.id.activity_main, new ViewOffer());
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
 
@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main);
         FragmentManager fragmentManager = ((FragmentActivity) this).getSupportFragmentManager();
         if(fragmentManager.getBackStackEntryCount() > 0) {
             fragmentManager.popBackStackImmediate();
@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return;
             }
             backPressed = true;
-            Snackbar.make(findViewById(R.id.drawer_layout), "Tap back again to exit", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(R.id.activity_main), "Tap back again to exit", Snackbar.LENGTH_SHORT).show();
             new Handler().postDelayed(new Runnable() {
 
                 @Override
@@ -254,7 +254,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         networkInfo = connMgr.getActiveNetworkInfo();
 
         if(null == networkInfo && R.id.logout != id) {
-            Snackbar snackbar = Snackbar.make(findViewById(R.id.drawer_layout),
+            Snackbar snackbar = Snackbar.make(findViewById(R.id.activity_main),
                     "Cy's Rides Requires\nInternet Connection", Snackbar.LENGTH_INDEFINITE);
 
             snackbar.setAction("Connect WIFI", new View.OnClickListener() {
@@ -268,14 +268,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return false;
         }
         else if(R.id.logout == id) {
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main);
             drawer.closeDrawer(GravityCompat.START);
             return true;
         }
         else {
-            startActivity(i);
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main);
             drawer.closeDrawer(GravityCompat.START);
+            startActivity(i);
             return true;
         }
     }
