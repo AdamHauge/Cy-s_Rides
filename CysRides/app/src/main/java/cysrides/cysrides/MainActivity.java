@@ -40,6 +40,7 @@ import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import domain.Offer;
 import volley.OfferVolleyImpl;
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Intent i;
     private boolean backPressed = false;
     private GoogleMap googleMap;
+    private List<Offer> offers = new ArrayList<>();
     private ConnectivityManager connMgr;
     private NetworkInfo networkInfo;
     private LatLng iowaState = new LatLng(42.0266187, -93.64646540000001);
@@ -122,8 +124,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
+                ViewOffer viewOffer = new ViewOffer();
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.activity_main, new ViewOffer());
+
+                for(int i = 0; i < offers.size(); i++) {
+                    Offer o = offers.get(i);
+                    if(o.getCoordinates().equals(marker.getPosition()) &&
+                            o.getDescription().equals(marker.getSnippet()) &&
+                            o.getDestination().equals(marker.getTitle())) {
+                        viewOffer.setData((o));
+                    }
+                }
+
+                fragmentTransaction.replace(R.id.activity_main, viewOffer);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
 
@@ -136,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void populateMap() {
         OfferVolleyImpl volley = new OfferVolleyImpl(new Callback() {
             public void call(ArrayList<Offer> result) {
-                Log.d("Array", result.toString());
+                offers = result;
                 googleMap.clear();
                 for(int i = 0; i < result.size(); i++) {
                     LatLng coordinates = result.get(i).getCoordinates();
@@ -145,8 +158,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     googleMap.addMarker(new MarkerOptions()
                             .position(coordinates)
                             .title(name)
-                            .snippet(description)
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+                            .snippet(description));
                 }
                 onMapReady(googleMap);
             }
