@@ -75,9 +75,11 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
 
     public void getOffersList() {
         OfferVolleyImpl volley = new OfferVolleyImpl(new Callback() {
-            public void call(ArrayList<Offer> result) {
-                Log.d("Array", result.toString());
-                offers = result;
+            public void call(ArrayList<?> result) {
+                if(result.get(0) instanceof Offer) {
+                    offers = (ArrayList<Offer>) result;
+                }
+
                 adapter.clear();
                 destinations.clear();
                 for(int i = 0; i < offers.size(); i++) {
