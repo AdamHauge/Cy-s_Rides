@@ -148,13 +148,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void populateMap() {
         OfferVolleyImpl volley = new OfferVolleyImpl(new Callback() {
-            public void call(ArrayList<Offer> result) {
-                offers = result;
+            public void call(ArrayList<?> result) {
+                if(result.get(0) instanceof Offer) {
+                    offers = (ArrayList<Offer>) result;
+                }
+
                 googleMap.clear();
-                for(int i = 0; i < result.size(); i++) {
-                    LatLng coordinates = result.get(i).getCoordinates();
-                    String name = result.get(i).getDestination();
-                    String description = result.get(i).getDescription();
+
+                for(int i = 0; i < offers.size(); i++) {
+                    LatLng coordinates = offers.get(i).getCoordinates();
+                    String name = offers.get(i).getDestination();
+                    String description = offers.get(i).getDescription();
                     googleMap.addMarker(new MarkerOptions()
                             .position(coordinates)
                             .title(name)
@@ -171,11 +175,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main);
         FragmentManager fragmentManager = ((FragmentActivity) this).getSupportFragmentManager();
-        if(fragmentManager.getBackStackEntryCount() > 0) {
-            fragmentManager.popBackStackImmediate();
-        }
-        else if (drawer.isDrawerOpen(GravityCompat.START)) {
+
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        }
+        else if(fragmentManager.getBackStackEntryCount() > 0) {
+            fragmentManager.popBackStackImmediate();
         }
         else {
             if(backPressed) {

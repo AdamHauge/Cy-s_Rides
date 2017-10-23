@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import domain.Offer;
 
@@ -21,10 +22,17 @@ public class ViewOffer extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_view_offer, container, false);
+        View v = inflater.inflate(R.layout.fragment_view_offer, container, false);
+        setTextInfo(v);
+        return v;
     }
 
     public void setData(Offer offer) {
         this.offer = offer;
+    }
+
+    public void setTextInfo(View v) {
+        TextView info = v.findViewById(R.id.offer);
+        info.setText(offer.toString());
     }
 }
