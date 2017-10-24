@@ -10,11 +10,12 @@ public class Group {
     private ArrayList<UserInfo> groupMembers = new ArrayList<>();
     private UserInfo driver;
     private int groupType;
+    private int groupID;
 
     public Group(UserInfo user){
         addUser(user);
         driver = user;
-        }
+    }
 
     public Group(ArrayList<UserInfo> contacts){
         groupMembers = contacts;
@@ -46,6 +47,8 @@ public class Group {
     public ArrayList<UserInfo> getGroupMembers(){
         return groupMembers;
     }
+
+    public int getId(){return groupID;}
 
 
 
