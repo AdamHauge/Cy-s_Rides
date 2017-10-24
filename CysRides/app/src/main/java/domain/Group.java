@@ -7,23 +7,23 @@ import java.util.ArrayList;
  */
 
 public class Group {
-    private ArrayList<UserInfo> groupMembers = new ArrayList<>();
-    private UserInfo driver;
+    private ArrayList<String> groupMembers = new ArrayList<>();
+    private String driver;
     private int groupType;
     private int groupID;
 
-    public Group(UserInfo user){
+    public Group(String user){
         addUser(user);
         driver = user;
     }
 
-    public Group(ArrayList<UserInfo> contacts){
+    public Group(ArrayList<String> contacts){
         groupMembers = contacts;
 
     }
 
     //returns -1 if group is full
-    public int addUser(UserInfo user){
+    public int addUser(String user){
         //return -1 if too many members in a trip group
         if(groupMembers.size() >= 8){
             return -1;
@@ -33,10 +33,10 @@ public class Group {
     }
 
     //returns -1 if trying to remove driver
-    public int removeUser(UserInfo user){
+    public int removeUser(String user){
 
         //return if trying to remove driver in a trip group
-        if(user == driver && groupType == 0){
+        if(user.equals(driver) && groupType == 0){
             return -1;
         }
         groupMembers.remove(user);
@@ -44,7 +44,7 @@ public class Group {
 
     }
 
-    public ArrayList<UserInfo> getGroupMembers(){
+    public ArrayList<String> getGroupMembers(){
         return groupMembers;
     }
 
