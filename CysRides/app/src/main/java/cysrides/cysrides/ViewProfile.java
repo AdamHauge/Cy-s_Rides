@@ -19,7 +19,7 @@ import volley.UserVolleyImpl;
 public class ViewProfile extends AppCompatActivity {
 
     private UserInfo user;
-    //private String netID = getIntent().getStringExtra("NETID");
+    String username;
     private TextView netIDView;
 
     @Override
@@ -29,16 +29,18 @@ public class ViewProfile extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //netIDView.getText().append(netID);
-        getUser();
+        username = getIntent().getStringExtra("netID");
+        getUser(username);
+        netIDView.append(username + user.getFirstName());
     }
 
-    public void getUser() {
+    public void getUser(String netID) {
         UserVolleyImpl volley = new UserVolleyImpl();
-        //user = volley.onPostExecute(volley.doInBackground());
+        //user = volley.onPostExecute(volley.doInBackground(netID));
     }
 
     public void fillProfile(){
-        netIDView.append(user.getNetID());
+        //netIDView.append(user.getNetID());
 
     }
 

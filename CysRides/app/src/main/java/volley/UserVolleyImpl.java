@@ -35,6 +35,7 @@ public class UserVolleyImpl implements UserVolley {
     private String getUserUrl = "http://proj-309-sa-b-5.cs.iastate.edu/getUser.php";
     private UserInfo currentUser;
     private Context currentContext;
+    private ArrayList<UserInfo> users;
     private UserInfo user;
     private Callback callback;
 
@@ -80,33 +81,42 @@ public class UserVolleyImpl implements UserVolley {
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
 
-    public UserInfo onPostExecute(JSONObject jsonUser) {
+    public void onPostExecute(JSONArray jsonArray) {
         try{
-            String netID = jsonUser.getString("NETID");
-            String userPassword = jsonUser.getString("PASSWORD");
-            String confirmationCode = jsonUser.getString("CONFIRMATION_CODE");
-            String firstName = jsonUser.getString("FIRST_NAME");
-            String lastName = jsonUser.getString("LAST_NAME");
-            String venmo = jsonUser.getString("VENMO");
-            String profileDescription = jsonUser.getString("PROFILE_DESCRIPTION");
-            String userType = jsonUser.getString("USER_TYPE");
-            UserType type = UserType.valueOf(userType);
-            float userRating = (float) jsonUser.getDouble("USER_RATING");
+            users = new ArrayList<>();
+            for(int i = 0; i < jsonArray.length(); i++) {
+                Log.d("JSON", jsonArray.toString());
+                JSONObject jsonUser = jsonArray.getJSONObject(i);
 
-            List<Offer> offers = new ArrayList<Offer>();
-            List<domain.Request> requests = new ArrayList<domain.Request>();
+                String netID = jsonUser.getString("NETID");
+                String userPassword = jsonUser.getString("PASSWORD");
+                String confirmationCode = jsonUser.getString("CONFIRMATION_CODE");
+                String firstName = jsonUser.getString("FIRST_NAME");
+                String lastName = jsonUser.getString("LAST_NAME");
+                String venmo = jsonUser.getString("VENMO");
+                String profileDescription = jsonUser.getString("PROFILE_DESCRIPTION");
+                String userType = jsonUser.getString("USER_TYPE");
+                UserType type = UserType.valueOf(userType);
+                float userRating = (float) jsonUser.getDouble("USER_RATING");
 
-            user = new UserInfo(netID, userPassword, confirmationCode, firstName, lastName,
-                            venmo, profileDescription, type, userRating, offers, requests);
+                List<Offer> offers = new ArrayList<Offer>();
+                List<domain.Request> requests = new ArrayList<domain.Request>();
 
-        }catch (Exception e){
+                user = new UserInfo(netID, userPassword, confirmationCode, firstName, lastName,
+                        venmo, profileDescription, type, userRating, offers, requests);
+
+                users.add(user);
+                Log.d("size", users.size() + "");
+
+            }
+
+        } catch (Exception e){
             e.printStackTrace();
         }
-        return user;
-        //callback.callUser(user);
+        //callback.call(users);
     }
 
-    public JSONObject doInBackground(String netID, Void... aVoid) {
+    public JSONArray doInBackground(String netID, Void... aVoid) {
         HttpURLConnection urlConnection = null;
         StringBuilder result = new StringBuilder();
 
@@ -139,14 +149,14 @@ public class UserVolleyImpl implements UserVolley {
         }
 
         Log.d("String", result.toString());
-        JSONObject obj = null;
+        JSONArray array = null;
         try {
-            obj = new JSONObject(result.toString());
+            array = new JSONArray(result.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return obj;
+        return array;
     }
 
 
