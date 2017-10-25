@@ -35,6 +35,8 @@ import domain.Offer;
 import domain.Request;
 import domain.UserInfo;
 import domain.UserType;
+import service.NavigationService;
+import service.NavigationServiceImpl;
 import service.RequestService;
 import service.RequestServiceImpl;
 
@@ -48,6 +50,7 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
     private int numBags;
     private Intent i;
     private RequestService requestService = new RequestServiceImpl();
+    private NavigationService navigationService = new NavigationServiceImpl();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -226,6 +229,7 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         final MenuItem item = menuItem;
         AlertDialog.Builder alert;
+        i = navigationService.getNavigationIntent(item, CreateRequest.this, i);
 
         switch(item.getItemId()) {
             case R.id.profile:
@@ -242,23 +246,18 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
                         int id = item.getItemId();
                         switch (id) {
                             case R.id.profile:
-                                i = new Intent(CreateRequest.this, ViewProfile.class);
                                 startActivity(i);
                                 break;
                             case R.id.requests:
-                                i = new Intent(CreateRequest.this, RideRequests.class);
                                 startActivity(i);
                                 break;
                             case R.id.offers:
-                                i = new Intent(CreateRequest.this, RideOffers.class);
                                 startActivity(i);
                                 break;
                             case R.id.contacts:
-                                i = new Intent(CreateRequest.this, Contacts.class);
                                 startActivity(i);
                                 break;
                             case R.id.createOffer:
-                                i = new Intent(CreateRequest.this, CreateOffer.class);
                                 startActivity(i);
                                 break;
                             case R.id.createRequest:
@@ -277,7 +276,6 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
                 alert.setMessage("Do you really want to logout?");
                 alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        i = new Intent(CreateRequest.this, LoginActivity.class);
                         startActivity(i);
                     }});
                 alert.setNegativeButton(android.R.string.no, null);

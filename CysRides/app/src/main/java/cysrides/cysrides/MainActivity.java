@@ -43,9 +43,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import domain.Offer;
+import service.NavigationService;
+import service.NavigationServiceImpl;
 import volley.OfferVolleyImpl;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
+
+    private NavigationService navigationService = new NavigationServiceImpl();
 
     private Intent i;
     private boolean backPressed = false;
@@ -232,29 +236,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        i = navigationService.getNavigationIntent(item, MainActivity.this, i);
 
         switch(id)
         {
             case R.id.profile:
-                i = new Intent(MainActivity.this, ViewProfile.class);
                 break;
             case R.id.requests:
-                i = new Intent(MainActivity.this, RideRequests.class);
                 break;
             case R.id.offers:
-                i = new Intent(MainActivity.this, RideOffers.class);
                 break;
             case R.id.contacts:
-                i = new Intent(MainActivity.this, Contacts.class);
                 break;
             case R.id.createOffer:
-                i = new Intent(MainActivity.this, CreateOffer.class);
                 break;
             case R.id.createRequest:
-                i = new Intent(MainActivity.this, CreateRequest.class);
                 break;
             case R.id.createProfile:
-                i = new Intent(MainActivity.this, CreateProfile.class);
                 break;
             case R.id.logout:
                 AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -262,7 +260,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 alert.setMessage("Do you really want to logout?");
                 alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        i = new Intent(MainActivity.this, LoginActivity.class);
                         startActivity(i);
                         }});
                 alert.setNegativeButton(android.R.string.no, null);
