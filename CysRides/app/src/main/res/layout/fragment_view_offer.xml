@@ -1,16 +1,29 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_view_offer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="80dp"
     tools:context="cysrides.cysrides.ViewOffer"
-    android:background="#FFFFFF"
     android:orientation="vertical">
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:background="#FFFFFF"
+        android:orientation="vertical">
     <TextView
         android:id="@+id/offer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="40sp"/>
+        android:textSize="20sp"/>
 
-</ScrollView>
+        <Button
+            android:id="@+id/join"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="@string/join" />
+    </LinearLayout>
+
+</FrameLayout>

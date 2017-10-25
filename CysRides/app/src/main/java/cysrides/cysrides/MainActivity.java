@@ -13,7 +13,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -30,7 +29,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -57,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private List<Offer> offers = new ArrayList<>();
     private ConnectivityManager connMgr;
     private NetworkInfo networkInfo;
+    private FragmentManager fragmentManager = this.getSupportFragmentManager();
     private LatLng iowaState = new LatLng(42.0266187, -93.64646540000001);
     private float defaultZoom = 16.0f; //TODO determine a good zoom value
 
@@ -136,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     if(o.getCoordinates().equals(marker.getPosition()) &&
                             o.getDescription().equals(marker.getSnippet()) &&
                             o.getDestination().equals(marker.getTitle())) {
-                        viewOffer.setData((o));
+                        viewOffer.setData(o);
                     }
                 }
 
@@ -150,6 +149,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.googleMap = googleMap;
     }
 
+    @SuppressWarnings("unchecked")
     public void populateMap() {
         OfferVolleyImpl volley = new OfferVolleyImpl(new Callback() {
             public void call(ArrayList<?> result) {
@@ -182,13 +182,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main);
-        FragmentManager fragmentManager = ((FragmentActivity) this).getSupportFragmentManager();
 
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         }
         else if(fragmentManager.getBackStackEntryCount() > 0) {
-            fragmentManager.popBackStackImmediate();
+            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
         else {
             if(backPressed) {
