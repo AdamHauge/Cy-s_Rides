@@ -24,9 +24,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import domain.Offer;
+import service.NavigationService;
+import service.NavigationServiceImpl;
 import volley.OfferVolleyImpl;
 
 public class RideOffers extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    private NavigationService navigationService = new NavigationServiceImpl();
 
     private ArrayAdapter<String> adapter;
     private List<Offer> offers = new ArrayList<>();
@@ -132,29 +136,25 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        i = navigationService.getNavigationIntent(item, RideOffers.this, i);
 
         switch(id)
         {
             case R.id.profile:
-                i = new Intent(RideOffers.this, ViewProfile.class);
                 startActivity(i);
                 break;
             case R.id.requests:
-                i = new Intent(RideOffers.this, RideRequests.class);
                 startActivity(i);
                 break;
             case R.id.offers:
                 break;
             case R.id.contacts:
-                i = new Intent(RideOffers.this, Contacts.class);
                 startActivity(i);
                 break;
             case R.id.createOffer:
-                i = new Intent(RideOffers.this, CreateOffer.class);
                 startActivity(i);
                 break;
             case R.id.createRequest:
-                i = new Intent(RideOffers.this, CreateRequest.class);
                 startActivity(i);
                 break;
             case R.id.logout:
@@ -163,7 +163,6 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
                 alert.setMessage("Do you really want to logout?");
                 alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        i = new Intent(RideOffers.this, LoginActivity.class);
                         startActivity(i);
                     }});
                 alert.setNegativeButton(android.R.string.no, null);

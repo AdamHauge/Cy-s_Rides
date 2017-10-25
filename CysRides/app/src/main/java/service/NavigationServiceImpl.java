@@ -22,56 +22,41 @@ import cysrides.cysrides.ViewProfile;
 
 public class NavigationServiceImpl extends AppCompatActivity implements NavigationService {
 
-    private Intent i;
+    private Intent intent;
     private Context context;
+    private MenuItem item;
 
     @Override
-    public boolean doNavigationItemSelected(@NonNull MenuItem item, Context c, Intent intent) {
+    public Intent getNavigationIntent(@NonNull MenuItem item, Context c, Intent i) {
         int id = item.getItemId();
-        i = intent;
+        intent = i;
         context = c;
         switch(id)
         {
             case R.id.profile:
-                i = new Intent(context, ViewProfile.class);
-                startActivity(i);
+                intent = new Intent(context, ViewProfile.class);
                 break;
             case R.id.requests:
-                i = new Intent(context, RideRequests.class);
-                startActivity(i);
+                intent = new Intent(context, RideRequests.class);
                 break;
             case R.id.offers:
-                i = new Intent(context, RideOffers.class);
-                startActivity(i);
+                intent = new Intent(context, RideOffers.class);
                 break;
             case R.id.contacts:
+                intent = new Intent(context, RideOffers.class);
                 break;
             case R.id.createOffer:
-                i = new Intent(context, CreateOffer.class);
-                startActivity(i);
+                intent = new Intent(context, CreateOffer.class);
                 break;
             case R.id.createRequest:
-                i = new Intent(context, CreateRequest.class);
-                startActivity(i);
+                intent = new Intent(context, CreateRequest.class);
                 break;
             case R.id.logout:
-                AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                alert.setTitle("Logout");
-                alert.setMessage("Do you really want to logout?");
-                alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        i = new Intent(context, LoginActivity.class);
-                        startActivity(i);
-                    }});
-                alert.setNegativeButton(android.R.string.no, null);
-                alert.show();
+                intent = new Intent(context, LoginActivity.class);
+                break;
             default:
                 break;
         }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+        return intent;
     }
-
 }

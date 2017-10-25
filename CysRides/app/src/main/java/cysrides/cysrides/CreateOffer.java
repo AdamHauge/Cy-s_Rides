@@ -32,6 +32,8 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import domain.Offer;
+import service.NavigationService;
+import service.NavigationServiceImpl;
 import service.OfferService;
 import service.OfferServiceImpl;
 import volley.OfferVolley;
@@ -47,6 +49,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
     private double cost;
     private Intent i;
     private OfferService offerService = new OfferServiceImpl();
+    private NavigationService navigationService = new NavigationServiceImpl();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -223,6 +226,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         final MenuItem item = menuItem;
         AlertDialog.Builder alert;
+        i = navigationService.getNavigationIntent(item, CreateOffer.this, i);
 
         switch(item.getItemId()) {
             case R.id.profile:
@@ -239,25 +243,20 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
                         int id = item.getItemId();
                         switch (id) {
                             case R.id.profile:
-                                i = new Intent(CreateOffer.this, ViewProfile.class);
                                 startActivity(i);
                                 break;
                             case R.id.requests:
-                                i = new Intent(CreateOffer.this, RideRequests.class);
                                 startActivity(i);
                                 break;
                             case R.id.offers:
-                                i = new Intent(CreateOffer.this, RideOffers.class);
                                 startActivity(i);
                                 break;
                             case R.id.contacts:
-                                i = new Intent(CreateOffer.this, Contacts.class);
                                 startActivity(i);
                                 break;
                             case R.id.createOffer:
                                 break;
                             case R.id.createRequest:
-                                i = new Intent(CreateOffer.this, CreateRequest.class);
                                 startActivity(i);
                                 break;
                             default:

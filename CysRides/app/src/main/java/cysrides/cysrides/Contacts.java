@@ -107,6 +107,42 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
-        return navigationService.doNavigationItemSelected(item, Contacts.this, i);
+        int id = item.getItemId();
+        i = navigationService.getNavigationIntent(item, Contacts.this, i);
+        switch(id)
+        {
+            case R.id.profile:
+                startActivity(i);
+                break;
+            case R.id.requests:
+                startActivity(i);
+                break;
+            case R.id.offers:
+                startActivity(i);
+                break;
+            case R.id.contacts:
+                break;
+            case R.id.createOffer:
+                startActivity(i);
+                break;
+            case R.id.createRequest:
+                startActivity(i);
+                break;
+            case R.id.logout:
+                AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                alert.setTitle("Logout");
+                alert.setMessage("Do you really want to logout?");
+                alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        startActivity(i);
+                    }});
+                alert.setNegativeButton(android.R.string.no, null);
+                alert.show();
+            default:
+                break;
+        }
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }
