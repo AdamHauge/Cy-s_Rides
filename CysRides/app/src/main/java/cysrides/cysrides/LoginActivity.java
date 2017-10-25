@@ -104,20 +104,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         });
 
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+
+        mEmailSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptLogin();
+                Intent i;
+                i = new Intent(LoginActivity.this, ViewProfile.class);
+                i.putExtra("netID", mEmailView.getText().toString());
+                startActivity(i);
             }
         });
-
-        Button mRegisterSignInButton = (Button) findViewById(R.id.register_button);
-        //mEmailSignInButton.setOnClickListener(new OnClickListener() {
-        //    @Override
-        //    public void onClick(View view) {
-        //        attemptRegister();
-        //    }
-        //});
 
 
         mLoginFormView = findViewById(R.id.login_form);
@@ -419,11 +415,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     }
 
-    public void onSignInClick(View view){
+    public void onSignInClickListener(View view){
         Intent i;
-        i = new Intent(LoginActivity.this, MainActivity.class);
+        //i = new Intent(LoginActivity.this, MainActivity.class);
+        i = new Intent(LoginActivity.this, ViewProfile.class);
+        i.putExtra("netID", mEmailView.getText().toString());
         startActivity(i);
     }
+
+
 
     public void onRegisterClick(View view){
         //sendEmail(view);

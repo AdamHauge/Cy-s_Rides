@@ -13,6 +13,9 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -37,6 +40,7 @@ import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import domain.Offer;
 import volley.OfferVolleyImpl;
@@ -46,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Intent i;
     private boolean backPressed = false;
     private GoogleMap googleMap;
+    private List<Offer> offers = new ArrayList<>();
     private ConnectivityManager connMgr;
     private NetworkInfo networkInfo;
     private LatLng iowaState = new LatLng(42.0266187, -93.64646540000001);
@@ -59,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -99,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         networkInfo = connMgr.getActiveNetworkInfo();
 
         if(null == networkInfo) {
-            Snackbar snackbar = Snackbar.make(findViewById(R.id.drawer_layout),
+            Snackbar snackbar = Snackbar.make(findViewById(R.id.activity_main),
                     "Cy's Rides Requires\nInternet Connection", Snackbar.LENGTH_INDEFINITE);
 
             snackbar.setAction("Connect WIFI", new View.OnClickListener() {
@@ -119,8 +124,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                //TODO go to specific offer page
-                return false;
+                ViewOffer viewOffer = new ViewOffer();
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
+                for(int i = 0; i < offers.size(); i++) {
+                    Offer o = offers.get(i);
+                    if(o.getCoordinates().equals(marker.getPosition()) &&
+                            o.getDescription().equals(marker.getSnippet()) &&
+                            o.getDestination().equals(marker.getTitle())) {
+                        viewOffer.setData((o));
+                    }
+                }
+
+                fragmentTransaction.replace(R.id.activity_main, viewOffer);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+
+                return true;
             }
         });
         this.googleMap = googleMap;
@@ -128,18 +148,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void populateMap() {
         OfferVolleyImpl volley = new OfferVolleyImpl(new Callback() {
-            public void call(ArrayList<Offer> result) {
-                Log.d("Array", result.toString());
+            public void call(ArrayList<?> result) {
+                if(result.get(0) instanceof Offer) {
+                    offers = (ArrayList<Offer>) result;
+                }
+
                 googleMap.clear();
-                for(int i = 0; i < result.size(); i++) {
-                    LatLng coordinates = result.get(i).getCoordinates();
-                    String name = result.get(i).getDestination();
-                    String description = result.get(i).getDescription();
+
+                for(int i = 0; i < offers.size(); i++) {
+                    LatLng coordinates = offers.get(i).getCoordinates();
+                    String name = offers.get(i).getDestination();
+                    String description = offers.get(i).getDescription();
                     googleMap.addMarker(new MarkerOptions()
                             .position(coordinates)
                             .title(name)
-                            .snippet(description)
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+                            .snippet(description));
                 }
                 onMapReady(googleMap);
             }
@@ -150,16 +173,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main);
+        FragmentManager fragmentManager = ((FragmentActivity) this).getSupportFragmentManager();
+
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
+        }
+        else if(fragmentManager.getBackStackEntryCount() > 0) {
+            fragmentManager.popBackStackImmediate();
+        }
+        else {
             if(backPressed) {
                 moveTaskToBack(true);
                 return;
             }
             backPressed = true;
-            Snackbar.make(findViewById(R.id.drawer_layout), "Tap back again to exit", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(R.id.activity_main), "Tap back again to exit", Snackbar.LENGTH_SHORT).show();
             new Handler().postDelayed(new Runnable() {
 
                 @Override
@@ -242,7 +271,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         networkInfo = connMgr.getActiveNetworkInfo();
 
         if(null == networkInfo && R.id.logout != id) {
-            Snackbar snackbar = Snackbar.make(findViewById(R.id.drawer_layout),
+            Snackbar snackbar = Snackbar.make(findViewById(R.id.activity_main),
                     "Cy's Rides Requires\nInternet Connection", Snackbar.LENGTH_INDEFINITE);
 
             snackbar.setAction("Connect WIFI", new View.OnClickListener() {
@@ -256,14 +285,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return false;
         }
         else if(R.id.logout == id) {
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main);
             drawer.closeDrawer(GravityCompat.START);
             return true;
         }
         else {
-            startActivity(i);
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main);
             drawer.closeDrawer(GravityCompat.START);
+            startActivity(i);
             return true;
         }
     }

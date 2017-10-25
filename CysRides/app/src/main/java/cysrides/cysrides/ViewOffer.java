@@ -1,29 +1,38 @@
 package cysrides.cysrides;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.EditText;
+import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
-public class ViewOffer extends AppCompatActivity {
+import domain.Offer;
+
+public class ViewOffer extends Fragment {
+
+    private Offer offer;
+
+    public ViewOffer() {
+        // Required empty public constructor
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_offer);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View v = inflater.inflate(R.layout.fragment_view_offer, container, false);
+        setTextInfo(v);
+        return v;
+    }
 
-        EditText temp = (EditText)findViewById(R.id.UserName);
-        temp.setText(getIntent().getExtras().getString("UserName"));
+    public void setData(Offer offer) {
+        this.offer = offer;
+    }
 
-        temp = (EditText)findViewById(R.id.Destination);
-        temp.setText(getIntent().getExtras().getString("Dest"));
-
-        temp = (EditText)findViewById(R.id.Cost);
-        temp.setText("$" + getIntent().getStringExtra("Cost"));
-
-        temp = (EditText)findViewById(R.id.LeaveDate);
-        temp.setText(getIntent().getStringExtra("Date"));
-
-        temp = (EditText)findViewById(R.id.Description);
-        temp.setText(getIntent().getStringExtra("Description"));
+    public void setTextInfo(View v) {
+        TextView info = v.findViewById(R.id.offer);
+        info.setText(offer.toString());
     }
 }
