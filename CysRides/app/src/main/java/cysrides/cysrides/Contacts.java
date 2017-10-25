@@ -24,10 +24,13 @@ import java.util.ArrayList;
 import domain.UserInfo;
 import service.NavigationService;
 import service.NavigationServiceImpl;
+import service.UserIntentService;
+import service.UserIntentServiceImpl;
 
 public class Contacts extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private NavigationService navigationService = new NavigationServiceImpl();
+    private UserIntentService userIntentService = new UserIntentServiceImpl();
 
     private ListView listView;
     private ArrayList list = new ArrayList();
@@ -38,6 +41,7 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        userInfo = userIntentService.getUserFromIntent(getIntent());
         setContentView(R.layout.activity_contacts);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
