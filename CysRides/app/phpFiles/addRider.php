@@ -4,6 +4,7 @@
 $group_id = $_POST["id"];
 $rider = $_POST["rider"];
 $rider_num = $_POST["rider_num"];
+//$offer_id = $_POST["offer_id"];
 
 
 $host="mysql.cs.iastate.edu";
