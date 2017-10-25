@@ -26,7 +26,6 @@ public class NavigationServiceImpl extends AppCompatActivity implements Navigati
 
     private Intent intent;
     private Context context;
-    private MenuItem item;
 
     @Override
     public Intent getNavigationIntent(@NonNull MenuItem item, Context c, Intent i) {
@@ -37,31 +36,24 @@ public class NavigationServiceImpl extends AppCompatActivity implements Navigati
         {
             case R.id.profile:
                 intent = userIntentService.createIntent(context, ViewProfile.class, "zgknoll@iastate.edu");
-//                intent = new Intent(context, ViewProfile.class);
                 break;
             case R.id.requests:
                 intent = userIntentService.createIntent(context, RideRequests.class, "zgknoll@iastate.edu");
-//                intent = new Intent(context, RideRequests.class);
                 break;
             case R.id.offers:
                 intent = userIntentService.createIntent(context, RideOffers.class, "zgknoll@iastate.edu");
-//                intent = new Intent(context, RideOffers.class);
                 break;
             case R.id.contacts:
                 intent = userIntentService.createIntent(context, Contacts.class, "zgknoll@iastate.edu");
-//                intent = new Intent(context, Contacts.class);
                 break;
             case R.id.createOffer:
                 intent = userIntentService.createIntent(context, CreateOffer.class, "zgknoll@iastate.edu");
-//                intent = new Intent(context, CreateOffer.class);
                 break;
             case R.id.createRequest:
                 intent = userIntentService.createIntent(context, CreateRequest.class, "zgknoll@iastate.edu");
-//                intent = new Intent(context, CreateRequest.class);
                 break;
             case R.id.logout:
                 intent = userIntentService.createIntent(context, LoginActivity.class, "zgknoll@iastate.edu");
-//                intent = new Intent(context, LoginActivity.class);
                 break;
             default:
                 break;
