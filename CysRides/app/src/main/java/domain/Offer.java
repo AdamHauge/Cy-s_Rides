@@ -27,6 +27,8 @@ public class Offer {
         this.description = description;
         this.date = date;
 
+        group = new Group("DRIVER");
+
     }
 
     public Offer() {

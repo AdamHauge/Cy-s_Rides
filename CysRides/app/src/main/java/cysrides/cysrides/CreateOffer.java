@@ -32,6 +32,8 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import domain.Offer;
+import service.GroupService;
+import service.GroupServiceImpl;
 import service.OfferService;
 import service.OfferServiceImpl;
 import volley.OfferVolley;
@@ -47,6 +49,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
     private double cost;
     private Intent i;
     private OfferService offerService = new OfferServiceImpl();
+    private GroupService groupService = new GroupServiceImpl();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,6 +159,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
                 if(allValid) {
                     Offer o = new Offer(cost, "email", (String) destination.getName(), destination.getLatLng(), description, new GregorianCalendar(year, month, day).getTime());
                     offerService.createOffer(CreateOffer.this, o);
+                    groupService.createGroup(CreateOffer.this, o.getGroup());
 
                     /* Refresh the page */
                     finish();

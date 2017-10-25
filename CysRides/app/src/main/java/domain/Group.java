@@ -17,10 +17,10 @@ public class Group {
         driver = user;
     }
 
-    public Group(ArrayList<String> contacts){
-        groupMembers = contacts;
-
-    }
+//    public Group(ArrayList<String> contacts){
+//        groupMembers = contacts;
+//
+//    }
 
     //returns -1 if group is full
     public int addUser(String user){
