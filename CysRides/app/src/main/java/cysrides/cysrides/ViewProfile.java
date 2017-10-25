@@ -30,22 +30,29 @@ public class ViewProfile extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_view_profile);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        //netIDView.getText().append(netID);
+        netIDView = (TextView) findViewById(R.id.netIDView);
+        netIDView.setText("...");
+        //netIDView.append(username + user.getFirstName());
+
         username = getIntent().getStringExtra("netID");
         getUsers();
         getUserInfo(username);
-        fillProfile();
-        //netIDView.append(username + user.getFirstName());
+        //fillProfile();
     }
 
     public void getUsers() {
         UserVolleyImpl volley = new UserVolleyImpl(new Callback() {
             public void call(ArrayList<?> result) {
-                if (result.get(0) instanceof UserInfo) {
-                    users = (ArrayList<UserInfo>) result;
+                try {
+                    if(result.get(0) instanceof UserInfo) {
+                        users = (ArrayList<UserInfo>) result;
+                    }
+                } catch(Exception e) {
+                    users = new ArrayList<>();
                 }
             }
         });
@@ -53,20 +60,24 @@ public class ViewProfile extends AppCompatActivity {
     }
 
     public void fillProfile(){
-        if(user != null) {
-            netIDView.append(user.getNetID());
-        }
+        netIDView.setText(user.getNetID());
 
     }
 
     private UserInfo getUserInfo(String netID) {
-        if (users.size() > 0) {
+        if (users != null) {
             for (int i = 0; i < users.size(); i++) {
                 if (users.get(i).getNetID() == netID) {
                     user = users.get(i);
                 }
             }
+            //fillProfile();
+
+            netIDView.setText(netIDView.getText(), TextView.BufferType.EDITABLE);
+            netIDView.setText("User stuff");
+
         }
+        netIDView.setText("User is null");
         return user;
     }
 

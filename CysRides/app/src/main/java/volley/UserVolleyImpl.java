@@ -128,9 +128,6 @@ public class UserVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements 
             urlConnection = (HttpURLConnection) url.openConnection();
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
 
-            //List<String> params = new ArrayList<String>();
-            //params.add(netID);
-
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
             String line;
