@@ -21,16 +21,27 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import domain.UserInfo;
+import service.NavigationService;
+import service.NavigationServiceImpl;
+import service.UserIntentService;
+import service.UserIntentServiceImpl;
+
 public class Contacts extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    private NavigationService navigationService = new NavigationServiceImpl();
+    private UserIntentService userIntentService = new UserIntentServiceImpl();
 
     private ListView listView;
     private ArrayList list = new ArrayList();
     private ArrayAdapter adapter;
     private Intent i;
+    private UserInfo userInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        userInfo = userIntentService.getUserFromIntent(getIntent());
         setContentView(R.layout.activity_contacts);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -101,29 +112,24 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
+        i = navigationService.getNavigationIntent(item, Contacts.this, i);
         switch(id)
         {
             case R.id.profile:
-                i = new Intent(Contacts.this, ViewProfile.class);
                 startActivity(i);
                 break;
             case R.id.requests:
-                i = new Intent(Contacts.this, RideRequests.class);
                 startActivity(i);
                 break;
             case R.id.offers:
-                i = new Intent(Contacts.this, RideOffers.class);
                 startActivity(i);
                 break;
             case R.id.contacts:
                 break;
             case R.id.createOffer:
-                i = new Intent(Contacts.this, CreateOffer.class);
                 startActivity(i);
                 break;
             case R.id.createRequest:
-                i = new Intent(Contacts.this, CreateRequest.class);
                 startActivity(i);
                 break;
             case R.id.logout:
@@ -132,7 +138,6 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
                 alert.setMessage("Do you really want to logout?");
                 alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        i = new Intent(Contacts.this, LoginActivity.class);
                         startActivity(i);
                     }});
                 alert.setNegativeButton(android.R.string.no, null);
@@ -140,7 +145,6 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
             default:
                 break;
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

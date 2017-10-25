@@ -26,12 +26,15 @@ import domain.Offer;
 import domain.Request;
 import domain.UserInfo;
 import domain.UserType;
+import service.NavigationService;
+import service.NavigationServiceImpl;
 import service.OfferService;
 import service.OfferServiceImpl;
 
 public class RideRequests extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    OfferService offerService = new OfferServiceImpl();
+    private NavigationService navigationService = new NavigationServiceImpl();
+    private OfferService offerService = new OfferServiceImpl();
 
     private ListView listView;
     private ArrayAdapter adapter;
@@ -115,29 +118,25 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        i = navigationService.getNavigationIntent(item, RideRequests.this, i);
 
         switch(id)
         {
             case R.id.profile:
-                i = new Intent(RideRequests.this, ViewProfile.class);
                 startActivity(i);
                 break;
             case R.id.requests:
                 break;
             case R.id.offers:
-                i = new Intent(RideRequests.this, RideOffers.class);
                 startActivity(i);
                 break;
             case R.id.contacts:
-                i = new Intent(RideRequests.this, Contacts.class);
                 startActivity(i);
                 break;
             case R.id.createOffer:
-                i = new Intent(RideRequests.this, CreateOffer.class);
                 startActivity(i);
                 break;
             case R.id.createRequest:
-                i = new Intent(RideRequests.this, CreateRequest.class);
                 startActivity(i);
                 break;
             case R.id.logout:
@@ -146,7 +145,6 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
                 alert.setMessage("Do you really want to logout?");
                 alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        i = new Intent(RideRequests.this, LoginActivity.class);
                         startActivity(i);
                     }});
                 alert.setNegativeButton(android.R.string.no, null);

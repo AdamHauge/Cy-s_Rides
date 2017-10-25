@@ -19,7 +19,6 @@ import volley.UserVolleyImpl;
 public class ViewProfile extends AppCompatActivity {
 
     private UserInfo user;
-    private ArrayList<UserInfo> users;
     String username;
     private TextView netIDView;
 
@@ -30,24 +29,14 @@ public class ViewProfile extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //netIDView.getText().append(netID);
-        username = getIntent().getStringExtra("netID");
-        getUser(username);
-        //netIDView.append(username + user.getFirstName());
+//        username = getIntent().getStringExtra("netID");
+//        getUser(username);
+//        netIDView.append(username + user.getFirstName());
     }
 
     public void getUser(String netID) {
-        /*UserVolleyImpl volley = new UserVolleyImpl(new Callback() {
-            public void call(ArrayList<?> result) {
-                if(result.get(0) instanceof UserInfo) {
-                    users = (ArrayList<UserInfo>) result;
-                }
-
-                for(int i = 0; i < users.size(); i++) {
-
-                }
-            }
-        });
-        //volley.execute();*/
+        UserVolleyImpl volley = new UserVolleyImpl();
+        //user = volley.onPostExecute(volley.doInBackground(netID));
     }
 
     public void fillProfile(){

@@ -17,6 +17,10 @@ public class UserInfo {
     private List<Offer> offers;
     private List<Request> requests;
 
+    public UserInfo() {
+
+    }
+
     public UserInfo(String netID, String password, String confirmationCode, String firstName, String lastName, String venmoName,
                     String profileDescription, UserType userType, float userRating, List<Offer> offers, List<Request> requests) {
         this.netID = netID;
