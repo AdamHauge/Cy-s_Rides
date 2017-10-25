@@ -149,8 +149,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void populateMap() {
         OfferVolleyImpl volley = new OfferVolleyImpl(new Callback() {
             public void call(ArrayList<?> result) {
-                if(result.get(0) instanceof Offer) {
-                    offers = (ArrayList<Offer>) result;
+                try {
+                    if(result.get(0) instanceof Offer) {
+                        offers = (ArrayList<Offer>) result;
+                    }
+                } catch(Exception e) {
+                    offers = new ArrayList<>();
                 }
 
                 googleMap.clear();
