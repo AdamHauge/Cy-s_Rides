@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -31,6 +33,7 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
     private ArrayAdapter<String> adapter;
     private List<Offer> offers = new ArrayList<>();
     private List<String> destinations = new ArrayList<>();
+    FragmentManager fragmentManager = this.getSupportFragmentManager();
     private Intent i;
 
     @Override
@@ -40,7 +43,7 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_offers_activity);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -57,18 +60,14 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(RideOffers.this);
-                alert.setTitle("Offer Info");
-                alert.setMessage(offers.get(position).toString());
-                alert.setNegativeButton(android.R.string.no, null);
-                alert.setPositiveButton("Join Trip", new  DialogInterface.OnClickListener(){
-                   @Override
-                    public void onClick(DialogInterface dialogInterface, int i){
-                       Toast.makeText(RideOffers.this, "NEED TO JOIN TRIP", Toast.LENGTH_LONG).show();
-                       //offers.get(position).getGroup().addUser(ME);
-                    }
-                } );
-                alert.show();
+                ViewOffer viewOffer = new ViewOffer();
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
+                viewOffer.setData(offers.get(position));
+
+                fragmentTransaction.replace(R.id.ride_offers_activity, viewOffer);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
             }
         });
     }
@@ -97,10 +96,14 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_offers_activity);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
+        }
+        else if(fragmentManager.getBackStackEntryCount() > 0) {
+            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        }
+        else {
             finish();
             i = new Intent(RideOffers.this, MainActivity.class);
             startActivity(i);

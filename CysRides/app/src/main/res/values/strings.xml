@@ -23,7 +23,7 @@
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
 
-    <!-- Strings related to ride requests -->
+    <!-- Strings related to ride requests and ride offers -->
     <string name="title_activity_ride_requests">Ride Requests</string>
     <string name="name">Name</string>
     <string name="destination">Destination (city, state)</string>
@@ -33,6 +33,7 @@
     <string name="leave_date">Leave Date (mm/dd/yyyy)</string>
     <string name="enter">Enter</string>
     <string name="submit">Submit</string>
+    <string name="join">Join Ride</string>
 
     <!-- Strings related to profile -->
     <string name="large_text">
