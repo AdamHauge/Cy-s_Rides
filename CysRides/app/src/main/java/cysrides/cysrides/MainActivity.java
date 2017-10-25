@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private List<Offer> offers = new ArrayList<>();
     private ConnectivityManager connMgr;
     private NetworkInfo networkInfo;
+    private FragmentManager fragmentManager = this.getSupportFragmentManager();
     private LatLng iowaState = new LatLng(42.0266187, -93.64646540000001);
     private float defaultZoom = 16.0f; //TODO determine a good zoom value
 
@@ -132,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     if(o.getCoordinates().equals(marker.getPosition()) &&
                             o.getDescription().equals(marker.getSnippet()) &&
                             o.getDestination().equals(marker.getTitle())) {
-                        viewOffer.setData((o));
+                        viewOffer.setData(o);
                     }
                 }
 
@@ -174,13 +175,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main);
-        FragmentManager fragmentManager = ((FragmentActivity) this).getSupportFragmentManager();
 
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         }
         else if(fragmentManager.getBackStackEntryCount() > 0) {
-            fragmentManager.popBackStackImmediate();
+            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
         else {
             if(backPressed) {
