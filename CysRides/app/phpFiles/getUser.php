@@ -12,14 +12,31 @@
         $post_netid = mysqli_real_escape_string($conn, $_POST['netID']);
 
         $sql = "SELECT * FROM USER_TABLE WHERE NETID='".$post_netid."'";
+
+        $sql = 'SELECT * FROM USER_TABLE';
+
         $result = $conn->query($sql);
 
+//        if ($result->num_rows > 0) {
+//            $row = $result->fetch_assoc();
+//            echo $json = json_encode($row);
+//        } else {
+//            echo "0 results";
+//        }
+//
+//        $conn->close();
+
+        $jsonArr = array();
+
         if ($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
-            echo $json = json_encode($row);
+             // output data of each row
+            while($row = $result->fetch_assoc()) {
+            array_push($jsonArr, $row);
+        }
         } else {
-            echo "0 results";
+        echo "0 results";
         }
 
+        echo $json = json_encode($jsonArr);
         $conn->close();
 ?>

@@ -42,9 +42,8 @@ public class UserVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements 
     private Callback callback;
     private String netID;
 
-    public UserVolleyImpl(String netID, Callback call){
+    public UserVolleyImpl(Callback call){
         callback = call;
-        this.netID = netID;
     }
 
     @Override
@@ -129,8 +128,8 @@ public class UserVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements 
             urlConnection = (HttpURLConnection) url.openConnection();
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
 
-            List<String> params = new ArrayList<String>();
-            params.add(netID);
+            //List<String> params = new ArrayList<String>();
+            //params.add(netID);
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
@@ -162,6 +161,5 @@ public class UserVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements 
 
         return array;
     }
-
 
 }

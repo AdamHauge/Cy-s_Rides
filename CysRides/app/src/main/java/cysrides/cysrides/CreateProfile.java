@@ -51,7 +51,7 @@ public class CreateProfile extends AppCompatActivity {
     private UserType userType;
     private Callback call;
 
-    private UserVolley userVolley = new UserVolleyImpl("", call);
+    private UserVolley userVolley = new UserVolleyImpl(call);
 
     private Intent i;
 

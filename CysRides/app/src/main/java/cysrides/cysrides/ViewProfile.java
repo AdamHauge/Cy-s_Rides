@@ -35,20 +35,17 @@ public class ViewProfile extends AppCompatActivity {
         setSupportActionBar(toolbar);
         //netIDView.getText().append(netID);
         username = getIntent().getStringExtra("netID");
-        getUser(username);
+        getUsers();
+        getUserInfo(username);
+        fillProfile();
         //netIDView.append(username + user.getFirstName());
     }
 
-    public void getUser(final String netID) {
-        UserVolleyImpl volley = new UserVolleyImpl(netID, new Callback() {
+    public void getUsers() {
+        UserVolleyImpl volley = new UserVolleyImpl(new Callback() {
             public void call(ArrayList<?> result) {
-                if(result.get(0) instanceof UserInfo) {
+                if (result.get(0) instanceof UserInfo) {
                     users = (ArrayList<UserInfo>) result;
-                }
-                for(int i = 0; i < users.size(); i++){
-                    if(users.get(i).getNetID() == netID){
-                        user = users.get(i);
-                    }
                 }
             }
         });
@@ -56,10 +53,22 @@ public class ViewProfile extends AppCompatActivity {
     }
 
     public void fillProfile(){
-        netIDView.append(user.getNetID());
+        if(user != null) {
+            netIDView.append(user.getNetID());
+        }
 
     }
 
+    private UserInfo getUserInfo(String netID) {
+        if (users.size() > 0) {
+            for (int i = 0; i < users.size(); i++) {
+                if (users.get(i).getNetID() == netID) {
+                    user = users.get(i);
+                }
+            }
+        }
+        return user;
+    }
 
     @Override
     public void onBackPressed() {
