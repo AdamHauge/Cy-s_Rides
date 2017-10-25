@@ -12,8 +12,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import domain.Offer;
+import domain.Request;
 import domain.UserInfo;
+import domain.UserType;
 import volley.UserVolleyImpl;
 
 public class ViewProfile extends AppCompatActivity {
@@ -35,23 +39,24 @@ public class ViewProfile extends AppCompatActivity {
         //netIDView.append(username + user.getFirstName());
     }
 
-    public void getUser(String netID) {
-        /*UserVolleyImpl volley = new UserVolleyImpl(new Callback() {
+    public void getUser(final String netID) {
+        UserVolleyImpl volley = new UserVolleyImpl(netID, new Callback() {
             public void call(ArrayList<?> result) {
                 if(result.get(0) instanceof UserInfo) {
                     users = (ArrayList<UserInfo>) result;
                 }
-
-                for(int i = 0; i < users.size(); i++) {
-
+                for(int i = 0; i < users.size(); i++){
+                    if(users.get(i).getNetID() == netID){
+                        user = users.get(i);
+                    }
                 }
             }
         });
-        //volley.execute();*/
+        volley.execute();
     }
 
     public void fillProfile(){
-        //netIDView.append(user.getNetID());
+        netIDView.append(user.getNetID());
 
     }
 
