@@ -7,4 +7,5 @@ import android.view.MenuItem;
 
 public interface NavigationService {
     Intent getNavigationIntent(@NonNull MenuItem item, Context c, Intent intent);
+    boolean checkInternetConnection(Context c);
 }

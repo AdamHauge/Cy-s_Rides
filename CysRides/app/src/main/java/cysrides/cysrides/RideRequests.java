@@ -1,10 +1,13 @@
 package cysrides.cysrides;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -72,6 +75,10 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
                 fragmentTransaction.commit();
             }
         });
+
+        if(navigationService.checkInternetConnection(getApplicationContext())) {
+            connectionPopUp();
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -144,41 +151,46 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
         i = navigationService.getNavigationIntent(item, RideRequests.this, i);
 
-        switch(id)
-        {
-            case R.id.profile:
-                startActivity(i);
-                break;
-            case R.id.requests:
-                break;
-            case R.id.offers:
-                startActivity(i);
-                break;
-            case R.id.contacts:
-                startActivity(i);
-                break;
-            case R.id.createOffer:
-                startActivity(i);
-                break;
-            case R.id.createRequest:
-                startActivity(i);
-                break;
-            case R.id.logout:
-                AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                alert.setTitle("Logout");
-                alert.setMessage("Do you really want to logout?");
-                alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        startActivity(i);
-                    }});
-                alert.setNegativeButton(android.R.string.no, null);
-                alert.show();
-            default:
-                break;
-        }
+        if(R.id.logout == id) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle("Logout");
+            alert.setMessage("Do you really want to logout?");
+            alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    startActivity(i);
+                }});
+            alert.setNegativeButton(android.R.string.no, null);
+            alert.show();
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_requests_activity);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_requests_activity);
+            drawer.closeDrawer(GravityCompat.START);
+            return true;
+        }
+        else if(navigationService.checkInternetConnection(getApplicationContext())) {
+            connectionPopUp();
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_requests_activity);
+            drawer.closeDrawer(GravityCompat.START);
+            return false;
+        }
+        else {
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_requests_activity);
+            drawer.closeDrawer(GravityCompat.START);
+            startActivity(i);
+            return true;
+        }
+    }
+
+    public void connectionPopUp() {
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.ride_requests_activity),
+                "Cy's Rides Requires\nInternet Connection", Snackbar.LENGTH_INDEFINITE);
+
+        snackbar.setAction("Connect WIFI", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                wifi.setWifiEnabled(true);
+            }
+        });
+        snackbar.show();
     }
 }

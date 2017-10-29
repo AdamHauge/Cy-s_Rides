@@ -57,8 +57,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private GoogleMap googleMap;
     private List<Offer> offers = new ArrayList<>();
     private List<Request> requests = new ArrayList<>();
-    private ConnectivityManager connMgr;
-    private NetworkInfo networkInfo;
     private FragmentManager fragmentManager = this.getSupportFragmentManager();
     private LatLng iowaState = new LatLng(42.0266187, -93.64646540000001);
     private float defaultZoom = 15.0f;
@@ -107,21 +105,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         populateMap();
 
-        connMgr = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
-        networkInfo = connMgr.getActiveNetworkInfo();
-
-        if(null == networkInfo) {
-            Snackbar snackbar = Snackbar.make(findViewById(R.id.activity_main),
-                    "Cy's Rides Requires\nInternet Connection", Snackbar.LENGTH_INDEFINITE);
-
-            snackbar.setAction("Connect WIFI", new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-                    wifi.setWifiEnabled(true);
-                }
-            });
-            snackbar.show();
+        if(navigationService.checkInternetConnection(getApplicationContext())) {
+            connectionPopUp();
         }
     }
 
@@ -294,57 +279,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
         i = navigationService.getNavigationIntent(item, MainActivity.this, i);
 
-        switch(id)
-        {
-            case R.id.profile:
-                break;
-            case R.id.requests:
-                break;
-            case R.id.offers:
-                break;
-            case R.id.contacts:
-                break;
-            case R.id.createOffer:
-                break;
-            case R.id.createRequest:
-                break;
-            case R.id.createProfile:
-                break;
-            case R.id.logout:
-                AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                alert.setTitle("Logout");
-                alert.setMessage("Do you really want to logout?");
-                alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        startActivity(i);
-                        }});
-                alert.setNegativeButton(android.R.string.no, null);
-                alert.show();
-            default:
-                break;
-        }
+        if(R.id.logout == id) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle("Logout");
+            alert.setMessage("Do you really want to logout?");
+            alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    startActivity(i);
+                }});
+            alert.setNegativeButton(android.R.string.no, null);
+            alert.show();
 
-        connMgr = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
-        networkInfo = connMgr.getActiveNetworkInfo();
-
-        if(null == networkInfo && R.id.logout != id) {
-            Snackbar snackbar = Snackbar.make(findViewById(R.id.activity_main),
-                    "Cy's Rides Requires\nInternet Connection", Snackbar.LENGTH_INDEFINITE);
-
-            snackbar.setAction("Connect WIFI", new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-                    wifi.setWifiEnabled(true);
-                }
-            });
-            snackbar.show();
-            return false;
-        }
-        else if(R.id.logout == id) {
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main);
             drawer.closeDrawer(GravityCompat.START);
             return true;
+        }
+        else if(navigationService.checkInternetConnection(getApplicationContext())) {
+            connectionPopUp();
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main);
+            drawer.closeDrawer(GravityCompat.START);
+            return false;
         }
         else {
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main);
@@ -352,5 +306,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(i);
             return true;
         }
+    }
+
+    public void connectionPopUp() {
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.activity_main),
+                "Cy's Rides Requires\nInternet Connection", Snackbar.LENGTH_INDEFINITE);
+
+        snackbar.setAction("Connect WIFI", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                wifi.setWifiEnabled(true);
+            }
+        });
+        snackbar.show();
     }
 }

@@ -2,10 +2,12 @@ package cysrides.cysrides;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -31,10 +33,7 @@ import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import domain.Offer;
 import domain.Request;
-import domain.UserInfo;
-import domain.UserType;
 import service.NavigationService;
 import service.NavigationServiceImpl;
 import service.RequestService;
@@ -51,6 +50,7 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
     private Intent i;
     private RequestService requestService = new RequestServiceImpl();
     private NavigationService navigationService = new NavigationServiceImpl();
+    private boolean retValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +59,7 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.create_request_activity);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -161,7 +161,6 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
                 if(allValid) {
                     Request r = new Request(numBags, "email", (String) destination.getName(), destination.getLatLng(), description, new GregorianCalendar(year, month, day).getTime());
                     requestService.createRequest(CreateRequest.this, r);
-                    //TODO submit to database
                     finish();
                     startActivity(getIntent());
                 }
@@ -170,11 +169,15 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
 //        UserInfo ui = new UserInfo("rcerveny@iastate.edu", "password", 42, "Ryan", "Cerveny",
 //                "venmo","description", UserType.DRIVER, (float) 5.0,
 //                new ArrayList<Offer>(), new ArrayList<Request>());
+
+        if(navigationService.checkInternetConnection(getApplicationContext())) {
+            connectionPopUp();
+        }
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.create_request_activity);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -226,66 +229,60 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        final MenuItem item = menuItem;
-        AlertDialog.Builder alert;
-        i = navigationService.getNavigationIntent(item, CreateRequest.this, i);
+    public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Discard Request");
+        alert.setMessage("This will discard your current request. Continue anyway?");
+        alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // Handle navigation view item clicks here.
+                int id = item.getItemId();
 
-        switch(item.getItemId()) {
-            case R.id.profile:
-            case R.id.requests:
-            case R.id.offers:
-            case R.id.contacts:
-            case R.id.createOffer:
-            case R.id.createRequest:
-                alert = new AlertDialog.Builder(this);
-                alert.setTitle("Discard Request");
-                alert.setMessage("This will discard your current request. Continue anyway?");
-                alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        int id = item.getItemId();
-                        switch (id) {
-                            case R.id.profile:
-                                startActivity(i);
-                                break;
-                            case R.id.requests:
-                                startActivity(i);
-                                break;
-                            case R.id.offers:
-                                startActivity(i);
-                                break;
-                            case R.id.contacts:
-                                startActivity(i);
-                                break;
-                            case R.id.createOffer:
-                                startActivity(i);
-                                break;
-                            case R.id.createRequest:
-                                break;
-                            default:
-                                break;
+                i = navigationService.getNavigationIntent(item, CreateRequest.this, i);
+
+                if (R.id.logout == id) {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(CreateRequest.this);
+                    alert.setTitle("Logout");
+                    alert.setMessage("Do you really want to logout?");
+                    alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            startActivity(i);
                         }
-                    }
-                });
-                alert.setNegativeButton(android.R.string.no, null);
-                alert.show();
-                break;
-            case R.id.logout:
-                alert = new AlertDialog.Builder(this);
-                alert.setTitle("Logout");
-                alert.setMessage("Do you really want to logout?");
-                alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        startActivity(i);
-                    }});
-                alert.setNegativeButton(android.R.string.no, null);
-                alert.show();
-                break;
-            default:
-                break;
-        }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+                    });
+                    alert.setNegativeButton(android.R.string.no, null);
+                    alert.show();
+
+                    DrawerLayout drawer = (DrawerLayout) findViewById(R.id.create_offer_activity);
+                    drawer.closeDrawer(GravityCompat.START);
+                    retValue = true;
+                } else if (navigationService.checkInternetConnection(getApplicationContext())) {
+                    connectionPopUp();
+                    DrawerLayout drawer = (DrawerLayout) findViewById(R.id.create_offer_activity);
+                    drawer.closeDrawer(GravityCompat.START);
+                    retValue = false;
+                } else {
+                    startActivity(i);
+                    retValue = true;
+                }
+            }
+        });
+        alert.setNegativeButton(android.R.string.no, null);
+        alert.show();
+
+        return retValue;
+    }
+
+    public void connectionPopUp() {
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.create_request_activity),
+                "Cy's Rides Requires\nInternet Connection", Snackbar.LENGTH_INDEFINITE);
+
+        snackbar.setAction("Connect WIFI", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                wifi.setWifiEnabled(true);
+            }
+        });
+        snackbar.show();
     }
 }
