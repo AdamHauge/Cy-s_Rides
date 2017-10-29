@@ -9,10 +9,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import domain.Offer;
+import domain.Request;
 
 public class ViewRequest extends Fragment {
 
-    private Offer offer;
+    private Request request;
 
     public ViewRequest() {
         // Required empty public constructor
@@ -27,12 +28,12 @@ public class ViewRequest extends Fragment {
         return v;
     }
 
-    public void setData(Offer offer) {
-        this.offer = offer;
+    public void setData(Request request) {
+        this.request = request;
     }
 
     public void setTextInfo(View v) {
         TextView info = v.findViewById(R.id.offer);
-        info.setText(offer.toString());
+        info.setText(request.toString());
     }
 }

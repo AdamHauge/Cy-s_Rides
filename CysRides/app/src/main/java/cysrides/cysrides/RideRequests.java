@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -17,31 +19,23 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import domain.Offer;
 import domain.Request;
-import domain.UserInfo;
-import domain.UserType;
 import service.NavigationService;
 import service.NavigationServiceImpl;
-import service.OfferService;
-import service.OfferServiceImpl;
+import volley.RequestVolleyImpl;
 
 public class RideRequests extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private NavigationService navigationService = new NavigationServiceImpl();
-    private OfferService offerService = new OfferServiceImpl();
 
-    private ListView listView;
-    private ArrayAdapter adapter;
-    private List<Offer> list = null; //offerService.getOfferRequests(new UserInfo("rcerveny@iastate.edu", "password", "0042", "Ryan", "Cerveny",
-//                                                            "venmo","description", UserType.DRIVER, (float) 5.0,
-//                                                             new ArrayList<Offer>(), new ArrayList<Request>()));
-    private List<String> destinationAndDescriptionList = new ArrayList<>();
+    private ArrayAdapter<String> adapter;
+    private List<Request> requests = new ArrayList<>();
+    private List<String> destinations = new ArrayList<>();
+    FragmentManager fragmentManager = this.getSupportFragmentManager();
     private Intent i;
 
     @Override
@@ -51,7 +45,7 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_requests_activity);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -59,30 +53,60 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        listView = (ListView)findViewById(R.id.ride_requests_list);
 
-        for(int i=0 ; i<list.size() ; i++) {
-            String destinationAndDescription = "";
-            destinationAndDescription += list.get(i).getDescription() + " " + list.get(i).getDestination();
-            destinationAndDescriptionList.add(destinationAndDescription);
-        }
+        getRequestsList();
 
-        adapter = new ArrayAdapter(RideRequests.this, android.R.layout.simple_list_item_1, destinationAndDescriptionList);
+        ListView listView = (ListView)findViewById(R.id.ride_requests_list);
+        adapter = new ArrayAdapter<>(RideRequests.this, android.R.layout.simple_list_item_1, destinations);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getApplicationContext(), destinationAndDescriptionList.get(position).toString(), Toast.LENGTH_SHORT).show();
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                ViewRequest viewRequest = new ViewRequest();
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
+                viewRequest.setData(requests.get(position));
+
+                fragmentTransaction.replace(R.id.ride_requests_activity, viewRequest);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
             }
         });
     }
 
+    @SuppressWarnings("unchecked")
+    public void getRequestsList() {
+        RequestVolleyImpl volley = new RequestVolleyImpl(new Callback() {
+            public void call(ArrayList<?> result) {
+                try {
+                    if (result.get(0) instanceof Request) {
+                        requests = (ArrayList<Request>) result;
+                    }
+                } catch(Exception e) {
+                    requests = new ArrayList<>();
+                }
+
+                adapter.clear();
+                destinations.clear();
+                for(int i = 0; i < requests.size(); i++) {
+                    destinations.add(requests.get(i).getDestination());
+                }
+                adapter.notifyDataSetChanged();
+            }
+        });
+        volley.execute();
+    }
+
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_requests_activity);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
+        }
+        else if(fragmentManager.getBackStackEntryCount() > 0) {
+            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        }
+        else {
             finish();
             i = new Intent(RideRequests.this, MainActivity.class);
             startActivity(i);
@@ -153,7 +177,7 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
                 break;
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_requests_activity);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
