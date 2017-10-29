@@ -29,6 +29,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -41,9 +42,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import domain.Offer;
+import domain.Request;
 import service.NavigationService;
 import service.NavigationServiceImpl;
 import volley.OfferVolleyImpl;
+import volley.RequestVolleyImpl;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
 
@@ -53,11 +56,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private boolean backPressed = false;
     private GoogleMap googleMap;
     private List<Offer> offers = new ArrayList<>();
+    private List<Request> requests = new ArrayList<>();
     private ConnectivityManager connMgr;
     private NetworkInfo networkInfo;
     private FragmentManager fragmentManager = this.getSupportFragmentManager();
     private LatLng iowaState = new LatLng(42.0266187, -93.64646540000001);
-    private float defaultZoom = 16.0f; //TODO determine a good zoom value
+    private float defaultZoom = 15.0f;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,19 +131,40 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                ViewOffer viewOffer = new ViewOffer();
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
-                for(int i = 0; i < offers.size(); i++) {
-                    Offer o = offers.get(i);
-                    if(o.getCoordinates().equals(marker.getPosition()) &&
-                            o.getDescription().equals(marker.getSnippet()) &&
-                            o.getDestination().equals(marker.getTitle())) {
-                        viewOffer.setData(o);
-                    }
+                switch((int) marker.getZIndex()) {
+                    case 0: //request
+                        ViewRequest viewRequest = new ViewRequest();
+                        for (int i = 0; i < requests.size(); i++) {
+                            Request r = requests.get(i);
+                            if (r.getCoordinates().equals(marker.getPosition()) &&
+                                    r.getDescription().equals(marker.getSnippet()) &&
+                                    r.getDestination().equals(marker.getTitle())) {
+                                viewRequest.setData(r);
+                            }
+                        }
+
+                        fragmentTransaction.replace(R.id.activity_main, viewRequest);
+                        break;
+
+                    case 1: //offer
+                        ViewOffer viewOffer = new ViewOffer();
+                        for (int i = 0; i < offers.size(); i++) {
+                            Offer o = offers.get(i);
+                            if (o.getCoordinates().equals(marker.getPosition()) &&
+                                    o.getDescription().equals(marker.getSnippet()) &&
+                                    o.getDestination().equals(marker.getTitle())) {
+                                viewOffer.setData(o);
+                            }
+                        }
+                        fragmentTransaction.replace(R.id.activity_main, viewOffer);
+
+                        break;
+                    default:
+                        break;
                 }
 
-                fragmentTransaction.replace(R.id.activity_main, viewOffer);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
 
@@ -151,7 +176,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @SuppressWarnings("unchecked")
     public void populateMap() {
-        OfferVolleyImpl volley = new OfferVolleyImpl(new Callback() {
+        OfferVolleyImpl offerVolley = new OfferVolleyImpl(new Callback() {
+            @Override
             public void call(ArrayList<?> result) {
                 try {
                     if(result.get(0) instanceof Offer) {
@@ -160,23 +186,54 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 } catch(Exception e) {
                     offers = new ArrayList<>();
                 }
-
-                googleMap.clear();
-
-                for(int i = 0; i < offers.size(); i++) {
-                    LatLng coordinates = offers.get(i).getCoordinates();
-                    String name = offers.get(i).getDestination();
-                    String description = offers.get(i).getDescription();
-                    googleMap.addMarker(new MarkerOptions()
-                            .position(coordinates)
-                            .title(name)
-                            .snippet(description));
-                }
-                onMapReady(googleMap);
+                createMarkers();
             }
         });
-        volley.execute();
-        //TODO get pins for all ride requests. Add them to map if only user has car.
+        offerVolley.execute();
+
+        RequestVolleyImpl requestVolley = new RequestVolleyImpl(new Callback() {
+            @Override
+            public void call(ArrayList<?> result) {
+                try {
+                    if(result.get(0) instanceof Request) {
+                        requests = (ArrayList<Request>) result;
+                    }
+                } catch(Exception e) {
+                    offers = new ArrayList<>();
+                }
+                createMarkers();
+            }
+        });
+        requestVolley.execute();
+    }
+
+    public void createMarkers() {
+        googleMap.clear();
+
+        for(int i = 0; i < offers.size(); i++) {
+            LatLng coordinates = offers.get(i).getCoordinates();
+            String name = offers.get(i).getDestination();
+            String description = offers.get(i).getDescription();
+            googleMap.addMarker(new MarkerOptions()
+                    .position(coordinates)
+                    .title(name)
+                    .snippet(description)
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                    .zIndex(1));
+        }
+
+        for(int i = 0; i < requests.size(); i++) {
+            LatLng coordinates = requests.get(i).getCoordinates();
+            String name = requests.get(i).getDestination();
+            String description = requests.get(i).getDescription();
+            googleMap.addMarker(new MarkerOptions()
+                    .position(coordinates)
+                    .title(name)
+                    .snippet(description)
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                    .zIndex(0));
+        }
+        onMapReady(googleMap);
     }
 
     @Override

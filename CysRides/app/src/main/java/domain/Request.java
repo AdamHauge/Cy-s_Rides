@@ -31,7 +31,7 @@ public class Request {
 
     @Override
     public String toString() {
-        return "num bags=$" + numBags +
+        return "num bags=" + numBags +
                 "\nemail=" + email +
                 "\ndescription=" + description +
                 "\ndate=" + date;
