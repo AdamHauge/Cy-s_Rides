@@ -38,8 +38,6 @@ import service.NavigationService;
 import service.NavigationServiceImpl;
 import service.OfferService;
 import service.OfferServiceImpl;
-import volley.OfferVolley;
-import volley.OfferVolleyImpl;
 
 public class CreateOffer extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
