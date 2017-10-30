@@ -8,11 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import domain.Offer;
 import domain.Request;
@@ -40,7 +38,7 @@ public class ViewProfile extends AppCompatActivity {
 
         username = getIntent().getStringExtra("netID");
         getUsers();
-        getUserInfo(username);
+        //getUserInfo(username);
         //fillProfile();
     }
 
@@ -54,6 +52,8 @@ public class ViewProfile extends AppCompatActivity {
                 } catch(Exception e) {
                     users = new ArrayList<>();
                 }
+
+                getUserInfo(username);
             }
         });
         volley.execute();
@@ -64,21 +64,22 @@ public class ViewProfile extends AppCompatActivity {
 
     }
 
-    private UserInfo getUserInfo(String netID) {
+    private void getUserInfo(String netID) {
         if (users != null) {
             for (int i = 0; i < users.size(); i++) {
-                if (users.get(i).getNetID() == netID) {
+                if (users.get(i).getNetID().equals(netID)) {
                     user = users.get(i);
                 }
             }
             //fillProfile();
 
             netIDView.setText(netIDView.getText(), TextView.BufferType.EDITABLE);
-            netIDView.setText("User stuff");
+            netIDView.setText(username + user.getFirstName());
 
         }
-        netIDView.setText("User is null");
-        return user;
+        else {
+            netIDView.setText("User is null");
+        }
     }
 
     @Override

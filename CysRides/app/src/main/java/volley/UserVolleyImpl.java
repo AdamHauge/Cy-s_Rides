@@ -84,6 +84,7 @@ public class UserVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements 
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
 
+    @Override
     public void onPostExecute(JSONArray jsonArray) {
         try{
             users = new ArrayList<>();
@@ -119,7 +120,8 @@ public class UserVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements 
         callback.call(users);
     }
 
-    public JSONArray doInBackground(Void... aVoid) {
+    @Override
+    protected JSONArray doInBackground(Void... aVoid) {
         HttpURLConnection urlConnection = null;
         StringBuilder result = new StringBuilder();
 
