@@ -2,10 +2,12 @@ package cysrides.cysrides;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -36,8 +38,6 @@ import service.NavigationService;
 import service.NavigationServiceImpl;
 import service.OfferService;
 import service.OfferServiceImpl;
-import volley.OfferVolley;
-import volley.OfferVolleyImpl;
 
 public class CreateOffer extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -50,6 +50,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
     private Intent i;
     private OfferService offerService = new OfferServiceImpl();
     private NavigationService navigationService = new NavigationServiceImpl();
+    boolean retValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +59,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.create_offer_activity);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -166,11 +167,15 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
                 }
             }
         });
+
+        if(navigationService.checkInternetConnection(getApplicationContext())) {
+            connectionPopUp();
+        }
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.create_offer_activity);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -195,95 +200,62 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.my_profile) {
-            AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            alert.setTitle("Discard Request");
-            alert.setMessage("This will discard your current offer. Continue anyway?");
-            alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    finish();
-                    i = new Intent(CreateOffer.this, ViewProfile.class);
-                    i.putExtra("caller", "Create Offer");
-                    startActivity(i);
-                }});
-            alert.setNegativeButton(android.R.string.no, null);
-            alert.show();
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        final MenuItem item = menuItem;
-        AlertDialog.Builder alert;
-        i = navigationService.getNavigationIntent(item, CreateOffer.this, i);
+    public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Discard Offer");
+        alert.setMessage("This will discard your current offer. Continue anyway?");
+        alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // Handle navigation view item clicks here.
+                int id = item.getItemId();
 
-        switch(item.getItemId()) {
-            case R.id.profile:
-            case R.id.requests:
-            case R.id.offers:
-            case R.id.contacts:
-            case R.id.createOffer:
-            case R.id.createRequest:
-                alert = new AlertDialog.Builder(this);
-                alert.setTitle("Discard Request");
-                alert.setMessage("This will discard your current offer. Continue anyway?");
-                alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        int id = item.getItemId();
-                        switch (id) {
-                            case R.id.profile:
-                                startActivity(i);
-                                break;
-                            case R.id.requests:
-                                startActivity(i);
-                                break;
-                            case R.id.offers:
-                                startActivity(i);
-                                break;
-                            case R.id.contacts:
-                                startActivity(i);
-                                break;
-                            case R.id.createOffer:
-                                break;
-                            case R.id.createRequest:
-                                startActivity(i);
-                                break;
-                            default:
-                                break;
+                i = navigationService.getNavigationIntent(item, CreateOffer.this, i);
+
+                if (R.id.logout == id) {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(CreateOffer.this);
+                    alert.setTitle("Logout");
+                    alert.setMessage("Do you really want to logout?");
+                    alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            startActivity(i);
                         }
-                    }
-                });
-                alert.setNegativeButton(android.R.string.no, null);
-                alert.show();
-                break;
-            case R.id.logout:
-                alert = new AlertDialog.Builder(this);
-                alert.setTitle("Logout");
-                alert.setMessage("Do you really want to logout?");
-                alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        i = new Intent(CreateOffer.this, LoginActivity.class);
-                        startActivity(i);
-                    }});
-                alert.setNegativeButton(android.R.string.no, null);
-                alert.show();
-                break;
-            default:
-                break;
-        }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+                    });
+                    alert.setNegativeButton(android.R.string.no, null);
+                    alert.show();
+
+                    DrawerLayout drawer = (DrawerLayout) findViewById(R.id.create_offer_activity);
+                    drawer.closeDrawer(GravityCompat.START);
+                    retValue = true;
+                } else if (navigationService.checkInternetConnection(getApplicationContext())) {
+                    connectionPopUp();
+                    DrawerLayout drawer = (DrawerLayout) findViewById(R.id.create_offer_activity);
+                    drawer.closeDrawer(GravityCompat.START);
+                    retValue = false;
+                } else {
+                    startActivity(i);
+                    retValue = true;
+                }
+            }
+        });
+        alert.setNegativeButton(android.R.string.no, null);
+        alert.show();
+
+        return retValue;
+    }
+
+    public void connectionPopUp() {
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.create_offer_activity),
+                "Cy's Rides Requires\nInternet Connection", Snackbar.LENGTH_INDEFINITE);
+
+        snackbar.setAction("Connect WIFI", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                wifi.setWifiEnabled(true);
+            }
+        });
+        snackbar.show();
     }
 }

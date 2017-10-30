@@ -8,7 +8,6 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Date;
 
-import cysrides.cysrides.CreateRequest;
 import cysrides.cysrides.ViewRequest;
 
 
@@ -32,13 +31,10 @@ public class Request {
 
     @Override
     public String toString() {
-        return "Request{" +
-                "num_bags=" + numBags +
-                ", user=" + email +
-                ", destination='" + destination + '\'' +
-                ", description='" + description + '\'' +
-                ", date='" + date + '\'' +
-                '}';
+        return "num bags=" + numBags +
+                "\nemail=" + email +
+                "\ndescription=" + description +
+                "\ndate=" + date;
     }
 
     public int getNumBags() {
