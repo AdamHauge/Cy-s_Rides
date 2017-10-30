@@ -4,8 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,7 +11,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -43,18 +40,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import domain.Offer;
+import domain.Request;
+import service.NavigationService;
+import service.NavigationServiceImpl;
 import volley.OfferVolleyImpl;
+import volley.RequestVolleyImpl;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
+
+    private NavigationService navigationService = new NavigationServiceImpl();
 
     private Intent i;
     private boolean backPressed = false;
     private GoogleMap googleMap;
     private List<Offer> offers = new ArrayList<>();
-    private ConnectivityManager connMgr;
-    private NetworkInfo networkInfo;
+    private List<Request> requests = new ArrayList<>();
+    private FragmentManager fragmentManager = this.getSupportFragmentManager();
     private LatLng iowaState = new LatLng(42.0266187, -93.64646540000001);
-    private float defaultZoom = 16.0f; //TODO determine a good zoom value
+    private float defaultZoom = 15.0f;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,21 +103,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         populateMap();
 
-        connMgr = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
-        networkInfo = connMgr.getActiveNetworkInfo();
-
-        if(null == networkInfo) {
-            Snackbar snackbar = Snackbar.make(findViewById(R.id.activity_main),
-                    "Cy's Rides Requires\nInternet Connection", Snackbar.LENGTH_INDEFINITE);
-
-            snackbar.setAction("Connect WIFI", new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-                    wifi.setWifiEnabled(true);
-                }
-            });
-            snackbar.show();
+        if(navigationService.checkInternetConnection(getApplicationContext())) {
+            connectionPopUp();
         }
     }
 
@@ -124,19 +114,40 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                ViewOffer viewOffer = new ViewOffer();
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
-                for(int i = 0; i < offers.size(); i++) {
-                    Offer o = offers.get(i);
-                    if(o.getCoordinates().equals(marker.getPosition()) &&
-                            o.getDescription().equals(marker.getSnippet()) &&
-                            o.getDestination().equals(marker.getTitle())) {
-                        viewOffer.setData((o));
-                    }
+                switch((int) marker.getZIndex()) {
+                    case 0: //request
+                        ViewRequest viewRequest = new ViewRequest();
+                        for (int i = 0; i < requests.size(); i++) {
+                            Request r = requests.get(i);
+                            if (r.getCoordinates().equals(marker.getPosition()) &&
+                                    r.getDescription().equals(marker.getSnippet()) &&
+                                    r.getDestination().equals(marker.getTitle())) {
+                                viewRequest.setData(r);
+                            }
+                        }
+
+                        fragmentTransaction.replace(R.id.activity_main, viewRequest);
+                        break;
+
+                    case 1: //offer
+                        ViewOffer viewOffer = new ViewOffer();
+                        for (int i = 0; i < offers.size(); i++) {
+                            Offer o = offers.get(i);
+                            if (o.getCoordinates().equals(marker.getPosition()) &&
+                                    o.getDescription().equals(marker.getSnippet()) &&
+                                    o.getDestination().equals(marker.getTitle())) {
+                                viewOffer.setData(o);
+                            }
+                        }
+                        fragmentTransaction.replace(R.id.activity_main, viewOffer);
+
+                        break;
+                    default:
+                        break;
                 }
 
-                fragmentTransaction.replace(R.id.activity_main, viewOffer);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
 
@@ -146,41 +157,77 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.googleMap = googleMap;
     }
 
+    @SuppressWarnings("unchecked")
     public void populateMap() {
-        OfferVolleyImpl volley = new OfferVolleyImpl(new Callback() {
+        OfferVolleyImpl offerVolley = new OfferVolleyImpl(new Callback() {
+            @Override
             public void call(ArrayList<?> result) {
-                if(result.get(0) instanceof Offer) {
-                    offers = (ArrayList<Offer>) result;
+                try {
+                    if(result.get(0) instanceof Offer) {
+                        offers = (ArrayList<Offer>) result;
+                    }
+                } catch(Exception e) {
+                    offers = new ArrayList<>();
                 }
-
-                googleMap.clear();
-
-                for(int i = 0; i < offers.size(); i++) {
-                    LatLng coordinates = offers.get(i).getCoordinates();
-                    String name = offers.get(i).getDestination();
-                    String description = offers.get(i).getDescription();
-                    googleMap.addMarker(new MarkerOptions()
-                            .position(coordinates)
-                            .title(name)
-                            .snippet(description));
-                }
-                onMapReady(googleMap);
+                createMarkers();
             }
         });
-        volley.execute();
-        //TODO get pins for all ride requests. Add them to map if only user has car.
+        offerVolley.execute();
+
+        RequestVolleyImpl requestVolley = new RequestVolleyImpl(new Callback() {
+            @Override
+            public void call(ArrayList<?> result) {
+                try {
+                    if(result.get(0) instanceof Request) {
+                        requests = (ArrayList<Request>) result;
+                    }
+                } catch(Exception e) {
+                    offers = new ArrayList<>();
+                }
+                createMarkers();
+            }
+        });
+        requestVolley.execute();
+    }
+
+    public void createMarkers() {
+        googleMap.clear();
+
+        for(int i = 0; i < offers.size(); i++) {
+            LatLng coordinates = offers.get(i).getCoordinates();
+            String name = offers.get(i).getDestination();
+            String description = offers.get(i).getDescription();
+            googleMap.addMarker(new MarkerOptions()
+                    .position(coordinates)
+                    .title(name)
+                    .snippet(description)
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                    .zIndex(1));
+        }
+
+        for(int i = 0; i < requests.size(); i++) {
+            LatLng coordinates = requests.get(i).getCoordinates();
+            String name = requests.get(i).getDestination();
+            String description = requests.get(i).getDescription();
+            googleMap.addMarker(new MarkerOptions()
+                    .position(coordinates)
+                    .title(name)
+                    .snippet(description)
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                    .zIndex(0));
+        }
+        onMapReady(googleMap);
     }
 
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main);
-        FragmentManager fragmentManager = ((FragmentActivity) this).getSupportFragmentManager();
 
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         }
         else if(fragmentManager.getBackStackEntryCount() > 0) {
-            fragmentManager.popBackStackImmediate();
+            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
         else {
             if(backPressed) {
@@ -228,66 +275,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        i = navigationService.getNavigationIntent(item, MainActivity.this, i);
 
-        switch(id)
-        {
-            case R.id.profile:
-                i = new Intent(MainActivity.this, ViewProfile.class);
-                break;
-            case R.id.requests:
-                i = new Intent(MainActivity.this, RideRequests.class);
-                break;
-            case R.id.offers:
-                i = new Intent(MainActivity.this, RideOffers.class);
-                break;
-            case R.id.contacts:
-                i = new Intent(MainActivity.this, Contacts.class);
-                break;
-            case R.id.createOffer:
-                i = new Intent(MainActivity.this, CreateOffer.class);
-                break;
-            case R.id.createRequest:
-                i = new Intent(MainActivity.this, CreateRequest.class);
-                break;
-            case R.id.createProfile:
-                i = new Intent(MainActivity.this, CreateProfile.class);
-                break;
-            case R.id.logout:
-                AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                alert.setTitle("Logout");
-                alert.setMessage("Do you really want to logout?");
-                alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        i = new Intent(MainActivity.this, LoginActivity.class);
-                        startActivity(i);
-                        }});
-                alert.setNegativeButton(android.R.string.no, null);
-                alert.show();
-            default:
-                break;
-        }
+        if(R.id.logout == id) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle("Logout");
+            alert.setMessage("Do you really want to logout?");
+            alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    startActivity(i);
+                }});
+            alert.setNegativeButton(android.R.string.no, null);
+            alert.show();
 
-        connMgr = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
-        networkInfo = connMgr.getActiveNetworkInfo();
-
-        if(null == networkInfo && R.id.logout != id) {
-            Snackbar snackbar = Snackbar.make(findViewById(R.id.activity_main),
-                    "Cy's Rides Requires\nInternet Connection", Snackbar.LENGTH_INDEFINITE);
-
-            snackbar.setAction("Connect WIFI", new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-                    wifi.setWifiEnabled(true);
-                }
-            });
-            snackbar.show();
-            return false;
-        }
-        else if(R.id.logout == id) {
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main);
             drawer.closeDrawer(GravityCompat.START);
             return true;
+        }
+        else if(navigationService.checkInternetConnection(getApplicationContext())) {
+            connectionPopUp();
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main);
+            drawer.closeDrawer(GravityCompat.START);
+            return false;
         }
         else {
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main);
@@ -295,5 +304,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(i);
             return true;
         }
+    }
+
+    public void connectionPopUp() {
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.activity_main),
+                "Cy's Rides Requires\nInternet Connection", Snackbar.LENGTH_INDEFINITE);
+
+        snackbar.setAction("Connect WIFI", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                wifi.setWifiEnabled(true);
+            }
+        });
+        snackbar.show();
     }
 }

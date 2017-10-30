@@ -3,7 +3,7 @@
     android:id="@+id/fragment_view_offer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="cysrides.cysrides.ViewOffer"
+    tools:context="cysrides.cysrides.ViewRequest"
     android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,11 +12,11 @@
         android:layout_marginTop="?attr/actionBarSize"
         android:background="#FFFFFF"
         android:orientation="vertical">
-    <TextView
-        android:id="@+id/offer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"/>
+        <TextView
+            android:id="@+id/request"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"/>
 
         <Button
             android:id="@+id/join"

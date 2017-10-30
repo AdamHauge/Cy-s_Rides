@@ -1,10 +1,15 @@
 package cysrides.cysrides;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -17,28 +22,23 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import domain.Offer;
 import domain.Request;
-import domain.UserInfo;
-import domain.UserType;
-import service.OfferService;
-import service.OfferServiceImpl;
+import service.NavigationService;
+import service.NavigationServiceImpl;
+import volley.RequestVolleyImpl;
 
 public class RideRequests extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    OfferService offerService = new OfferServiceImpl();
+    private NavigationService navigationService = new NavigationServiceImpl();
 
-    private ListView listView;
-    private ArrayAdapter adapter;
-    private List<Offer> list = null; //offerService.getOfferRequests(new UserInfo("rcerveny@iastate.edu", "password", "0042", "Ryan", "Cerveny",
-//                                                            "venmo","description", UserType.DRIVER, (float) 5.0,
-//                                                             new ArrayList<Offer>(), new ArrayList<Request>()));
-    private List<String> destinationAndDescriptionList = new ArrayList<>();
+    private ArrayAdapter<String> adapter;
+    private List<Request> requests = new ArrayList<>();
+    private List<String> destinations = new ArrayList<>();
+    FragmentManager fragmentManager = this.getSupportFragmentManager();
     private Intent i;
 
     @Override
@@ -48,7 +48,7 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_requests_activity);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -56,30 +56,64 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        listView = (ListView)findViewById(R.id.ride_requests_list);
 
-        for(int i=0 ; i<list.size() ; i++) {
-            String destinationAndDescription = "";
-            destinationAndDescription += list.get(i).getDescription() + " " + list.get(i).getDestination();
-            destinationAndDescriptionList.add(destinationAndDescription);
-        }
+        getRequestsList();
 
-        adapter = new ArrayAdapter(RideRequests.this, android.R.layout.simple_list_item_1, destinationAndDescriptionList);
+        ListView listView = (ListView)findViewById(R.id.ride_requests_list);
+        adapter = new ArrayAdapter<>(RideRequests.this, android.R.layout.simple_list_item_1, destinations);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getApplicationContext(), destinationAndDescriptionList.get(position).toString(), Toast.LENGTH_SHORT).show();
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                ViewRequest viewRequest = new ViewRequest();
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
+                viewRequest.setData(requests.get(position));
+
+                fragmentTransaction.replace(R.id.ride_requests_activity, viewRequest);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
             }
         });
+
+        if(navigationService.checkInternetConnection(getApplicationContext())) {
+            connectionPopUp();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void getRequestsList() {
+        RequestVolleyImpl volley = new RequestVolleyImpl(new Callback() {
+            public void call(ArrayList<?> result) {
+                try {
+                    if (result.get(0) instanceof Request) {
+                        requests = (ArrayList<Request>) result;
+                    }
+                } catch(Exception e) {
+                    requests = new ArrayList<>();
+                }
+
+                adapter.clear();
+                destinations.clear();
+                for(int i = 0; i < requests.size(); i++) {
+                    destinations.add(requests.get(i).getDestination());
+                }
+                adapter.notifyDataSetChanged();
+            }
+        });
+        volley.execute();
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_requests_activity);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
+        }
+        else if(fragmentManager.getBackStackEntryCount() > 0) {
+            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        }
+        else {
             finish();
             i = new Intent(RideRequests.this, MainActivity.class);
             startActivity(i);
@@ -115,48 +149,48 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        i = navigationService.getNavigationIntent(item, RideRequests.this, i);
 
-        switch(id)
-        {
-            case R.id.profile:
-                i = new Intent(RideRequests.this, ViewProfile.class);
-                startActivity(i);
-                break;
-            case R.id.requests:
-                break;
-            case R.id.offers:
-                i = new Intent(RideRequests.this, RideOffers.class);
-                startActivity(i);
-                break;
-            case R.id.contacts:
-                i = new Intent(RideRequests.this, Contacts.class);
-                startActivity(i);
-                break;
-            case R.id.createOffer:
-                i = new Intent(RideRequests.this, CreateOffer.class);
-                startActivity(i);
-                break;
-            case R.id.createRequest:
-                i = new Intent(RideRequests.this, CreateRequest.class);
-                startActivity(i);
-                break;
-            case R.id.logout:
-                AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                alert.setTitle("Logout");
-                alert.setMessage("Do you really want to logout?");
-                alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        i = new Intent(RideRequests.this, LoginActivity.class);
-                        startActivity(i);
-                    }});
-                alert.setNegativeButton(android.R.string.no, null);
-                alert.show();
-            default:
-                break;
+        if(R.id.logout == id) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle("Logout");
+            alert.setMessage("Do you really want to logout?");
+            alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    startActivity(i);
+                }});
+            alert.setNegativeButton(android.R.string.no, null);
+            alert.show();
+
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_requests_activity);
+            drawer.closeDrawer(GravityCompat.START);
+            return true;
         }
+        else if(navigationService.checkInternetConnection(getApplicationContext())) {
+            connectionPopUp();
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_requests_activity);
+            drawer.closeDrawer(GravityCompat.START);
+            return false;
+        }
+        else {
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_requests_activity);
+            drawer.closeDrawer(GravityCompat.START);
+            startActivity(i);
+            return true;
+        }
+    }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+    public void connectionPopUp() {
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.ride_requests_activity),
+                "Cy's Rides Requires\nInternet Connection", Snackbar.LENGTH_INDEFINITE);
+
+        snackbar.setAction("Connect WIFI", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                wifi.setWifiEnabled(true);
+            }
+        });
+        snackbar.show();
     }
 }

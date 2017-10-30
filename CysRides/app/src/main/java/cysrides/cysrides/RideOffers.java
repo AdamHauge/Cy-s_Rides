@@ -1,36 +1,44 @@
 package cysrides.cysrides;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import domain.Offer;
+import service.NavigationService;
+import service.NavigationServiceImpl;
 import volley.OfferVolleyImpl;
 
 public class RideOffers extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    private NavigationService navigationService = new NavigationServiceImpl();
+
     private ArrayAdapter<String> adapter;
     private List<Offer> offers = new ArrayList<>();
     private List<String> destinations = new ArrayList<>();
+    FragmentManager fragmentManager = this.getSupportFragmentManager();
     private Intent i;
 
     @Override
@@ -40,7 +48,7 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_offers_activity);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -57,28 +65,32 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(RideOffers.this);
-                alert.setTitle("Offer Info");
-                alert.setMessage(offers.get(position).toString());
-                alert.setNegativeButton(android.R.string.no, null);
-                alert.setPositiveButton("Join Trip", new  DialogInterface.OnClickListener(){
-                   @Override
-                    public void onClick(DialogInterface dialogInterface, int i){
-                       Toast.makeText(RideOffers.this, "NEED TO JOIN TRIP", Toast.LENGTH_LONG).show();
-                       //offers.get(position).getGroup().addUser(ME);
-                       //TEST
-                    }
-                } );
-                alert.show();
+                ViewOffer viewOffer = new ViewOffer();
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
+                viewOffer.setData(offers.get(position));
+
+                fragmentTransaction.replace(R.id.ride_offers_activity, viewOffer);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
             }
         });
+
+        if(navigationService.checkInternetConnection(getApplicationContext())) {
+            connectionPopUp();
+        }
     }
 
+    @SuppressWarnings("unchecked")
     public void getOffersList() {
         OfferVolleyImpl volley = new OfferVolleyImpl(new Callback() {
             public void call(ArrayList<?> result) {
-                if(result.get(0) instanceof Offer) {
-                    offers = (ArrayList<Offer>) result;
+                try {
+                    if (result.get(0) instanceof Offer) {
+                        offers = (ArrayList<Offer>) result;
+                    }
+                } catch(Exception e) {
+                    offers = new ArrayList<>();
                 }
 
                 adapter.clear();
@@ -94,10 +106,14 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_offers_activity);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
+        }
+        else if(fragmentManager.getBackStackEntryCount() > 0) {
+            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        }
+        else {
             finish();
             i = new Intent(RideOffers.this, MainActivity.class);
             startActivity(i);
@@ -133,48 +149,48 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        i = navigationService.getNavigationIntent(item, RideOffers.this, i);
 
-        switch(id)
-        {
-            case R.id.profile:
-                i = new Intent(RideOffers.this, ViewProfile.class);
-                startActivity(i);
-                break;
-            case R.id.requests:
-                i = new Intent(RideOffers.this, RideRequests.class);
-                startActivity(i);
-                break;
-            case R.id.offers:
-                break;
-            case R.id.contacts:
-                i = new Intent(RideOffers.this, Contacts.class);
-                startActivity(i);
-                break;
-            case R.id.createOffer:
-                i = new Intent(RideOffers.this, CreateOffer.class);
-                startActivity(i);
-                break;
-            case R.id.createRequest:
-                i = new Intent(RideOffers.this, CreateRequest.class);
-                startActivity(i);
-                break;
-            case R.id.logout:
-                AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                alert.setTitle("Logout");
-                alert.setMessage("Do you really want to logout?");
-                alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        i = new Intent(RideOffers.this, LoginActivity.class);
-                        startActivity(i);
-                    }});
-                alert.setNegativeButton(android.R.string.no, null);
-                alert.show();
-            default:
-                break;
+        if(R.id.logout == id) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle("Logout");
+            alert.setMessage("Do you really want to logout?");
+            alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    startActivity(i);
+                }});
+            alert.setNegativeButton(android.R.string.no, null);
+            alert.show();
+
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_offers_activity);
+            drawer.closeDrawer(GravityCompat.START);
+            return true;
         }
+        else if(navigationService.checkInternetConnection(getApplicationContext())) {
+            connectionPopUp();
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_offers_activity);
+            drawer.closeDrawer(GravityCompat.START);
+            return false;
+        }
+        else {
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_offers_activity);
+            drawer.closeDrawer(GravityCompat.START);
+            startActivity(i);
+            return true;
+        }
+    }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+    public void connectionPopUp() {
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.ride_offers_activity),
+                "Cy's Rides Requires\nInternet Connection", Snackbar.LENGTH_INDEFINITE);
+
+        snackbar.setAction("Connect WIFI", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                wifi.setWifiEnabled(true);
+            }
+        });
+        snackbar.show();
     }
 }

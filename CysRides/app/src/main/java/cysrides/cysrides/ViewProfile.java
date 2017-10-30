@@ -29,9 +29,9 @@ public class ViewProfile extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //netIDView.getText().append(netID);
-        username = getIntent().getStringExtra("netID");
-        getUser(username);
-        netIDView.append(username + user.getFirstName());
+//        username = getIntent().getStringExtra("netID");
+//        getUser(username);
+//        netIDView.append(username + user.getFirstName());
     }
 
     public void getUser(String netID) {

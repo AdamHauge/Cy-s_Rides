@@ -113,7 +113,7 @@ public class UserVolleyImpl implements UserVolley {
         } catch (Exception e){
             e.printStackTrace();
         }
-        //callback.call(users);
+        callback.call(users);
     }
 
     public JSONArray doInBackground(String netID, Void... aVoid) {

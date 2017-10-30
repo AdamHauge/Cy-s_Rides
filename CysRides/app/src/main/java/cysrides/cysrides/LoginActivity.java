@@ -38,6 +38,8 @@ import java.util.List;
 import java.util.Random;
 
 import service.GmailSenderServiceImpl;
+import service.UserIntentService;
+import service.UserIntentServiceImpl;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -62,6 +64,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask mAuthTask = null;
+    private UserIntentService userIntentService = new UserIntentServiceImpl();
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -108,9 +111,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i;
-                i = new Intent(LoginActivity.this, ViewProfile.class);
-                i.putExtra("netID", mEmailView.getText().toString());
+                Intent i = userIntentService.createIntent(LoginActivity.this, ViewProfile.class, mEmailView.getText().toString());
+//                i = new Intent(LoginActivity.this, ViewProfile.class);
+//                i.putExtra("netID", mEmailView.getText().toString());
                 startActivity(i);
             }
         });
