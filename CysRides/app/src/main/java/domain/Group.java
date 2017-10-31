@@ -17,10 +17,7 @@ public class Group {
         driver = user;
     }
 
-//    public Group(ArrayList<String> contacts){
-//        groupMembers = contacts;
-//
-//    }
+
 
     //returns -1 if group is full
     public int addUser(String user){
@@ -32,23 +29,14 @@ public class Group {
         return 1;
     }
 
-    //returns -1 if trying to remove driver
-    public int removeUser(String user){
-
-        //return if trying to remove driver in a trip group
-        if(user.equals(driver) && groupType == 0){
-            return -1;
-        }
-        groupMembers.remove(user);
-        return -1;
-
-    }
 
     public ArrayList<String> getGroupMembers(){
         return groupMembers;
     }
 
-    public int getId(){return groupID;}
+    public int getId(){return groupID;}//need to be able to pull this
+
+    public int getSize(){return this.getGroupMembers().size();}
 
 
 

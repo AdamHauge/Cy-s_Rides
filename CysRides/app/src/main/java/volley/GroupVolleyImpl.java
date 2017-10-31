@@ -69,32 +69,34 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
     @Override
-    public void addRider(Context context) {
-//        currentContext = context;
-//        StringRequest stringRequest = new StringRequest(Request.Method.POST, addRiderUrl,
-//                new Response.Listener<String>() {
-//                    @Override
-//                    public void onResponse(String response) {
-//
-//                    }
-//                },
-//                new Response.ErrorListener() {
-//                    @Override
-//                    public void onErrorResponse(VolleyError error) {
-//                        Toast.makeText(currentContext, "Error...",Toast.LENGTH_SHORT).show();
-//                        error.printStackTrace();
-//                    }
-//
-//                }){
-//            @Override
-//            protected Map<String, String> getParams() throws AuthFailureError {
-//                Map<String, String> params = new HashMap<>();
-//                params.put("rider", group.getGroupMembers().get(0));
-//                return params;
-//            }
-//        };
-//
-//        MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
+    public void addRider(Context context, final Group group, final String netID) {
+        currentContext = context;
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, addRiderUrl,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(currentContext, "Error...",Toast.LENGTH_SHORT).show();
+                        error.printStackTrace();
+                    }
+
+                }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("rider", netID);
+                params.put("id", Integer.toString(1)); //need groupID
+                params.put("rider_num", Integer.toString(group.getSize()));
+                return params;
+            }
+        };
+
+        MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
 
 

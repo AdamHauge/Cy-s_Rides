@@ -13,7 +13,7 @@ $socket="";
 $username = 'dbu309sab5';
 $password = 'VRCc@3V2';
 $dbname = 'db309sab5';
-$sel_column = 'RIDER_' .$rider_num;
+$sel_column = 'RIDER_' . $rider_num;
 
 $con = new mysqli($host, $username, $password, $dbname, $port, $socket) or die('Could not connect to database server'.mysqli_connect_error);
 

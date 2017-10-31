@@ -23,7 +23,4 @@ if(mysqli_query($con,$sql)) {
     echo "Error while insertion... ".$sql." ".mysqli_error($con);
 }
 
-$sql = "Select ID FROM OFFER_TABLE WHERE COST = '".$cost."', EMAIL = '".$email."', DESTINATION = '".$destination."', DESCRIPTION = '".$description."', Date = '".$date."';";
-$result = $conn->query($sql);
-echo $result;
 ?>

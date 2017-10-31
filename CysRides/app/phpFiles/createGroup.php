@@ -1,6 +1,9 @@
 <?php
 
 $driver = $_POST["driver"];
+
+
+//MAYBE USE IF WE IMPLEMENT MAKING CHATS THAT ARENT RELATED TO TRIPS
 // $rider1 = $_POST["rider1"];
 // $rider2 = $_POST["rider2"];
 // $rider3 = $_POST["rider3"];

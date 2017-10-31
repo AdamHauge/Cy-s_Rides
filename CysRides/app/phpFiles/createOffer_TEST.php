@@ -18,19 +18,15 @@ $con = new mysqli($host, $username, $password, $dbname, $port, $socket) or die('
 $sql = "insert into OFFER_TABLE (COST, EMAIL, DESTINATION, DESCRIPTION, DATE) values('".$cost."','".$email."','".$destination."','".$description."',".$date.");";
 
 if(mysqli_query($con,$sql)) {
-    echo "Data insertion success...";
+    $sql = "SELECT ID from OFFER_TABLE ORDER BY ID DESC LIMIT 1;";
+
+    $result = mysqli_query($con,$sql);
+
+    $row = mysqli_fetch_row($result);
+    echo $row[0];
+  
 } else {
     echo "Error while insertion... ".$sql." ".mysqli_error($con);
 }
-
-$sql = "Select ID FROM OFFER_TABLE WHERE COST = ".$cost.", EMAIL = '".$email."', DESTINATION = '".$destination."', DESCRIPTION = '".$description."';";
-//, Date = '".$date."'
-//$result = mysqli_query($con, $sql);
-$result = $con->query($sql);
-
-if($result->num_rows == 0){
-  echo "no results";
-}
-  echo $result.fetch_assoc();
 
 ?>

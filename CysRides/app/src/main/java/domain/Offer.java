@@ -85,16 +85,4 @@ public class Offer {
 
     public Group getGroup(){return group;}
 
-    public void viewOffer(Offer o, Activity c){
-
-//        Intent i = new Intent(c , ViewOffer.class);
-//        i.putExtra("Email", o.getEmail());
-//        i.putExtra("Dest", o.getDestination());
-//        i.putExtra("LatLng", o.getCoordinates());
-//        i.putExtra("Cost", Double.toString(o.getCost()));
-//        i.putExtra("Date", o.getDate());
-//        i.putExtra("Description", o.getDescription());
-//
-//        c.startActivity(i);
-    }
 }

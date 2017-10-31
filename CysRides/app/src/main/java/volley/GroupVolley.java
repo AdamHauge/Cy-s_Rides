@@ -10,5 +10,5 @@ import domain.Group;
 
 public interface GroupVolley {
     void createGroup(Context context, Group g);
-    void addRider(Context context);
+    void addRider(Context context, Group group, String netID);
 }
