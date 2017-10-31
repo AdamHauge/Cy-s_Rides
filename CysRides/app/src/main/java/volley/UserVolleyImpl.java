@@ -1,6 +1,7 @@
 package volley;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.telecom.Call;
 import android.util.Log;
 import android.view.View;
@@ -30,7 +31,8 @@ import domain.Offer;
 import domain.UserInfo;
 import domain.UserType;
 
-public class UserVolleyImpl implements UserVolley {
+public class UserVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements UserVolley {
+
     private String createUserUrl = "http://proj-309-sa-b-5.cs.iastate.edu/createUser.php";
     private String getUserUrl = "http://proj-309-sa-b-5.cs.iastate.edu/getUser.php";
     private UserInfo currentUser;
@@ -38,9 +40,10 @@ public class UserVolleyImpl implements UserVolley {
     private ArrayList<UserInfo> users;
     private UserInfo user;
     private Callback callback;
+    private String netID;
 
-    public UserVolleyImpl(){
-
+    public UserVolleyImpl(Callback call){
+        callback = call;
     }
 
     @Override
@@ -81,6 +84,7 @@ public class UserVolleyImpl implements UserVolley {
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
 
+    @Override
     public void onPostExecute(JSONArray jsonArray) {
         try{
             users = new ArrayList<>();
@@ -116,7 +120,8 @@ public class UserVolleyImpl implements UserVolley {
         callback.call(users);
     }
 
-    public JSONArray doInBackground(String netID, Void... aVoid) {
+    @Override
+    protected JSONArray doInBackground(Void... aVoid) {
         HttpURLConnection urlConnection = null;
         StringBuilder result = new StringBuilder();
 
@@ -124,9 +129,6 @@ public class UserVolleyImpl implements UserVolley {
             URL url = new URL(getUserUrl);
             urlConnection = (HttpURLConnection) url.openConnection();
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-
-            List<String> params = new ArrayList<String>();
-            params.add(netID);
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
@@ -158,6 +160,5 @@ public class UserVolleyImpl implements UserVolley {
 
         return array;
     }
-
 
 }

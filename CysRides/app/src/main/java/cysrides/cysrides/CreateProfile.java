@@ -12,6 +12,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.telecom.Call;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
@@ -48,8 +49,9 @@ public class CreateProfile extends AppCompatActivity {
     private String profileDescription;
     private String confirmationCode;
     private UserType userType;
+    private Callback call;
 
-    private UserVolley userVolley = new UserVolleyImpl();
+    private UserVolley userVolley = new UserVolleyImpl(call);
 
     private Intent i;
 
