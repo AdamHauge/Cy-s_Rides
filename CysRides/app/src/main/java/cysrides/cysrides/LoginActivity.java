@@ -420,5 +420,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         i = new Intent(LoginActivity.this, CreateProfile.class);
         startActivity(i);
     }
+
+    public boolean verifyCredentials(String enteredUsername, String entereredPassword){
+        
+        return false;
+    }
 }
 

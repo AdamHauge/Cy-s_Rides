@@ -2,7 +2,5 @@ package service;
 
 public interface LoginService {
 
-    public String verifyNetID();
-    public String verifyPassword();
-
+    public boolean verifyLogin(String netID, String password);
 }
