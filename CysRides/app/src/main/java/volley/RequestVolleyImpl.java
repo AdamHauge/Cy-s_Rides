@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
@@ -28,16 +29,17 @@ import java.util.Locale;
 import java.util.Map;
 
 import cysrides.cysrides.Callback;
-import domain.Request;
+import domain.Offer;
+
 
 public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements RequestVolley {
 
     private String createRequestUrl = "http://proj-309-sa-b-5.cs.iastate.edu/createRequest.php";
-    private String getRequestUrl = "http://proj-309-sa-b-5.cs.iastate.edu/getRequest.php";
-    private Request newRequest;
+    private String getRequestsUrl = "http://proj-309-sa-b-5.cs.iastate.edu/getRequest.php";
+    private domain.Request newRequest;
     private Context currentContext;
-    private ArrayList<Request> requests;
     private String latitudeLongitudeName;
+    private ArrayList<domain.Request> requests;
     private Callback callback;
 
     public RequestVolleyImpl() { }
@@ -47,11 +49,11 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
     }
 
     @Override
-    public void createRequest(Context context, Request request, String latLongName) {
+    public void createRequest(Context context, domain.Request request, String latLongName) {
         newRequest = request;
         currentContext = context;
         latitudeLongitudeName = latLongName;
-        StringRequest stringRequest = new StringRequest(com.android.volley.Request.Method.POST, createRequestUrl,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, createRequestUrl,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -87,19 +89,19 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
             requests = new ArrayList<>();
             for(int i=0; i < jsonArray.length();i++){
                 Log.d("JSON",jsonArray.toString());
-                JSONObject jsonRequest = jsonArray.getJSONObject(i);
+                JSONObject jsonOffer = jsonArray.getJSONObject(i);
 
-                String id = jsonRequest.getString("ID");
-                String stringNumBags = jsonRequest.getString("NUM_BAGS");
-                int numBags = Integer.parseInt(stringNumBags);
-                String email = jsonRequest.getString("EMAIL");
+                String id = jsonOffer.getString("ID");
+                String stringCost = jsonOffer.getString("NUM_BAGS");
+                int numBags = Integer.parseInt(stringCost);
+                String email = jsonOffer.getString("EMAIL");
 
-                String stringDestination = jsonRequest.getString("DESTINATION");
+                String stringDestination = jsonOffer.getString("DESTINATION");
                 String destinationName = getDestinationName(stringDestination);
                 LatLng latitudeLongitude = getLatLngFromDatabase(stringDestination);
 
-                String description = jsonRequest.getString("DESCRIPTION");
-                String stringDate = jsonRequest.getString("DATE");
+                String description = jsonOffer.getString("DESCRIPTION");
+                String stringDate = jsonOffer.getString("DATE");
                 Date date =  new Date();
 
                 try {
@@ -108,7 +110,7 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
                     e.printStackTrace();
                 }
 
-                Request request = new Request(numBags, email, destinationName, latitudeLongitude, description, date);
+                domain.Request request = new domain.Request(numBags, email, destinationName, latitudeLongitude, description, date);
                 requests.add(request);
                 Log.d("size", requests.size()+"");
             }
@@ -124,7 +126,7 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
         StringBuilder result = new StringBuilder();
 
         try {
-            URL url = new URL(getRequestUrl);
+            URL url = new URL(getRequestsUrl);
             urlConnection = (HttpURLConnection) url.openConnection();
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
 
