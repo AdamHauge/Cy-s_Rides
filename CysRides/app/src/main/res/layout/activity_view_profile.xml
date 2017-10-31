@@ -7,6 +7,41 @@
     android:fitsSystemWindows="true"
     tools:context="cysrides.cysrides.ViewProfile">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:text="TextView"
+            android:layout_weight="0.19" />
+
+        <TextView
+            android:id="@+id/netIDView"
+            android:layout_width="match_parent"
+            android:layout_height="127dp"
+            android:textAlignment="center"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_weight="0.05" />
+
+        <TextView
+            android:id="@+id/firstNameView"
+            android:layout_width="174dp"
+            android:layout_height="55dp"
+            android:textAlignment="textEnd" />
+
+        <TextView
+            android:id="@+id/lastNameView"
+            android:layout_width="181dp"
+            android:layout_height="53dp"
+            android:textAlignment="textStart" />
+
+    </LinearLayout>
+
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
@@ -31,18 +66,5 @@
 
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:weightSum="1">
-
-        <TextView
-            android:id="@+id/netIDView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.54" />
-    </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>
