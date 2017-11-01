@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
@@ -18,16 +19,19 @@ import domain.Offer;
 import domain.Request;
 import domain.UserInfo;
 import domain.UserType;
+import service.UserIntentService;
+import service.UserIntentServiceImpl;
 import volley.UserVolleyImpl;
 
 public class ViewProfile extends AppCompatActivity {
 
     private UserInfo user;
     private ArrayList<UserInfo> users;
-    String username;
     private TextView netIDView;
     private TextView firstNameView;
     private TextView lastNameView;
+    private UserIntentService userIntentService = new UserIntentServiceImpl();
+    private String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +44,13 @@ public class ViewProfile extends AppCompatActivity {
         firstNameView = (TextView) findViewById(R.id.firstNameView);
         lastNameView = (TextView) findViewById(R.id.lastNameView);
 
-        username = getIntent().getStringExtra("netID");
+        username = getIntent().getStringExtra("email");
+
+        user = userIntentService.getUserFromIntent(this.getIntent());
+
+        Toast toast = Toast.makeText(getApplicationContext(), "it works", Toast.LENGTH_LONG);
+        toast.show();
+
         getUsers();
     }
 
@@ -55,7 +65,7 @@ public class ViewProfile extends AppCompatActivity {
                     users = new ArrayList<>();
                 }
 
-                getUserInfo(username);
+                getUserInfo(user.getNetID());
             }
         });
         volley.execute();
@@ -70,7 +80,7 @@ public class ViewProfile extends AppCompatActivity {
             }
 
             //netIDView.setText(netIDView.getText(), TextView.BufferType.EDITABLE);
-            netIDView.setText(username.split("@iastate.edu")[0]);
+            netIDView.setText(user.getNetID().split("@iastate.edu")[0]);
 
             //firstNameView.setText(firstNameView.getText(), TextView.BufferType.EDITABLE);
             firstNameView.setText(user.getFirstName());

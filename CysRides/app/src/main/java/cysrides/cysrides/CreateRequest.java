@@ -230,6 +230,7 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
+        i = this.getIntent();
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Discard Request");
         alert.setMessage("This will discard your current request. Continue anyway?");

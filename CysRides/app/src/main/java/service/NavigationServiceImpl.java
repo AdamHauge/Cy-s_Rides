@@ -40,25 +40,25 @@ public class NavigationServiceImpl implements NavigationService {
         switch(id)
         {
             case R.id.profile:
-                intent = userIntentService.createIntent(context, ViewProfile.class, "zgknoll@iastate.edu");
+                intent = userIntentService.createIntent(context, ViewProfile.class, userIntentService.getUserFromIntent(intent));
                 break;
             case R.id.requests:
-                intent = userIntentService.createIntent(context, RideRequests.class, "zgknoll@iastate.edu");
+                intent = userIntentService.createIntent(context, RideRequests.class, userIntentService.getUserFromIntent(intent));
                 break;
             case R.id.offers:
-                intent = userIntentService.createIntent(context, RideOffers.class, "zgknoll@iastate.edu");
+                intent = userIntentService.createIntent(context, RideOffers.class, userIntentService.getUserFromIntent(intent));
                 break;
             case R.id.contacts:
-                intent = userIntentService.createIntent(context, Contacts.class, "zgknoll@iastate.edu");
+                intent = userIntentService.createIntent(context, Contacts.class, userIntentService.getUserFromIntent(intent));
                 break;
             case R.id.createOffer:
-                intent = userIntentService.createIntent(context, CreateOffer.class, "zgknoll@iastate.edu");
+                intent = userIntentService.createIntent(context, CreateOffer.class, userIntentService.getUserFromIntent(intent));
                 break;
             case R.id.createRequest:
-                intent = userIntentService.createIntent(context, CreateRequest.class, "zgknoll@iastate.edu");
+                intent = userIntentService.createIntent(context, CreateRequest.class, userIntentService.getUserFromIntent(intent));
                 break;
             case R.id.logout:
-                intent = userIntentService.createIntent(context, LoginActivity.class, "zgknoll@iastate.edu");
+                intent = userIntentService.createIntent(context, LoginActivity.class, userIntentService.getUserFromIntent(intent));
                 break;
             default:
                 break;

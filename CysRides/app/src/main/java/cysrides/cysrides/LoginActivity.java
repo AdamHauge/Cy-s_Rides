@@ -32,14 +32,17 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import domain.UserInfo;
 import service.GmailSenderServiceImpl;
 import service.UserIntentService;
 import service.UserIntentServiceImpl;
+import volley.UserVolleyImpl;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -59,11 +62,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private UserLoginTask mAuthTask = null;
     private UserIntentService userIntentService = new UserIntentServiceImpl();
 
-    // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private ArrayList<UserInfo> users;
+    private UserInfo user;
 
     void LoginActivity(){
         AutoCompleteTextView email = mEmailView;
@@ -104,9 +108,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i; //userIntentService.createIntent(LoginActivity.this, ViewProfile.class, mEmailView.getText().toString());
-                i = new Intent(LoginActivity.this, ViewProfile.class);
-                i.putExtra("netID", mEmailView.getText().toString());
+                getUsers();
+                Intent i = new Intent();
+                i.putExtra("email", user.getNetID());
+                i = userIntentService.createIntent(LoginActivity.this, ViewProfile.class, user);
                 startActivity(i);
             }
         });
@@ -314,6 +319,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
 
+
     }
 
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
@@ -404,13 +410,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     }
 
-    public void onSignInClickListener(View view){
+    /*public void onSignInClickListener(View view){
         Intent i;
         //i = new Intent(LoginActivity.this, MainActivity.class);
         i = new Intent(LoginActivity.this, ViewProfile.class);
         i.putExtra("netID", mEmailView.getText().toString());
         startActivity(i);
-    }
+    }*/
 
 
 
@@ -421,6 +427,48 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         i = new Intent(LoginActivity.this, CreateProfile.class);
         startActivity(i);
     }
+
+
+
+    public void getUsers() {
+        UserVolleyImpl volley = new UserVolleyImpl(new Callback() {
+            public void call(ArrayList<?> result) {
+                try {
+                    if(result.get(0) instanceof UserInfo) {
+                        users = (ArrayList<UserInfo>) result;
+                    }
+                } catch(Exception e) {
+                    users = new ArrayList<>();
+                }
+
+                getUserInfo(mEmailView.getText().toString());
+
+            }
+        });
+        volley.execute();
+    }
+
+    private boolean getUserInfo(String netID) {
+        if (users != null) {
+            for (int i = 0; i < users.size(); i++) {
+                if (users.get(i).getNetID().equals(netID)) {
+                    user = users.get(i);
+                    for(int j = 0; j < users.size(); j++){
+                        if(mPasswordView.getText().toString().equals(user.getPassword())){
+
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        Toast toast = Toast.makeText(getApplicationContext(), "Not valid credentials", Toast.LENGTH_LONG);
+        toast.show();
+        return false;
+    }
+
+
+
 
     public boolean verifyCredentials(String enteredUsername, String entereredPassword){
         

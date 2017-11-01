@@ -115,17 +115,17 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-        i = navigationService.getNavigationIntent(item, Contacts.this, i);
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                // Handle navigation view item clicks here.
+                int id = item.getItemId();
+                i = navigationService.getNavigationIntent(item, Contacts.this, this.getIntent());
 
-        if(R.id.logout == id) {
-            AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            alert.setTitle("Logout");
-            alert.setMessage("Do you really want to logout?");
-            alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                if(R.id.logout == id) {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                    alert.setTitle("Logout");
+                    alert.setMessage("Do you really want to logout?");
+                    alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     startActivity(i);
                 }});
