@@ -40,7 +40,7 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
     private ArrayList<Offer> offers;
     private String latitudeLongitudeName;
     private Callback callback;
-
+    private GroupVolleyImpl groupVolley = new GroupVolleyImpl();
     public OfferVolleyImpl() { }
 
     public OfferVolleyImpl(Callback o) {
@@ -48,7 +48,7 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
     }
 
     @Override
-    public void createOffer(Context context, Offer offer, String latLongName) {
+    public void createOffer(final Context context, final Offer offer, String latLongName) {
         newOffer = offer;
         currentContext = context;
         latitudeLongitudeName = latLongName;
@@ -56,7 +56,8 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-
+                        newOffer.getGroup().setId(Integer.parseInt(response));
+                        groupVolley.createGroup(currentContext, newOffer.getGroup());
                     }
                 },
                 new Response.ErrorListener() {

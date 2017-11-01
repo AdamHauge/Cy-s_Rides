@@ -12,6 +12,7 @@ public class Group {
     private int groupType;
     private int groupID;
 
+
     public Group(String user){
         addUser(user);
         driver = user;
@@ -34,7 +35,9 @@ public class Group {
         return groupMembers;
     }
 
-    public int getId(){return groupID;}//need to be able to pull this
+    public int getId(){return groupID;}
+
+    public void setId(int id){this.groupID = id;}
 
     public int getSize(){return this.getGroupMembers().size();}
 

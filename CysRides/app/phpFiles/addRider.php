@@ -4,7 +4,7 @@
 $group_id = $_POST["id"];
 $rider = $_POST["rider"];
 $rider_num = $_POST["rider_num"];
-//$offer_id = $_POST["offer_id"];
+$offer_id = $_POST["offer_id"];
 
 
 $host="mysql.cs.iastate.edu";
@@ -18,9 +18,7 @@ $sel_column = 'RIDER_' . $rider_num;
 $con = new mysqli($host, $username, $password, $dbname, $port, $socket) or die('Could not connect to database server'.mysqli_connect_error);
 
 $sql =  "UPDATE GROUP_TABLE SET " .$sel_column. " = '" .$rider. "' WHERE ID = " .$group_id. ";";
-//"INSERT INTO GROUP_TABLE (DRIVER/*, RIDER_1, RIDER_2, RIDER_3, RIDER_4, RIDER_5, RIDER_6, RIDER_7*/) VALUES ('".$driver."');";
-  //end of values statement
-  //,'".$rider1."','".$rider2."','".$rider3."','".$rider4."','".$rider5."','".$rider6."','".$rider7."'
+
 if(mysqli_query($con,$sql)) {
     echo "Data insertion success...";
 } else {

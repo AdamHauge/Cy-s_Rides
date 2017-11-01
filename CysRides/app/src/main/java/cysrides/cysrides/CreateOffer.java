@@ -165,8 +165,6 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
                     Offer o = new Offer(cost, "email", (String) destination.getName(), destination.getLatLng(), description, new GregorianCalendar(year, month, day).getTime());
 
                     offerService.createOffer(CreateOffer.this, o);
-                    groupService.createGroup(CreateOffer.this, o.getGroup());
-
 
                     /* Refresh the page */
                     finish();

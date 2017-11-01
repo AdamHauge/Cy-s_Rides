@@ -62,6 +62,7 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("driver", group.getGroupMembers().get(0));
+                params.put("id", Integer.toString(group.getId()));
                 return params;
             }
         };
@@ -92,6 +93,7 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
                 params.put("rider", netID);
                 params.put("id", Integer.toString(1)); //need groupID
                 params.put("rider_num", Integer.toString(group.getSize()));
+                params.put("offer_id", Integer.toString(group.getId()));
                 return params;
             }
         };
