@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class Group {
     private ArrayList<String> groupMembers = new ArrayList<>();
     private String driver;
-    private int groupType;
+    private int offerID;
     private int groupID;
 
 
@@ -35,9 +35,12 @@ public class Group {
         return groupMembers;
     }
 
-    public int getId(){return groupID;}
 
-    public void setId(int id){this.groupID = id;}
+    public int getId(){return groupID;}
+    public int getOfferId(){return offerID;}
+
+
+    public void setOfferID(int id){this.offerID = id;}
 
     public int getSize(){return this.getGroupMembers().size();}
 

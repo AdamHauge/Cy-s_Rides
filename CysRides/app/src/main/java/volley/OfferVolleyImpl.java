@@ -56,7 +56,9 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        newOffer.getGroup().setId(Integer.parseInt(response));
+                        Toast.makeText(currentContext, response ,Toast.LENGTH_SHORT).show();
+
+                        newOffer.getGroup().setOfferID(Integer.parseInt(response));
                         groupVolley.createGroup(currentContext, newOffer.getGroup());
                     }
                 },

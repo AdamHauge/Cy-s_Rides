@@ -69,7 +69,8 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
                 viewOffer.setData(offers.get(position));
-
+                viewOffer.setContext(RideOffers.this
+                );
                 fragmentTransaction.replace(R.id.ride_offers_activity, viewOffer);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();

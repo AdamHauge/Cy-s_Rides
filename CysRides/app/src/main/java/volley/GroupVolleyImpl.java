@@ -28,7 +28,7 @@ import cysrides.cysrides.Callback;
 public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements GroupVolley {
 
     private String createGroupUrl = "http://proj-309-sa-b-5.cs.iastate.edu/createGroup.php";
-    private String addRiderUrl = "http://prog-309-sa-b-5.cs.iastate.edu/addRider.php";
+    private String addRiderUrl =    "http://proj-309-sa-b-5.cs.iastate.edu/addRider.php";
     private Group group;
     private Context currentContext;
     private Callback callback;
@@ -62,7 +62,7 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("driver", group.getGroupMembers().get(0));
-                params.put("id", Integer.toString(group.getId()));
+                params.put("id", Integer.toString(group.getOfferId()));
                 return params;
             }
         };
@@ -70,12 +70,14 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
     @Override
-    public void addRider(Context context, final Group group, final String netID) {
+    public void addRider(Context context, final Group g, final String netID) {
         currentContext = context;
+        this.group = g;
         StringRequest stringRequest = new StringRequest(Request.Method.POST, addRiderUrl,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        Toast.makeText(currentContext, response, Toast.LENGTH_SHORT).show();
 
                     }
                 },
@@ -91,9 +93,8 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("rider", netID);
-                params.put("id", Integer.toString(1)); //need groupID
                 params.put("rider_num", Integer.toString(group.getSize()));
-                params.put("offer_id", Integer.toString(group.getId()));
+                params.put("offer_id", Integer.toString(group.getOfferId()));
                 return params;
             }
         };
