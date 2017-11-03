@@ -35,6 +35,7 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
 
     private String createOfferUrl = "http://proj-309-sa-b-5.cs.iastate.edu/createOffer.php";
     private String getOffersUrl = "http://proj-309-sa-b-5.cs.iastate.edu/getOffer.php";
+    private String giveOfferGroupUrl = "http://proj-309-sa-b-5.cs.iastate.edu/giveOfferGroup.php";
     private Offer newOffer;
     private Context currentContext;
     private ArrayList<Offer> offers;
@@ -78,6 +79,35 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
                 params.put("destination", latitudeLongitudeName);
                 params.put("description", newOffer.getDescription());
                 params.put("date", String.format("%s '%s'", "DATE", new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(newOffer.getDate())));
+                return params;
+            }
+        };
+
+        MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
+    }
+
+    public void giveOfferGroup(Context context, final int offerId, final int groupId){
+        currentContext = context;
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, giveOfferGroupUrl,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(currentContext, "Error...",Toast.LENGTH_SHORT).show();
+                        error.printStackTrace();
+                    }
+                }){
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("offer_id", Integer.toString(offerId));
+                params.put("group_id", Integer.toString(groupId));
                 return params;
             }
         };

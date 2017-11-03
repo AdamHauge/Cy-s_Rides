@@ -37,6 +37,7 @@ public class Group {
 
 
     public int getId(){return groupID;}
+
     public int getOfferId(){return offerID;}
 
 

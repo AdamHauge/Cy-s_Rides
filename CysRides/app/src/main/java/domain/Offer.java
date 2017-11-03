@@ -18,6 +18,7 @@ public class Offer {
     private String description;
     private Date date;
     private Group group;
+    private int groupID;
 
     public Offer(double cost, String email, String destination, LatLng coordinates, String description, Date date) {
         this.cost = cost;
@@ -27,10 +28,19 @@ public class Offer {
         this.description = description;
         this.date = date;
 
-        group = new Group("ME!");
+        group = new Group(email);
 
     }
+    public Offer(double cost, String email, String destination, LatLng coordinates, String description, Date date, int groupID) {
+        this.cost = cost;
+        this.email = email;
+        this.destination = destination;
+        this.coordinates = coordinates;
+        this.description = description;
+        this.date = date;
+        this.groupID = groupID;
 
+    }
     public Offer() {
 
     }

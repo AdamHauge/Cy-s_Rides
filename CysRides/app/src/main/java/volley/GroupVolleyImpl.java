@@ -3,6 +3,7 @@ package volley;
 import android.content.Context;
 import android.content.pm.LauncherApps;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -32,6 +33,7 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
     private Group group;
     private Context currentContext;
     private Callback callback;
+    private OfferVolleyImpl ovi;
     private int groupNum;
 
     public GroupVolleyImpl(){};
@@ -42,12 +44,18 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
     @Override
     public void createGroup(Context context, Group g) {
         this.group = g;
+        this.ovi = new OfferVolleyImpl();
         currentContext = context;
         StringRequest stringRequest = new StringRequest(Request.Method.POST, createGroupUrl,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-
+                        //return group number of group we just created
+                        //add group number to offer table
+                        //0 is Groupid and 1 is Offerid
+                        String[] splitResponse = response.split(" ");
+                        Log.d("GroupID, OfferID: ", splitResponse[0] + splitResponse[1]);
+                        ovi.giveOfferGroup(currentContext, Integer.parseInt(splitResponse[1]), Integer.parseInt(splitResponse[0]));
                     }
                 },
                 new Response.ErrorListener() {
