@@ -33,7 +33,10 @@ import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import domain.Group;
 import domain.Offer;
+import service.GroupService;
+import service.GroupServiceImpl;
 import service.NavigationService;
 import service.NavigationServiceImpl;
 import service.OfferService;
@@ -49,6 +52,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
     private double cost;
     private Intent i;
     private OfferService offerService = new OfferServiceImpl();
+    private GroupService groupService = new GroupServiceImpl();
     private NavigationService navigationService = new NavigationServiceImpl();
     boolean retValue;
 
@@ -159,6 +163,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
 
                 if(allValid) {
                     Offer o = new Offer(cost, "email", (String) destination.getName(), destination.getLatLng(), description, new GregorianCalendar(year, month, day).getTime());
+
                     offerService.createOffer(CreateOffer.this, o);
 
                     /* Refresh the page */

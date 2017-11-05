@@ -57,6 +57,9 @@ public class NavigationServiceImpl implements NavigationService {
             case R.id.createRequest:
                 intent = userIntentService.createIntent(context, CreateRequest.class, userIntentService.getUserFromIntent(intent));
                 break;
+            case R.id.bannedUsers:
+                intent = userIntentService.createIntent(context, CreateRequest.class, userIntentService.getUserFromIntent(intent));
+                break;
             case R.id.logout:
                 intent = userIntentService.createIntent(context, LoginActivity.class, userIntentService.getUserFromIntent(intent));
                 break;

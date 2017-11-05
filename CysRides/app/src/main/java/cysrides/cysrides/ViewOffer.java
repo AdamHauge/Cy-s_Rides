@@ -1,5 +1,6 @@
 package cysrides.cysrides;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,11 +10,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import domain.Offer;
+import service.GroupService;
+import service.GroupServiceImpl;
 
 public class ViewOffer extends Fragment {
 
     private Offer offer;
-
+    private Context context;
+    private GroupServiceImpl g = new GroupServiceImpl();
     public ViewOffer() {
         // Required empty public constructor
     }
@@ -27,8 +31,7 @@ public class ViewOffer extends Fragment {
         v.findViewById(R.id.join).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(), "NEED TO JOIN TRIP", Toast.LENGTH_LONG).show();
-                //offers.get(position).getGroup().addUser(ME);
+                g.addRider(context, offer.getGroup(), "myNetid");
             }
         });
 
@@ -38,6 +41,8 @@ public class ViewOffer extends Fragment {
     public void setData(Offer offer) {
         this.offer = offer;
     }
+
+    public void setContext(Context context){this.context = context;}
 
     public void setTextInfo(View v) {
         TextView info = v.findViewById(R.id.offer);

@@ -29,10 +29,13 @@ import java.util.List;
 import domain.Request;
 import service.NavigationService;
 import service.NavigationServiceImpl;
+import service.UserIntentService;
+import service.UserIntentServiceImpl;
 import volley.RequestVolleyImpl;
 
 public class RideRequests extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    private UserIntentService userIntentService = new UserIntentServiceImpl();
     private NavigationService navigationService = new NavigationServiceImpl();
 
     private ArrayAdapter<String> adapter;
@@ -136,7 +139,7 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.my_profile) {
-            i = new Intent(RideRequests.this, ViewProfile.class);
+            i = userIntentService.createIntent(RideRequests.this, ViewProfile.class, userIntentService.getUserFromIntent(this.getIntent()));
             i.putExtra("caller", "Ride Requests");
             startActivity(i);
         }

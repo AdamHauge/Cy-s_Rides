@@ -29,31 +29,31 @@ import java.util.Locale;
 import java.util.Map;
 
 import cysrides.cysrides.Callback;
-import domain.Offer;
+import domain.Ban;
 
 
-public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements RequestVolley {
+public class BanVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements BanVolley {
 
-    private String createRequestUrl = "http://proj-309-sa-b-5.cs.iastate.edu/createRequest.php";
-    private String getRequestsUrl = "http://proj-309-sa-b-5.cs.iastate.edu/getRequest.php";
-    private domain.Request newRequest;
+    private String createBanUrl = "http://proj-309-sa-b-5.cs.iastate.edu/createBan.php";
+    private String getBansUrl = "http://proj-309-sa-b-5.cs.iastate.edu/getBan.php";
     private Context currentContext;
-    private String latitudeLongitudeName;
-    private ArrayList<domain.Request> requests;
+    private String email;
+    private String reason;
+    private ArrayList<Ban> bans;
     private Callback callback;
 
-    public RequestVolleyImpl() { }
+    public BanVolleyImpl() { }
 
-    public RequestVolleyImpl(Callback o) {
+    public BanVolleyImpl(Callback o) {
         callback = o;
     }
 
     @Override
-    public void createRequest(Context context, domain.Request request, String latLongName) {
-        newRequest = request;
+    public void createBan(Context context, String e, String r) {
         currentContext = context;
-        latitudeLongitudeName = latLongName;
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, createRequestUrl,
+        email = e;
+        reason = r;
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, createBanUrl,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -71,11 +71,8 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("numBags", newRequest.getNumBags()+"");
-                params.put("email", newRequest.getEmail());
-                params.put("destination", latitudeLongitudeName);
-                params.put("description", newRequest.getDescription());
-                params.put("date", String.format("%s '%s'", "DATE", new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(newRequest.getDate())));
+                params.put("email", email);
+                params.put("reason", reason);
                 return params;
             }
         };
@@ -86,38 +83,21 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
     @Override
     protected void onPostExecute(JSONArray jsonArray) {
         try{
-            requests = new ArrayList<>();
+            bans = new ArrayList<>();
             for(int i=0; i < jsonArray.length();i++){
                 Log.d("JSON",jsonArray.toString());
                 JSONObject jsonOffer = jsonArray.getJSONObject(i);
 
-                String id = jsonOffer.getString("ID");
-                String stringCost = jsonOffer.getString("NUM_BAGS");
-                int numBags = Integer.parseInt(stringCost);
                 String email = jsonOffer.getString("EMAIL");
+                String reason = jsonOffer.getString("REASON");
 
-                String stringDestination = jsonOffer.getString("DESTINATION");
-                String destinationName = getDestinationName(stringDestination);
-                LatLng latitudeLongitude = getLatLngFromDatabase(stringDestination);
-
-                String description = jsonOffer.getString("DESCRIPTION");
-                String stringDate = jsonOffer.getString("DATE");
-                Date date =  new Date();
-
-                try {
-                    date = new SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(stringDate);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                domain.Request request = new domain.Request(numBags, email, destinationName, latitudeLongitude, description, date);
-                requests.add(request);
-                Log.d("size", requests.size()+"");
+                Ban ban = new Ban(email, reason);
+                bans.add(ban);
             }
         }catch (Exception e){
             e.printStackTrace();
         }
-        callback.call(requests);
+        callback.call(bans);
     }
 
     @Override
@@ -126,7 +106,7 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
         StringBuilder result = new StringBuilder();
 
         try {
-            URL url = new URL(getRequestsUrl);
+            URL url = new URL(getBansUrl);
             urlConnection = (HttpURLConnection) url.openConnection();
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
 
@@ -160,23 +140,4 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
 
         return array;
     }
-
-
-
-    private String getDestinationName(String stringDestination) {
-        String[] splitDestination = stringDestination.split(" lat/lng: ");
-        return splitDestination[0];
-    }
-
-    private LatLng getLatLngFromDatabase(String stringDestination) {
-        String[] splitDestination = stringDestination.split(" lat/lng: ");
-        String latLong = splitDestination[1];
-        latLong = latLong.replace("(","");
-        latLong = latLong.replace(")","");
-        String[] splitLatLong = latLong.split(",");
-        double latitude = Double.parseDouble(splitLatLong[0]);
-        double longitude = Double.parseDouble(splitLatLong[1]);
-        return new LatLng(latitude, longitude);
-    }
-
 }

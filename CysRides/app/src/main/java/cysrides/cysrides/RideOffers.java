@@ -29,10 +29,13 @@ import java.util.List;
 import domain.Offer;
 import service.NavigationService;
 import service.NavigationServiceImpl;
+import service.UserIntentService;
+import service.UserIntentServiceImpl;
 import volley.OfferVolleyImpl;
 
 public class RideOffers extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    private UserIntentService userIntentService = new UserIntentServiceImpl();
     private NavigationService navigationService = new NavigationServiceImpl();
 
     private ArrayAdapter<String> adapter;
@@ -69,7 +72,7 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
                 viewOffer.setData(offers.get(position));
-
+                viewOffer.setContext(RideOffers.this);
                 fragmentTransaction.replace(R.id.ride_offers_activity, viewOffer);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
@@ -136,7 +139,7 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.my_profile) {
-            i = new Intent(RideOffers.this, ViewProfile.class);
+            i = userIntentService.createIntent(RideOffers.this, ViewProfile.class, userIntentService.getUserFromIntent(this.getIntent()));
             i.putExtra("caller", "Ride Offers");
             startActivity(i);
         }

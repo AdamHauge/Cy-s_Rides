@@ -25,37 +25,21 @@ public class LoginServiceImpl implements LoginService {
         return false;
     }
 
-    public void getUsers() {
-        UserVolleyImpl volley = new UserVolleyImpl(new Callback() {
-            public void call(ArrayList<?> result) {
-                try {
-                    if(result.get(0) instanceof UserInfo) {
-                        users = (ArrayList<UserInfo>) result;
-                    }
-                } catch(Exception e) {
-                    users = new ArrayList<>();
-                }
-
-                getUserInfo(username);
-            }
-        });
-        volley.execute();
-    }
-
-    private void getUserInfo(String netID) {
+    public UserInfo getUserInfo(ArrayList<UserInfo> users, String netID, String enteredPassword) {
+        UserInfo userInfo;
         if (users != null) {
             for (int i = 0; i < users.size(); i++) {
                 if (users.get(i).getNetID().equals(netID)) {
-                    user = users.get(i);
-                    if(verifyLogin(user.getNetID(), user.getPassword())){
-                        loginVerifiedFlag = true;
+                    userInfo = users.get(i);
+                    for(int j = 0; j < users.size(); j++){
+                        if(enteredPassword.equals(userInfo.getPassword())){
+                            return userInfo;
+                        }
                     }
                 }
             }
         }
-        else{
-
-        }
+        return null;
     }
 
 }

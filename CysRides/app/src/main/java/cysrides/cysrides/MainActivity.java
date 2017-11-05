@@ -37,17 +37,22 @@ import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import domain.Offer;
 import domain.Request;
+import domain.UserInfo;
 import service.NavigationService;
 import service.NavigationServiceImpl;
+import service.UserIntentService;
+import service.UserIntentServiceImpl;
 import volley.OfferVolleyImpl;
 import volley.RequestVolleyImpl;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
 
+    private UserIntentService userIntentService = new UserIntentServiceImpl();
     private NavigationService navigationService = new NavigationServiceImpl();
 
     private Intent i;
@@ -58,10 +63,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private FragmentManager fragmentManager = this.getSupportFragmentManager();
     private LatLng iowaState = new LatLng(42.0266187, -93.64646540000001);
     private float defaultZoom = 15.0f;
+    private HashMap<Marker, Offer> offerMarkers;
+    private HashMap<Marker, Request> requestMarkers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         PlaceAutocompleteFragment placeAutoComplete;
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -76,8 +84,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_main);
-        fab.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.fab_main).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 populateMap();
@@ -115,37 +122,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public boolean onMarkerClick(Marker marker) {
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                Offer offerData;
+                Request requestData;
 
-                switch((int) marker.getZIndex()) {
-                    case 0: //request
-                        ViewRequest viewRequest = new ViewRequest();
-                        for (int i = 0; i < requests.size(); i++) {
-                            Request r = requests.get(i);
-                            if (r.getCoordinates().equals(marker.getPosition()) &&
-                                    r.getDescription().equals(marker.getSnippet()) &&
-                                    r.getDestination().equals(marker.getTitle())) {
-                                viewRequest.setData(r);
-                            }
-                        }
+                /* Check if marker is for an offer*/
+                if(null != (offerData = offerMarkers.get(marker))) {
+                    ViewOffer viewOffer = new ViewOffer();
+                    viewOffer.setData(offerData);
+                    fragmentTransaction.replace(R.id.activity_main, viewOffer);
+                }
 
-                        fragmentTransaction.replace(R.id.activity_main, viewRequest);
-                        break;
-
-                    case 1: //offer
-                        ViewOffer viewOffer = new ViewOffer();
-                        for (int i = 0; i < offers.size(); i++) {
-                            Offer o = offers.get(i);
-                            if (o.getCoordinates().equals(marker.getPosition()) &&
-                                    o.getDescription().equals(marker.getSnippet()) &&
-                                    o.getDestination().equals(marker.getTitle())) {
-                                viewOffer.setData(o);
-                            }
-                        }
-                        fragmentTransaction.replace(R.id.activity_main, viewOffer);
-
-                        break;
-                    default:
-                        break;
+                /* Check if marker is for a request */
+                else if(null != (requestData = requestMarkers.get(marker))) {
+                    ViewRequest viewRequest = new ViewRequest();
+                    viewRequest.setData(requestData);
+                    fragmentTransaction.replace(R.id.activity_main, viewRequest);
+                }
+                else {
+                    return false;
                 }
 
                 fragmentTransaction.addToBackStack(null);
@@ -154,6 +148,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return true;
             }
         });
+
         this.googleMap = googleMap;
     }
 
@@ -172,7 +167,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 createMarkers();
             }
         });
-        offerVolley.execute();
 
         RequestVolleyImpl requestVolley = new RequestVolleyImpl(new Callback() {
             @Override
@@ -187,34 +181,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 createMarkers();
             }
         });
+
+        offerVolley.execute();
         requestVolley.execute();
     }
 
     public void createMarkers() {
+        offerMarkers = new HashMap<>();
+        requestMarkers = new HashMap<>();
+
         googleMap.clear();
 
         for(int i = 0; i < offers.size(); i++) {
             LatLng coordinates = offers.get(i).getCoordinates();
-            String name = offers.get(i).getDestination();
-            String description = offers.get(i).getDescription();
-            googleMap.addMarker(new MarkerOptions()
+            Marker marker = googleMap.addMarker(new MarkerOptions()
                     .position(coordinates)
-                    .title(name)
-                    .snippet(description)
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
-                    .zIndex(1));
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+
+            offerMarkers.put(marker, offers.get(i));
         }
 
         for(int i = 0; i < requests.size(); i++) {
             LatLng coordinates = requests.get(i).getCoordinates();
-            String name = requests.get(i).getDestination();
-            String description = requests.get(i).getDescription();
-            googleMap.addMarker(new MarkerOptions()
+            Marker marker = googleMap.addMarker(new MarkerOptions()
                     .position(coordinates)
-                    .title(name)
-                    .snippet(description)
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-                    .zIndex(0));
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+
+            requestMarkers.put(marker, requests.get(i));
         }
         onMapReady(googleMap);
     }
@@ -237,7 +230,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             backPressed = true;
             Snackbar.make(findViewById(R.id.activity_main), "Tap back again to exit", Snackbar.LENGTH_SHORT).show();
             new Handler().postDelayed(new Runnable() {
-
                 @Override
                 public void run() {
                     backPressed = false;
@@ -262,7 +254,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.my_profile) {
-            i = new Intent(MainActivity.this, ViewProfile.class);
+            i = userIntentService.createIntent(MainActivity.this, ViewProfile.class, userIntentService.getUserFromIntent(this.getIntent()));
             i.putExtra("caller", "Main Activity");
             startActivity(i);
         }

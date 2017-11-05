@@ -5,14 +5,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,36 +22,38 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import domain.UserInfo;
+import domain.Ban;
+import domain.Offer;
 import service.NavigationService;
 import service.NavigationServiceImpl;
 import service.UserIntentService;
 import service.UserIntentServiceImpl;
+import volley.BanVolley;
+import volley.BanVolleyImpl;
+import volley.OfferVolleyImpl;
 
-public class Contacts extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class BannedUsers extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private NavigationService navigationService = new NavigationServiceImpl();
     private UserIntentService userIntentService = new UserIntentServiceImpl();
+    private NavigationService navigationService = new NavigationServiceImpl();
 
-    private ListView listView;
-    private ArrayList list = new ArrayList();
-    private ArrayAdapter adapter;
+    private ArrayAdapter<String> adapter;
+    private List<Ban> bans = new ArrayList<>();
+    FragmentManager fragmentManager = this.getSupportFragmentManager();
     private Intent i;
-    private UserInfo userInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        userInfo = userIntentService.getUserFromIntent(getIntent());
-        setContentView(R.layout.activity_contacts);
+        setContentView(R.layout.activity_ride_offers);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.contacts_activity);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_offers_activity);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -58,34 +62,61 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        listView = (ListView)findViewById(R.id.contacts_list);
-
-        for(int i = 0; i < 20; i++) { //TODO the number needs to match the amount of contacts
-            list.add("Item #" + (i + 1)); //TODO this needs to be changed to match the contact names
-        }
-
-        adapter = new ArrayAdapter(Contacts.this, android.R.layout.simple_list_item_1, list);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getApplicationContext(), list.get(position).toString(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        getBansList();
+//TODO
+        ListView listView = (ListView)findViewById(R.id.ride_offers_list);
+//        adapter = new ArrayAdapter<>(BannedUsers.this, android.R.layout.simple_list_item_1, destinations);
+//        listView.setAdapter(adapter);
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+//                ViewOffer viewOffer = new ViewOffer();
+//                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+//
+//                viewOffer.setData(offers.get(position));
+//
+//                fragmentTransaction.replace(R.id.ride_offers_activity, viewOffer);
+//                fragmentTransaction.addToBackStack(null);
+//                fragmentTransaction.commit();
+//            }
+//        });
 
         if(navigationService.checkInternetConnection(getApplicationContext())) {
             connectionPopUp();
         }
     }
 
+    @SuppressWarnings("unchecked")
+    public void getBansList() {
+        BanVolleyImpl volley = new BanVolleyImpl(new Callback() {
+            public void call(ArrayList<?> result) {
+                try {
+                    if (result.get(0) instanceof Ban) {
+                        bans = (ArrayList<Ban>) result;
+                    }
+                } catch(Exception e) {
+                    bans = new ArrayList<>();
+                }
+
+                adapter.clear();
+                adapter.notifyDataSetChanged();
+            }
+        });
+        volley.execute();
+    }
+
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.contacts_activity);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_offers_activity);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
+        }
+        else if(fragmentManager.getBackStackEntryCount() > 0) {
+            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        }
+        else {
             finish();
-            i = new Intent(Contacts.this, MainActivity.class);
+            i = new Intent(BannedUsers.this, MainActivity.class);
             startActivity(i);
         }
     }
@@ -106,8 +137,8 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.my_profile) {
-            i = userIntentService.createIntent(Contacts.this, ViewProfile.class, userIntentService.getUserFromIntent(this.getIntent()));
-            i.putExtra("caller", "Contacts");
+            i = userIntentService.createIntent(BannedUsers.this, ViewProfile.class, userIntentService.getUserFromIntent(this.getIntent()));
+            i.putExtra("caller", "Ride Offers");
             startActivity(i);
         }
 
@@ -119,7 +150,7 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        i = navigationService.getNavigationIntent(item, Contacts.this, this.getIntent());
+        i = navigationService.getNavigationIntent(item, BannedUsers.this, this.getIntent());
 
         if(R.id.logout == id) {
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -132,18 +163,18 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
             alert.setNegativeButton(android.R.string.no, null);
             alert.show();
 
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.contacts_activity);
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.banned_users_activity);
             drawer.closeDrawer(GravityCompat.START);
             return true;
         }
         else if(navigationService.checkInternetConnection(getApplicationContext())) {
             connectionPopUp();
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.contacts_activity);
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.banned_users_activity);
             drawer.closeDrawer(GravityCompat.START);
             return false;
         }
         else {
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.contacts_activity);
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.banned_users_activity);
             drawer.closeDrawer(GravityCompat.START);
             startActivity(i);
             return true;
@@ -151,7 +182,7 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
     }
 
     public void connectionPopUp() {
-        Snackbar snackbar = Snackbar.make(findViewById(R.id.contacts_activity),
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.ride_offers_activity),
                 "Cy's Rides Requires\nInternet Connection", Snackbar.LENGTH_INDEFINITE);
 
         snackbar.setAction("Connect WIFI", new View.OnClickListener() {
@@ -163,4 +194,5 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
         });
         snackbar.show();
     }
+
 }

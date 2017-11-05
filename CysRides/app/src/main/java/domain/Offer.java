@@ -17,26 +17,30 @@ public class Offer {
     private LatLng coordinates;
     private String description;
     private Date date;
-    //private Group g;
-    /*
-        Im going to have to attach group to the offer. When an offer is created, ill automatically
-        create an Group and add the driver to it. Then as riders accept, they will be added to the
-        group.. unless yall can figure out a smarter way. Only writing this because its late and
-        didnt wanna forget what i was thinking in the morning. Also still need to be able to get
-        current user for adding to groups.
-        -Ryan
-     */
+    private Group group;
+    private int groupID;
 
-    public Offer(double cost, String email, String destination, LatLng coordinates, String description, Date date/*,Group g*/) {
+    public Offer(double cost, String email, String destination, LatLng coordinates, String description, Date date) {
         this.cost = cost;
         this.email = email;
         this.destination = destination;
         this.coordinates = coordinates;
         this.description = description;
         this.date = date;
-        //this.g = g;
-    }
 
+        group = new Group(email);
+
+    }
+    public Offer(double cost, String email, String destination, LatLng coordinates, String description, Date date, int groupID) {
+        this.cost = cost;
+        this.email = email;
+        this.destination = destination;
+        this.coordinates = coordinates;
+        this.description = description;
+        this.date = date;
+        this.groupID = groupID;
+
+    }
     public Offer() {
 
     }
@@ -89,16 +93,6 @@ public class Offer {
 
     public Date getDate(){return date;}
 
-    public void viewOffer(Offer o, Activity c){
+    public Group getGroup(){return group;}
 
-//        Intent i = new Intent(c , ViewOffer.class);
-//        i.putExtra("Email", o.getEmail());
-//        i.putExtra("Dest", o.getDestination());
-//        i.putExtra("LatLng", o.getCoordinates());
-//        i.putExtra("Cost", Double.toString(o.getCost()));
-//        i.putExtra("Date", o.getDate());
-//        i.putExtra("Description", o.getDescription());
-//
-//        c.startActivity(i);
-    }
 }

@@ -24,7 +24,7 @@ if(mysqli_query($con,$sql)) {
 
     $row = mysqli_fetch_row($result);
     echo $row[0];
-
+  
 } else {
     echo "Error while insertion... ".$sql." ".mysqli_error($con);
 }
