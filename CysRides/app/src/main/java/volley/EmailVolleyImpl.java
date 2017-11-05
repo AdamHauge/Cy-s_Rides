@@ -1,8 +1,23 @@
 package volley;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.mail.Message;
@@ -15,48 +30,45 @@ import javax.mail.internet.MimeMessage;
 
 public class EmailVolleyImpl implements EmailVolley {
 
-    @Override
-    public void sendEmail(Context context, String to, String from, String subject, String body){
 
+    private String sendEmailUrl = "http://proj-309-sa-b-5.cs.iastate.edu/sendEmail.php";
+    private Context currentContext;
+    private String to, from, subject, message;
 
-        //SERVER STUFF
-        final String username = "manishaspatil";//change accordingly
-        final String password = "******";//change accordingly
+    public void sendEmail(String toData, String fromData, String subjectData, String messageData, Context context)
+    {
+        currentContext = context;
+        to = toData;
+        from = fromData;
+        subject = subjectData;
+        message = messageData;
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, sendEmailUrl,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
 
-        // Assuming you are sending email through relay.jangosmtp.net
-        String host = "relay.jangosmtp.net";
-
-        Properties props = new Properties();
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", host);
-        props.put("mail.smtp.port", "25");
-
-        Session session = Session.getInstance(props,
-                new javax.mail.Authenticator() {
-                    protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(username, password);
                     }
-                });
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(currentContext, "Error...",Toast.LENGTH_SHORT).show();
+                        error.printStackTrace();
+                    }
+                }){
 
-        try {
-            Message message = new MimeMessage(session);
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("to", to);
+                params.put("from", from);
+                params.put("subject", subject);
+                params.put("message", message);
+                return params;
+            }
+        };
 
-            message.setFrom(new InternetAddress(from));
+        MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
 
-            message.setRecipients(Message.RecipientType.TO,
-                    InternetAddress.parse(to));
-
-            message.setSubject(subject);
-
-            message.setText(body);
-
-            Transport.send(message);
-
-            System.out.println("Sent message successfully....");
-
-        } catch (MessagingException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

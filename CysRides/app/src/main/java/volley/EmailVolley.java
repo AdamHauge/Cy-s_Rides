@@ -4,5 +4,5 @@ import android.content.Context;
 import android.view.View;
 
 public interface EmailVolley {
-    void sendEmail(Context context, String to, String from, String subject, String body);
+    public void sendEmail(String toData, String fromData, String subjectData, String messageData, Context context);
 }

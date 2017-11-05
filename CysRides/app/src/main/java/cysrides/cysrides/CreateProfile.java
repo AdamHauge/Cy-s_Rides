@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -29,6 +30,8 @@ import domain.UserInfo;
 import domain.UserType;
 import service.UserIntentService;
 import service.UserIntentServiceImpl;
+import volley.EmailVolley;
+import volley.EmailVolleyImpl;
 import volley.UserVolley;
 import volley.UserVolleyImpl;
 
@@ -42,6 +45,10 @@ public class CreateProfile extends AppCompatActivity {
     private EditText profileDescriptionView;
     private RadioButton driverRadioButton;
     private RadioButton passengerRadioButton;
+    private RadioGroup radioGroup;
+
+    private static final int RB1_ID = 1000; //first radio button id
+    private static final int RB2_ID = 1001; //second radio button id
 
     private String netID;
     private String password;
@@ -53,8 +60,9 @@ public class CreateProfile extends AppCompatActivity {
     private UserType userType;
     private Callback call;
 
-    private UserVolley userVolley = new UserVolleyImpl(call);
     private UserIntentService userIntentService = new UserIntentServiceImpl();
+
+    private UserVolley userVolley = new UserVolleyImpl(call);
 
     private Intent i;
 
@@ -64,7 +72,6 @@ public class CreateProfile extends AppCompatActivity {
         setContentView(R.layout.activity_create_profile);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        netIDView = (EditText) findViewById(R.id.NetID);
         passwordView = (EditText) findViewById(R.id.Password);
         fNameView = (EditText) findViewById(R.id.First_Name);
         lNameView = (EditText) findViewById(R.id.Last_Name);
@@ -72,6 +79,21 @@ public class CreateProfile extends AppCompatActivity {
         profileDescriptionView = (EditText) findViewById(R.id.Description);
         driverRadioButton = (RadioButton) findViewById(R.id.driverRadioButton);
         passengerRadioButton = (RadioButton) findViewById(R.id.passengerRadioButton);
+        radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
+        driverRadioButton.setId(RB1_ID);
+        passengerRadioButton.setId(RB2_ID);
+        radioGroup
+                .setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(RadioGroup group, int checkedId) {
+                        if (checkedId == RB1_ID) {
+                            userType = UserType.DRIVER;
+                        } else if (checkedId == RB2_ID) {
+                            userType = UserType.PASSENGER;
+                        }
+                    }
+                });
+
     }
 
     public void onCreateProfileButtonClicked(View view) {
@@ -79,33 +101,49 @@ public class CreateProfile extends AppCompatActivity {
         if (!isEmailValid(netID)) {
             Toast.makeText(CreateProfile.this, "You did not enter an iastate.edu email", Toast.LENGTH_LONG).show();
         }
+
         password = passwordView.getText().toString();
         if (!isPasswordValid(password)) {
             Toast.makeText(CreateProfile.this, "You did not enter a valid password", Toast.LENGTH_LONG).show();
         }
+
         firstName = fNameView.getText().toString();
         lastName = lNameView.getText().toString();
         if (!isNameValid(firstName, lastName)) {
             Toast.makeText(CreateProfile.this, "You did not enter a valid name", Toast.LENGTH_LONG).show();
         }
+
         venmo = venmoView.getText().toString();
         if(!isVenmoValid(venmo)){
             Toast.makeText(CreateProfile.this, "You did not enter a valid venmo", Toast.LENGTH_LONG).show();
         }
+
         profileDescription = profileDescriptionView.getText().toString();
         if(!isDescriptionValid(profileDescription)){
             Toast.makeText(CreateProfile.this, "You did not enter a long enough profile description", Toast.LENGTH_LONG).show();
         }
+
         Random rand = new Random();
         confirmationCode = String.format("%04d", rand.nextInt(10000));
-        if (driverRadioButton.isChecked()) {
-            userType = UserType.DRIVER;
-        } else {
-            userType = UserType.PASSENGER;
-        }
+
+//        if (driverRadioButton.isChecked()) {
+//            userType = UserType.DRIVER;
+//        }
+//        if(passengerRadioButton.isChecked()){
+//            userType = UserType.PASSENGER;
+//        }
+//        int type = radioGroup.getCheckedRadioButtonId();
+//        if(type == RB1_ID){
+//            userType = UserType.DRIVER;
+//        }
+//        else if(type == RB2_ID){
+//            userType = UserType.PASSENGER;
+//        }
+
         if (!isTypeSelected()) {
             Toast.makeText(CreateProfile.this, "You did not select a user type", Toast.LENGTH_LONG).show();
         }
+
         List<Offer> offers = new ArrayList<Offer>();
         List<Request> requests = new ArrayList<Request>();
 
@@ -114,12 +152,13 @@ public class CreateProfile extends AppCompatActivity {
                     userType, 0, offers, requests);
             userVolley.createUser(CreateProfile.this, user);
             finish();
-            //i = new Intent(this, ConfirmationCodeDialog.class);
-            //startActivity(i);
-            //displayConfirmationInput();
 
-            i = userIntentService.createIntent(this, ViewProfile.class, user);
-            //i.putExtra("NETID", user.getNetID());
+            i = userIntentService.createIntent(this, DialogConfirmationCode.class, user);
+
+            EmailVolley emailVolley = new EmailVolleyImpl();
+            emailVolley.sendEmail(user.getNetID(), "cysrides@gmail.com", "Welcome to Cy's Rides!",
+                    ("Here's your confimation code: " + user.getConfirmationCode()), this.getApplicationContext());
+
             startActivity(i);
         }
 

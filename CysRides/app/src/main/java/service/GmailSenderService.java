@@ -2,6 +2,6 @@ package service;
 
 public interface GmailSenderService {
 
-    void sendEmail(String to, String from, String subject, String body);
+    public void sendData(String name, String to, String from, String subject, String message);
 
 }
