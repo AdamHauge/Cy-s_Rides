@@ -36,6 +36,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 import domain.UserInfo;
@@ -90,44 +91,43 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-
-        // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-        populateAutoComplete();
-
-        mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
-                    //attemptRegister();
-                    return true;
-                }
-                return false;
-            }
-        });
-
         if(SaveSharedPreference.getUsernamePassword(LoginActivity.this).length() != 0) {
             String data[] = SaveSharedPreference.getUsernamePassword(LoginActivity.this).split(":");
-            mEmailView.setText(data[0]);
-            mPasswordView.setText(data[1]);
-            login();
+            login(data[0], data[1]);
         }
+        else {
+            setContentView(R.layout.activity_login);
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+            // Set up the login form.
+            mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+            populateAutoComplete();
 
-        mEmailSignInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                login();
-            }
-        });
+            mPasswordView = (EditText) findViewById(R.id.password);
+            mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+                    if (id == R.id.login || id == EditorInfo.IME_NULL) {
+                        attemptLogin();
+                        //attemptRegister();
+                        return true;
+                    }
+                    return false;
+                }
+            });
+
+            Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+
+            mEmailSignInButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    login(mEmailView.getText().toString(), mPasswordView.getText().toString());
+                }
+            });
 
 
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
+            mLoginFormView = findViewById(R.id.login_form);
+            mProgressView = findViewById(R.id.login_progress);
+        }
     }
 
     @Override
@@ -405,7 +405,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     public String generateCode(){
         Random rand = new Random();
 
-        return String.format("%04d", rand.nextInt(10000));
+        return String.format(Locale.US, "%04d", rand.nextInt(10000));
     }
 
     public void sendEmail(View view){
@@ -438,7 +438,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         startActivity(i);
     }
 
-    private void login() {
+    @SuppressWarnings("unchecked")
+    private void login(final String username, final String password) {
         UserVolleyImpl volley = new UserVolleyImpl(new Callback() {
             ArrayList<UserInfo> users;
 
@@ -451,7 +452,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     users = new ArrayList<>();
                 }
 
-                UserInfo userInfo = loginService.getUserInfo(users, mEmailView.getText().toString(), mPasswordView.getText().toString());
+                UserInfo userInfo = loginService.getUserInfo(users, username, password);
                 if(userInfo != null) {
                     SaveSharedPreference.setUsernamePassword(LoginActivity.this, userInfo.getNetID() + ":" + userInfo.getPassword());
                     Intent i = userIntentService.createIntent(LoginActivity.this, MainActivity.class, userInfo);

@@ -233,6 +233,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
                     alert.setMessage("Do you really want to logout?");
                     alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
+                            SaveSharedPreference.clearUsernamePassword(CreateOffer.this);
                             startActivity(i);
                         }
                     });
