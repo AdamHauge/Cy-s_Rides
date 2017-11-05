@@ -58,7 +58,11 @@
             android:name=".CreateRequest"
             android:label="Create Request"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ViewRequest" />
+        <activity
+            android:name=".BanUser"
+            android:label="Ban User"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <!--<activity android:name=".ViewRequest" />-->
         <activity
             android:name=".CreateProfile"
             android:label="@string/title_activity_create_profile"

@@ -49,10 +49,10 @@ public class BanVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements B
     }
 
     @Override
-    public void createBan(Context context, String e, String r) {
+    public void createBan(Context context, Ban ban) {
         currentContext = context;
-        email = e;
-        reason = r;
+        email = ban.getEmail();
+        reason = ban.getReason();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, createBanUrl,
                 new Response.Listener<String>() {
                     @Override

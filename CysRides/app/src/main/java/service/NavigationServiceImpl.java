@@ -18,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import cysrides.cysrides.BanUser;
 import cysrides.cysrides.Contacts;
 import cysrides.cysrides.CreateOffer;
 import cysrides.cysrides.CreateRequest;
@@ -63,6 +64,9 @@ public class NavigationServiceImpl implements NavigationService {
                 break;
             case R.id.bannedUsers:
                 intent = userIntentService.createIntent(context, CreateRequest.class, userIntentService.getUserFromIntent(intent));
+                break;
+            case R.id.banUser:
+                intent = userIntentService.createIntent(context, BanUser.class, userIntentService.getUserFromIntent(intent));
                 break;
             case R.id.logout:
                 intent = userIntentService.createIntent(context, LoginActivity.class, userIntentService.getUserFromIntent(intent));
