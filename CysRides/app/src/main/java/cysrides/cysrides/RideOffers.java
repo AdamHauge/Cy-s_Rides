@@ -102,7 +102,7 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
 
     @SuppressWarnings("unchecked")
     public void getOffersList() {
-        OfferVolleyImpl volley = new OfferVolleyImpl(new Callback() {
+        OfferVolleyImpl volley = new OfferVolleyImpl(this, new Callback() {
             public void call(ArrayList<?> result) {
                 try {
                     if (result.get(0) instanceof Offer) {
