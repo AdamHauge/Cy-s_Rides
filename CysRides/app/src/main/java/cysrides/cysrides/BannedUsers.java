@@ -30,12 +30,15 @@ import domain.Ban;
 import domain.Offer;
 import service.NavigationService;
 import service.NavigationServiceImpl;
+import service.UserIntentService;
+import service.UserIntentServiceImpl;
 import volley.BanVolley;
 import volley.BanVolleyImpl;
 import volley.OfferVolleyImpl;
 
 public class BannedUsers extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    private UserIntentService userIntentService = new UserIntentServiceImpl();
     private NavigationService navigationService = new NavigationServiceImpl();
 
     private ArrayAdapter<String> adapter;
@@ -134,7 +137,7 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.my_profile) {
-            i = new Intent(BannedUsers.this, ViewProfile.class);
+            i = userIntentService.createIntent(BannedUsers.this, ViewProfile.class, userIntentService.getUserFromIntent(this.getIntent()));
             i.putExtra("caller", "Ride Offers");
             startActivity(i);
         }
@@ -147,7 +150,7 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        i = navigationService.getNavigationIntent(item, BannedUsers.this, i);
+        i = navigationService.getNavigationIntent(item, BannedUsers.this, this.getIntent());
 
         if(R.id.logout == id) {
             AlertDialog.Builder alert = new AlertDialog.Builder(this);

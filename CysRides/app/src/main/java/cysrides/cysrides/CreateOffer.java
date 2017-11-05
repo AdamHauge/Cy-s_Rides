@@ -208,6 +208,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
+        i = this.getIntent();
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Discard Offer");
         alert.setMessage("This will discard your current offer. Continue anyway?");

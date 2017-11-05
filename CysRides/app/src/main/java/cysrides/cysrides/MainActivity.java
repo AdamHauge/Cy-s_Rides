@@ -41,13 +41,17 @@ import java.util.List;
 
 import domain.Offer;
 import domain.Request;
+import domain.UserInfo;
 import service.NavigationService;
 import service.NavigationServiceImpl;
+import service.UserIntentService;
+import service.UserIntentServiceImpl;
 import volley.OfferVolleyImpl;
 import volley.RequestVolleyImpl;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
 
+    private UserIntentService userIntentService = new UserIntentServiceImpl();
     private NavigationService navigationService = new NavigationServiceImpl();
 
     private Intent i;
@@ -262,7 +266,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.my_profile) {
-            i = new Intent(MainActivity.this, ViewProfile.class);
+            i = userIntentService.createIntent(MainActivity.this, ViewProfile.class, userIntentService.getUserFromIntent(this.getIntent()));
             i.putExtra("caller", "Main Activity");
             startActivity(i);
         }
@@ -275,7 +279,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        i = navigationService.getNavigationIntent(item, MainActivity.this, i);
+        i = navigationService.getNavigationIntent(item, MainActivity.this, this.getIntent());
 
         if(R.id.logout == id) {
             AlertDialog.Builder alert = new AlertDialog.Builder(this);

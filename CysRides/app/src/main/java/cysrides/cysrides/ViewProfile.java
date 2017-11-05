@@ -18,13 +18,15 @@ import domain.Offer;
 import domain.Request;
 import domain.UserInfo;
 import domain.UserType;
+import service.UserIntentService;
+import service.UserIntentServiceImpl;
 import volley.UserVolleyImpl;
 
 public class ViewProfile extends AppCompatActivity {
 
+    private UserIntentService userIntentService = new UserIntentServiceImpl();
+
     private UserInfo user;
-    private ArrayList<UserInfo> users;
-    String username;
     private TextView netIDView;
     private TextView firstNameView;
     private TextView lastNameView;
@@ -40,48 +42,16 @@ public class ViewProfile extends AppCompatActivity {
         firstNameView = (TextView) findViewById(R.id.firstNameView);
         lastNameView = (TextView) findViewById(R.id.lastNameView);
 
-        username = getIntent().getStringExtra("netID");
-        getUsers();
-    }
+        user = userIntentService.getUserFromIntent(this.getIntent());
 
-    public void getUsers() {
-        UserVolleyImpl volley = new UserVolleyImpl(new Callback() {
-            public void call(ArrayList<?> result) {
-                try {
-                    if(result.get(0) instanceof UserInfo) {
-                        users = (ArrayList<UserInfo>) result;
-                    }
-                } catch(Exception e) {
-                    users = new ArrayList<>();
-                }
+        netIDView.setText(user.getNetID().split("@iastate.edu")[0]);
 
-                getUserInfo(username);
-            }
-        });
-        volley.execute();
-    }
+        //firstNameView.setText(firstNameView.getText(), TextView.BufferType.EDITABLE);
+        firstNameView.setText(user.getFirstName());
 
-    private void getUserInfo(String netID) {
-        if (users != null) {
-            for (int i = 0; i < users.size(); i++) {
-                if (users.get(i).getNetID().equals(netID)) {
-                    user = users.get(i);
-                }
-            }
+        //lastNameView.setText(lastNameView.getText(), TextView.BufferType.EDITABLE);
+        lastNameView.setText(user.getLastName());
 
-            //netIDView.setText(netIDView.getText(), TextView.BufferType.EDITABLE);
-            netIDView.setText(username.split("@iastate.edu")[0]);
-
-            //firstNameView.setText(firstNameView.getText(), TextView.BufferType.EDITABLE);
-            firstNameView.setText(user.getFirstName());
-
-            //lastNameView.setText(lastNameView.getText(), TextView.BufferType.EDITABLE);
-            lastNameView.setText(user.getLastName());
-
-        }
-        else {
-            netIDView.setText("User is null");
-        }
     }
 
     @Override

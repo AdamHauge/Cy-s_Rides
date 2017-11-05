@@ -106,7 +106,7 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.my_profile) {
-            i = new Intent(Contacts.this, ViewProfile.class);
+            i = userIntentService.createIntent(Contacts.this, ViewProfile.class, userIntentService.getUserFromIntent(this.getIntent()));
             i.putExtra("caller", "Contacts");
             startActivity(i);
         }
@@ -119,7 +119,7 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        i = navigationService.getNavigationIntent(item, Contacts.this, i);
+        i = navigationService.getNavigationIntent(item, Contacts.this, this.getIntent());
 
         if(R.id.logout == id) {
             AlertDialog.Builder alert = new AlertDialog.Builder(this);

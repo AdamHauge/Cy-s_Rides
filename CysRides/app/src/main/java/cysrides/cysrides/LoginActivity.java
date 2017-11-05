@@ -32,14 +32,19 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import domain.UserInfo;
 import service.GmailSenderServiceImpl;
+import service.LoginService;
+import service.LoginServiceImpl;
 import service.UserIntentService;
 import service.UserIntentServiceImpl;
+import volley.UserVolleyImpl;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -58,12 +63,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     private UserLoginTask mAuthTask = null;
     private UserIntentService userIntentService = new UserIntentServiceImpl();
+    private LoginService loginService = new LoginServiceImpl();
 
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private ArrayList<UserInfo> users;
+    private UserInfo user;
+
 
     void LoginActivity(){
         AutoCompleteTextView email = mEmailView;
@@ -104,10 +113,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i; //userIntentService.createIntent(LoginActivity.this, ViewProfile.class, mEmailView.getText().toString());
-                i = new Intent(LoginActivity.this, ViewProfile.class);
-                i.putExtra("netID", mEmailView.getText().toString());
-                startActivity(i);
+                login();
             }
         });
 
@@ -423,9 +429,32 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         startActivity(i);
     }
 
-    public boolean verifyCredentials(String enteredUsername, String entereredPassword){
-        
-        return false;
+    private void login() {
+        UserVolleyImpl volley = new UserVolleyImpl(new Callback() {
+            ArrayList<UserInfo> users;
+
+            public void call(ArrayList<?> result) {
+                try {
+                    if(result.get(0) instanceof UserInfo) {
+                        users = (ArrayList<UserInfo>) result;
+                    }
+                } catch(Exception e) {
+                    users = new ArrayList<>();
+                }
+
+                UserInfo userInfo = loginService.getUserInfo(users, mEmailView.getText().toString(), mPasswordView.getText().toString());
+                if(userInfo != null) {
+                    Intent i = userIntentService.createIntent(LoginActivity.this, MainActivity.class, userInfo);
+                    startActivity(i);
+                } else {
+                    Toast toast = Toast.makeText(getApplicationContext(), "Not valid credentials", Toast.LENGTH_LONG);
+                    toast.show();
+                }
+
+            }
+        });
+        volley.execute();
     }
+
 }
 
