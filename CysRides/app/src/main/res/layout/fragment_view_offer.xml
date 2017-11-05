@@ -12,11 +12,11 @@
         android:layout_marginTop="?attr/actionBarSize"
         android:background="#FFFFFF"
         android:orientation="vertical">
-    <TextView
-        android:id="@+id/offer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"/>
+        <TextView
+            android:id="@+id/offer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"/>
 
         <Button
             android:id="@+id/join"

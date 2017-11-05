@@ -5,13 +5,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -38,11 +41,12 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
     private UserIntentService userIntentService = new UserIntentServiceImpl();
     private NavigationService navigationService = new NavigationServiceImpl();
 
+    private Intent i;
+    private SwipeRefreshLayout refresh;
     private ArrayAdapter<String> adapter;
     private List<Request> requests = new ArrayList<>();
     private List<String> destinations = new ArrayList<>();
-    FragmentManager fragmentManager = this.getSupportFragmentManager();
-    private Intent i;
+    private FragmentManager fragmentManager = this.getSupportFragmentManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +64,15 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        refresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
+        refresh.setColorSchemeColors(ContextCompat.getColor(this.getApplicationContext(), R.color.colorGold),
+                ContextCompat.getColor(this.getApplicationContext(), R.color.colorCardinal));
+        refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getRequestsList();
+            }
+        });
         getRequestsList();
 
         ListView listView = (ListView)findViewById(R.id.ride_requests_list);
@@ -101,7 +114,19 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
                 for(int i = 0; i < requests.size(); i++) {
                     destinations.add(requests.get(i).getDestination());
                 }
-                adapter.notifyDataSetChanged();
+
+                if(refresh.isRefreshing()) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            refresh.setRefreshing(false);
+                            adapter.notifyDataSetChanged();
+                        }
+                    }, 1000);
+                }
+                else {
+                    adapter.notifyDataSetChanged();
+                }
             }
         });
         volley.execute();
