@@ -182,6 +182,7 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.create_request_activity);
+        i = userIntentService.createIntent(CreateRequest.this, MainActivity.class, userIntentService.getUserFromIntent(this.getIntent()));
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -191,7 +192,6 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
             alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     finish();
-                    i = new Intent(CreateRequest.this, MainActivity.class);
                     startActivity(i);
             }});
             alert.setNegativeButton(android.R.string.no, null);

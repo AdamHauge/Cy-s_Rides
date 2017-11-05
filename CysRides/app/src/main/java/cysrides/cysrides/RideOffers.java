@@ -119,6 +119,7 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
         else {
             finish();
             i = new Intent(RideOffers.this, MainActivity.class);
+            i = userIntentService.createIntent(RideOffers.this, MainActivity.class, userIntentService.getUserFromIntent(this.getIntent()));
             startActivity(i);
         }
     }

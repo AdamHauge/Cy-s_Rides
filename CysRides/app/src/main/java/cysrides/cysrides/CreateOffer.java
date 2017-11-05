@@ -41,8 +41,12 @@ import service.NavigationService;
 import service.NavigationServiceImpl;
 import service.OfferService;
 import service.OfferServiceImpl;
+import service.UserIntentService;
+import service.UserIntentServiceImpl;
 
 public class CreateOffer extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    UserIntentService userIntentService = new UserIntentServiceImpl();
 
     private DatePickerDialog.OnDateSetListener dateSetListener;
     private Place destination;
@@ -181,6 +185,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.create_offer_activity);
+        i = userIntentService.createIntent(CreateOffer.this, MainActivity.class, userIntentService.getUserFromIntent(this.getIntent()));
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -190,7 +195,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
             alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                 finish();
-                i = new Intent(CreateOffer.this, MainActivity.class);
+//                i = new Intent(CreateOffer.this, MainActivity.class);
                 startActivity(i);
             }});
             alert.setNegativeButton(android.R.string.no, null);

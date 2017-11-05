@@ -85,7 +85,8 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
             drawer.closeDrawer(GravityCompat.START);
         } else {
             finish();
-            i = new Intent(Contacts.this, MainActivity.class);
+//            i = new Intent(Contacts.this, MainActivity.class);
+            i = userIntentService.createIntent(Contacts.this, MainActivity.class, userIntentService.getUserFromIntent(this.getIntent()));
             startActivity(i);
         }
     }

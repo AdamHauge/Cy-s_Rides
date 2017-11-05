@@ -61,6 +61,7 @@ public class ViewProfile extends AppCompatActivity {
         finish();
         if(previous.equals("Create Offer") || previous.equals("Create Request")) {
             intent = new Intent(ViewProfile.this, MainActivity.class);
+            intent = userIntentService.createIntent(ViewProfile.this, MainActivity.class, userIntentService.getUserFromIntent(this.getIntent()));
             startActivity(intent);
         }
         else {

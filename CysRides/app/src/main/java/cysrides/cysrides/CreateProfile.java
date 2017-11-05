@@ -27,6 +27,8 @@ import domain.Offer;
 import domain.Request;
 import domain.UserInfo;
 import domain.UserType;
+import service.UserIntentService;
+import service.UserIntentServiceImpl;
 import volley.UserVolley;
 import volley.UserVolleyImpl;
 
@@ -52,6 +54,7 @@ public class CreateProfile extends AppCompatActivity {
     private Callback call;
 
     private UserVolley userVolley = new UserVolleyImpl(call);
+    private UserIntentService userIntentService = new UserIntentServiceImpl();
 
     private Intent i;
 
@@ -115,7 +118,7 @@ public class CreateProfile extends AppCompatActivity {
             //startActivity(i);
             //displayConfirmationInput();
 
-            i = new Intent(this, ViewProfile.class);
+            i = userIntentService.createIntent(this, ViewProfile.class, user);
             //i.putExtra("NETID", user.getNetID());
             startActivity(i);
         }
