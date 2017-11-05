@@ -91,6 +91,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -107,6 +108,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 return false;
             }
         });
+
+        if(SaveSharedPreference.getUsernamePassword(LoginActivity.this).length() != 0) {
+            String data[] = SaveSharedPreference.getUsernamePassword(LoginActivity.this).split(":");
+            mEmailView.setText(data[0]);
+            mPasswordView.setText(data[1]);
+            login();
+        }
 
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
 
@@ -445,6 +453,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                 UserInfo userInfo = loginService.getUserInfo(users, mEmailView.getText().toString(), mPasswordView.getText().toString());
                 if(userInfo != null) {
+                    SaveSharedPreference.setUsernamePassword(LoginActivity.this, userInfo.getNetID() + ":" + userInfo.getPassword());
                     Intent i = userIntentService.createIntent(LoginActivity.this, MainActivity.class, userInfo);
                     startActivity(i);
                 } else {
@@ -456,6 +465,5 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         });
         volley.execute();
     }
-
 }
 
