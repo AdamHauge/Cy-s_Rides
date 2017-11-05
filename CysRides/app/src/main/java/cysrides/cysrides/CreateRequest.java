@@ -38,8 +38,12 @@ import service.NavigationService;
 import service.NavigationServiceImpl;
 import service.RequestService;
 import service.RequestServiceImpl;
+import service.UserIntentService;
+import service.UserIntentServiceImpl;
 
 public class CreateRequest extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    private UserIntentService userIntentService = new UserIntentServiceImpl();
 
     private DatePickerDialog.OnDateSetListener dateSetListener;
     private Place destination;
@@ -208,7 +212,7 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
+        i = this.getIntent();
         //noinspection SimplifiableIfStatement
         if (id == R.id.my_profile) {
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -217,7 +221,7 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
             alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     finish();
-                    i = new Intent(CreateRequest.this, ViewProfile.class);
+                    i = userIntentService.createIntent(CreateRequest.this, ViewProfile.class, userIntentService.getUserFromIntent(i));
                     i.putExtra("caller", "Create Request");
                     startActivity(i);
                 }});
@@ -230,6 +234,7 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
+        i = this.getIntent();
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Discard Request");
         alert.setMessage("This will discard your current request. Continue anyway?");

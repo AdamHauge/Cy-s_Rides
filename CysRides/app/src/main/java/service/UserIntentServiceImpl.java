@@ -9,31 +9,28 @@ import domain.UserType;
 public class UserIntentServiceImpl implements UserIntentService {
 
     @Override
-    public Intent createIntent(Context context, Class<?> cls, String netId/*, String firstName, String lastName, String venmoName, String profileDescription, UserType userType, float userRating*/) {
+    public Intent createIntent(Context context, Class<?> cls, UserInfo userInfo) {
         Intent intent = new Intent(context, cls);
-        intent.putExtra("email", netId);
-//        intent.putExtra("firstName", firstName);
-//        intent.putExtra("lastName", lastName);
-//        intent.putExtra("venmoName", venmoName);
-//        intent.putExtra("profileDescription", profileDescription);
-//        intent.putExtra("userType", userType.toString());
-//        intent.putExtra("userRating", userRating+"");
+        intent.putExtra("email", userInfo.getNetID());
+        intent.putExtra("firstName", userInfo.getFirstName());
+        intent.putExtra("lastName", userInfo.getLastName());
+        intent.putExtra("venmoName", userInfo.getVenmoName());
+        intent.putExtra("profileDescription", userInfo.getProfileDescription());
+        intent.putExtra("userType", userInfo.getUserType().toString());
+        intent.putExtra("userRating", userInfo.getUserRating() + "");
         return intent;
     }
 
     @Override
     public UserInfo getUserFromIntent(Intent intent) {
         UserInfo userInfo = new UserInfo();
-        if (intent.hasExtra("email")) {
-            userInfo.setNetID(intent.getExtras().getString("email"));
-//        userInfo.setFirstName(intent.getExtras().getString("firstName"));
-//        userInfo.setLastName(intent.getExtras().getString("lastName"));
-//        userInfo.setVenmoName(intent.getExtras().getString("venmoName"));
-//        userInfo.setProfileDescription(intent.getExtras().getString("profileDescription"));
-//        userInfo.setUserType(UserType.valueOf(intent.getExtras().getString("userType")));
-//        userInfo.setUserRating(Float.valueOf(intent.getExtras().getString("userRating")));
-        }
-
+        userInfo.setNetID(intent.getExtras().getString("email"));
+        userInfo.setFirstName(intent.getExtras().getString("firstName"));
+        userInfo.setLastName(intent.getExtras().getString("lastName"));
+        userInfo.setVenmoName(intent.getExtras().getString("venmoName"));
+        userInfo.setProfileDescription(intent.getExtras().getString("profileDescription"));
+        userInfo.setUserType(UserType.valueOf(intent.getExtras().getString("userType")));
+        userInfo.setUserRating(Float.valueOf(intent.getExtras().getString("userRating")));
         return userInfo;
     }
 }
