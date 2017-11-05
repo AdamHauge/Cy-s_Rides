@@ -36,11 +36,15 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
 
     private String createRequestUrl = "http://proj-309-sa-b-5.cs.iastate.edu/createRequest.php";
     private String getRequestsUrl = "http://proj-309-sa-b-5.cs.iastate.edu/getRequest.php";
+    private String giveRequestGroupUrl = "http://proj-309-sa-b-5.cs.iastate.edu/giveRequestGroup.php";
+
     private domain.Request newRequest;
     private Context currentContext;
     private String latitudeLongitudeName;
     private ArrayList<domain.Request> requests;
     private Callback callback;
+    private GroupVolleyImpl groupVolley = new GroupVolleyImpl();
+
 
     public RequestVolleyImpl() { }
 
@@ -57,6 +61,8 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        newRequest.getGroup().setRequestID(Integer.parseInt(response));
+                        groupVolley.createGroup(currentContext, newRequest.getGroup());
 
                     }
                 },
@@ -82,6 +88,36 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
 
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
+
+    public void giveRequestGroup(Context context, final int requestId, final int groupId){
+        currentContext = context;
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, giveRequestGroupUrl,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(currentContext, "Error...",Toast.LENGTH_SHORT).show();
+                        error.printStackTrace();
+                    }
+                }){
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("request_id", Integer.toString(requestId));
+                params.put("group_id", Integer.toString(groupId));
+                return params;
+            }
+        };
+
+        MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
+    }
+
 
     @Override
     protected void onPostExecute(JSONArray jsonArray) {

@@ -170,7 +170,6 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
 
                 if(allValid) {
                     Offer o = new Offer(cost, "email", (String) destination.getName(), destination.getLatLng(), description, new GregorianCalendar(year, month, day).getTime());
-
                     offerService.createOffer(CreateOffer.this, o);
 
                     /* Refresh the page */
