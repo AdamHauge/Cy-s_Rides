@@ -3,7 +3,7 @@
     <string name="app_name">"Cy's Rides"</string>
     <string name="register">Register</string>
     <string name="login">Log in</string>
-    <string name="logout">Log out</string>
+    <string name="logout">Logout</string>
     <string name="profile">My Profile</string>
     <string name="contacts">My Contacts</string>
     <string name="requests">Ride Requests</string>
