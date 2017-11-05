@@ -82,6 +82,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        Menu menu = navigationView.getMenu();
+        navigationService.hideMenuItems(menu, userIntentService.getUserFromIntent(this.getIntent()));
+
         findViewById(R.id.fab_main).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -241,7 +244,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.my_profile_button, menu);
-        //navigationService.hideMenuItems(menu, userIntentService.getUserFromIntent(this.getIntent()));
         return true;
     }
 
@@ -269,6 +271,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
         i = navigationService.getNavigationIntent(item, MainActivity.this, this.getIntent());
 
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main);
+        drawer.closeDrawer(GravityCompat.START);
+
         if(R.id.logout == id) {
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
             alert.setTitle("Logout");
@@ -279,20 +284,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }});
             alert.setNegativeButton(android.R.string.no, null);
             alert.show();
-
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main);
-            drawer.closeDrawer(GravityCompat.START);
             return true;
         }
         else if(navigationService.checkInternetConnection(getApplicationContext())) {
             connectionPopUp();
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main);
-            drawer.closeDrawer(GravityCompat.START);
             return false;
         }
         else {
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main);
-            drawer.closeDrawer(GravityCompat.START);
             startActivity(i);
             return true;
         }

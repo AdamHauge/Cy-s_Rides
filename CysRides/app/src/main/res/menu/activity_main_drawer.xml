@@ -31,6 +31,9 @@
             android:id="@+id/createRequest"
             android:title="Create Ride Request" />
         <item
+            android:id="@+id/banUser"
+            android:title="Ban User" />
+        <item
             android:id="@+id/bannedUsers"
             android:title="View Banned Users" />
     </group>

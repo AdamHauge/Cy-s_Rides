@@ -72,6 +72,9 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        Menu menu = navigationView.getMenu();
+        navigationService.hideMenuItems(menu, userIntentService.getUserFromIntent(this.getIntent()));
+
         PlaceAutocompleteFragment placeAutoComplete;
         placeAutoComplete = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete);
         placeAutoComplete.setHint("Where do you need to go?");

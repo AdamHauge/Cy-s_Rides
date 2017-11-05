@@ -31,6 +31,14 @@
         android:title="@string/create_request" />
 
     <item
+        android:id="@+id/banUser"
+        android:title="Ban User" />
+
+    <item
+        android:id="@+id/bannedUsers"
+        android:title="View Banned Users" />
+
+    <item
         android:id="@+id/logout"
         android:title="@string/logout" />
 

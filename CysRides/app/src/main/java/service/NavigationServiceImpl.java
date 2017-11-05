@@ -85,13 +85,20 @@ public class NavigationServiceImpl implements NavigationService {
     @Override
     public void hideMenuItems(Menu menu, UserInfo userInfo) {
         MenuItem item;
-        if(userInfo.getUserType() == UserType.ADMIN) {
+        if(userInfo.getUserType() == UserType.PASSENGER) {
             item = menu.findItem(R.id.createOffer);
             item.setVisible(false);
             item = menu.findItem(R.id.requests);
             item.setVisible(false);
+            item = menu.findItem(R.id.bannedUsers);
+            item.setVisible(false);
+            item = menu.findItem(R.id.banUser);
+            item.setVisible(false);
         } else if(userInfo.getUserType() == UserType.DRIVER) {
-
+            item = menu.findItem(R.id.bannedUsers);
+            item.setVisible(false);
+            item = menu.findItem(R.id.banUser);
+            item.setVisible(false);
         }
     }
 }

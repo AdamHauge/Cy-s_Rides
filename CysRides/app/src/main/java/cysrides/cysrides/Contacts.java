@@ -58,6 +58,9 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        Menu menu = navigationView.getMenu();
+        navigationService.hideMenuItems(menu, userIntentService.getUserFromIntent(this.getIntent()));
+
         listView = (ListView)findViewById(R.id.contacts_list);
 
         for(int i = 0; i < 20; i++) { //TODO the number needs to match the amount of contacts

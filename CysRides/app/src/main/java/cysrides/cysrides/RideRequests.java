@@ -64,6 +64,9 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        Menu menu = navigationView.getMenu();
+        navigationService.hideMenuItems(menu, userIntentService.getUserFromIntent(this.getIntent()));
+
         refresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
         refresh.setColorSchemeColors(ContextCompat.getColor(this.getApplicationContext(), R.color.colorGold),
                 ContextCompat.getColor(this.getApplicationContext(), R.color.colorCardinal));
