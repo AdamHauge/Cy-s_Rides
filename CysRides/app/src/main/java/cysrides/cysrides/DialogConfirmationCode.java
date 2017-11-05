@@ -34,7 +34,7 @@ public class DialogConfirmationCode extends AppCompatActivity {
                     Toast toast = Toast.makeText(getApplicationContext(), "Valid confirmation code", Toast.LENGTH_LONG);
                     toast.show();
 
-                    Intent i = userIntentService.createIntent(DialogConfirmationCode.this, MainActivity.class, user);
+                    Intent i = userIntentService.createIntent(DialogConfirmationCode.this, LoginActivity.class, user);
                     startActivity(i);
                 }
                 else{
