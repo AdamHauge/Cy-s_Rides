@@ -33,13 +33,14 @@ import cysrides.cysrides.Callback;
 
 public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements GroupVolley {
 
-    private String createGroupUrl = "http://proj-309-sa-b-5.cs.iastate.edu/createGroup.php";
+    private String createGroupUrl = "http://proj-309-sa-b-5.cs.iastate.edu/createGroup_TEST.php";
     private String addRiderUrl =    "http://proj-309-sa-b-5.cs.iastate.edu/addRider.php";
     private String getGroupUrl =    "http://proj-309-sa-b-5.cs.iastate.edu/getGroup.php";
     private Group group;
     private Context currentContext;
     private Callback callback;
     private OfferVolleyImpl ovi;
+    private RequestVolleyImpl rvi;
     private int groupNum;
 
     public GroupVolleyImpl(){};
@@ -48,7 +49,11 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
     @Override
     public void createGroup(Context context, Group g) {
         this.group = g;
-        this.ovi = new OfferVolleyImpl();
+        if(this.group.getType().equals("OFFER")) {
+            this.ovi = new OfferVolleyImpl();
+        }else{
+            this.rvi = new RequestVolleyImpl();
+        }
         currentContext = context;
         StringRequest stringRequest = new StringRequest(Request.Method.POST, createGroupUrl,
                 new Response.Listener<String>() {
@@ -56,10 +61,14 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
                     public void onResponse(String response) {
                         //return group number of group we just created
                         //add group number to offer table
-                        //0 is Groupid and 1 is Offerid
+                        //0 is Groupid and 1 is tripid
                         String[] splitResponse = response.split(" ");
                         Log.d("GroupID, OfferID: ", splitResponse[0] + splitResponse[1]);
-                        ovi.giveOfferGroup(currentContext, Integer.parseInt(splitResponse[1]), Integer.parseInt(splitResponse[0]));
+                        if(group.getType().equals("OFFER")) {
+                            ovi.giveOfferGroup(currentContext, Integer.parseInt(splitResponse[1]), Integer.parseInt(splitResponse[0]));
+                        }else{
+                            rvi.giveRequestGroup(currentContext,Integer.parseInt(splitResponse[1]), Integer.parseInt(splitResponse[0]));
+                        }
                     }
                 },
                 new Response.ErrorListener() {
@@ -73,8 +82,17 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("driver", group.getGroupMembers().get(0));
-                params.put("id", Integer.toString(group.getOfferId()));
+                if(group.getGroupMembers().get(0) != null) {
+                    params.put("user", group.getGroupMembers().get(0));
+                }else{
+                    params.put("user", group.getGroupMembers().get(1));
+                }
+                if(group.getType().equals("OFFER")) {
+                    params.put("id", Integer.toString(group.getOfferId()));
+                }else{
+                    params.put("id", Integer.toString(group.getRequestID()));
+                }
+                params.put("type", group.getType());
                 return params;
             }
         };
@@ -112,8 +130,9 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
                             members.add(rider);
 
                             int offerNum = jGroup.getInt("OFFER_ID");
+                            int requestNum = jGroup.getInt("REQUEST_ID");
 
-                            group = new Group(groupNum, members, offerNum);
+                            group = new Group(groupNum, members, offerNum, requestNum);
                             ArrayList<Group> groupList = new ArrayList<>();
                             groupList.add(group);
                             callback.call(groupList);
@@ -169,7 +188,16 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("rider", netID);
-                params.put("rider_num", Integer.toString(group.getSize()));
+
+                ArrayList<String> gMembers = group.getGroupMembers();
+                int size = 0;
+                for (String s : gMembers) {
+                    if(!s.equals("null")){
+                        size += 1;
+                    }
+                }
+
+                params.put("rider_num", Integer.toString(size));
                 params.put("offer_id", Integer.toString(group.getOfferId()));
                 return params;
             }

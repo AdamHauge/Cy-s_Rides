@@ -19,6 +19,8 @@ public class Request {
     private LatLng coordinates;
     private String description;
     private Date date;
+    private Group group;
+    private int groupID;
 
     public Request(int numBags, String email, String destination, LatLng coordinates, String description, Date date) {
         this.numBags = numBags;
@@ -27,6 +29,8 @@ public class Request {
         this.coordinates = coordinates;
         this.description = description;
         this.date = date;
+
+        group = new Group("Creator", "REQUEST");
     }
 
     @Override
@@ -36,6 +40,8 @@ public class Request {
                 "\ndescription=" + description +
                 "\ndate=" + date;
     }
+
+    public Group getGroup(){return group;}
 
     public int getNumBags() {
         return numBags;

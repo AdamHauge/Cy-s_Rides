@@ -4,7 +4,7 @@ $numBags = $_POST["numBags"];
 $email = $_POST["email"];
 $destination = $_POST["destination"];
 $description = $_POST["description"];
-$date =$_POST["date"];
+$date = $_POST["date"];
 
 $host="mysql.cs.iastate.edu";
 $port=3306;
@@ -18,9 +18,15 @@ $con = new mysqli($host, $username, $password, $dbname, $port, $socket) or die('
 $sql = "INSERT INTO REQUEST_TABLE (NUM_BAGS, EMAIL, DESTINATION, DESCRIPTION, DATE) VALUES ('".$numBags."','".$email."','".$destination."','".$description."',".$date.");";
 
 if(mysqli_query($con,$sql)) {
-    echo "Data insertion success...";
-} else {
+  $sql = "SELECT ID from REQUEST_TABLE ORDER BY ID DESC LIMIT 1;";
+
+  $result = mysqli_query($con,$sql);
+
+  $row = mysqli_fetch_row($result);
+  echo $row[0];
+
+  } else {
     echo "Error while insertion... ".$sql." ".mysqli_error($con);
-}
+  }
 
 ?>

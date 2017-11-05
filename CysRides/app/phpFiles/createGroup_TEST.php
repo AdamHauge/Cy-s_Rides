@@ -2,7 +2,8 @@
 
   $user = $_POST["user"];
   $id = $_POST["id"];
-  
+  $type = $_POST["type"];
+
 
 
   $host="mysql.cs.iastate.edu";
@@ -13,8 +14,11 @@
   $dbname = 'db309sab5';
 
   $con = new mysqli($host, $username, $password, $dbname, $port, $socket) or die('Could not connect to database server'.mysqli_connect_error);
-
-  $sql = "INSERT INTO GROUP_TABLE (DRIVER, OFFER_ID) VALUES ('".$driver."',".$id.");";
+  if($type === "OFFER"){
+    $sql = "INSERT INTO GROUP_TABLE (DRIVER, OFFER_ID) VALUES ('".$user."',".$id.");";
+  }else {
+    $sql = "INSERT INTO GROUP_TABLE (RIDER_1, REQUEST_ID) VALUES ('".$user."', ".$id.");";
+  }
 
   if(mysqli_query($con,$sql)) {
     $sql = "SELECT ID from GROUP_TABLE ORDER BY ID DESC LIMIT 1;";

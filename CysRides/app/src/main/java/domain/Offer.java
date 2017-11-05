@@ -36,7 +36,7 @@ public class Offer {
         this.description = description;
         this.date = date;
 
-        group = new Group(email);
+        group = new Group(email, "OFFER");
 
     }
     public Offer(double cost, String email, String destination, LatLng coordinates, String description, Date date, int groupID, Context context) {
@@ -50,6 +50,7 @@ public class Offer {
         //USE CALLBACK SOMEHOW TO GET THE GROUP BACK
         pullGroup(context, this.groupID);
     }
+
     public Offer() {
 
     }
