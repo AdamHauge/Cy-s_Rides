@@ -159,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @SuppressWarnings("unchecked")
     public void populateMap() {
-        OfferVolleyImpl offerVolley = new OfferVolleyImpl(new Callback() {
+        OfferVolleyImpl offerVolley = new OfferVolleyImpl(this,new Callback() {
             @Override
             public void call(ArrayList<?> result) {
                 try {

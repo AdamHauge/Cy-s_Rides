@@ -29,6 +29,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import cysrides.cysrides.Callback;
+import cysrides.cysrides.RideOffers;
 import domain.Offer;
 
 public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements OfferVolley {
@@ -45,6 +46,10 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
     public OfferVolleyImpl() { }
 
     public OfferVolleyImpl(Callback o) {
+        callback = o;
+    }
+    public OfferVolleyImpl(Context currentContext, Callback o) {
+        this.currentContext = currentContext;
         callback = o;
     }
 
@@ -136,13 +141,16 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
                 String stringDate = jsonOffer.getString("DATE");
                 Date date =  new Date();
 
+                int groupID = jsonOffer.getInt("GROUP_ID");
+
                 try {
                     date = new SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(stringDate);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
-                Offer offer = new Offer(cost, email, destinationName, latitudeLongitude, description, date);
+                Offer offer = new Offer(cost, email, destinationName, latitudeLongitude, description, date, groupID, this.currentContext);
+                //Log.d("offer", offer.toString());
                 offers.add(offer);
                 Log.d("size", offers.size()+"");
             }

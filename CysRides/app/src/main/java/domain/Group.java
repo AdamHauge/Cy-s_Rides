@@ -2,6 +2,9 @@ package domain;
 
 import java.util.ArrayList;
 
+import service.GroupServiceImpl;
+import volley.GroupVolleyImpl;
+
 /**
  * Created by Ryan on 10/17/2017.
  */
@@ -14,27 +17,25 @@ public class Group {
 
 
     public Group(String user){
-        addUser(user);
+        groupMembers.add(user);
         driver = user;
     }
 
+    public Group(int groupID, ArrayList<String> groupMembers, int offerID){
+        this.groupMembers = groupMembers;
+        this.groupID = groupID;
+        this.offerID = offerID;
+        this.driver = groupMembers.get(0);
 
-
-    //returns -1 if group is full
-    public int addUser(String user){
-        //return -1 if too many members in a trip group
-        if(groupMembers.size() >= 8){
-            return -1;
-        }
-        groupMembers.add(user);
-        return 1;
     }
+
 
 
     public ArrayList<String> getGroupMembers(){
         return groupMembers;
     }
 
+    public String getDriver(){return driver;}
 
     public int getId(){return groupID;}
 
