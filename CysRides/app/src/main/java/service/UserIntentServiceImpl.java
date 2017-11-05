@@ -12,6 +12,7 @@ public class UserIntentServiceImpl implements UserIntentService {
     public Intent createIntent(Context context, Class<?> cls, UserInfo userInfo) {
         Intent intent = new Intent(context, cls);
         intent.putExtra("email", userInfo.getNetID());
+        intent.putExtra("confirmation code", userInfo.getConfirmationCode());
         intent.putExtra("firstName", userInfo.getFirstName());
         intent.putExtra("lastName", userInfo.getLastName());
         intent.putExtra("venmoName", userInfo.getVenmoName());
@@ -25,6 +26,7 @@ public class UserIntentServiceImpl implements UserIntentService {
     public UserInfo getUserFromIntent(Intent intent) {
         UserInfo userInfo = new UserInfo();
         userInfo.setNetID(intent.getExtras().getString("email"));
+        userInfo.setConfirmationCode(intent.getExtras().getString("confirmation code"));
         userInfo.setFirstName(intent.getExtras().getString("firstName"));
         userInfo.setLastName(intent.getExtras().getString("lastName"));
         userInfo.setVenmoName(intent.getExtras().getString("venmoName"));
