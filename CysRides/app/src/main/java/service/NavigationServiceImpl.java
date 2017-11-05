@@ -13,6 +13,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -24,6 +26,8 @@ import cysrides.cysrides.R;
 import cysrides.cysrides.RideOffers;
 import cysrides.cysrides.RideRequests;
 import cysrides.cysrides.ViewProfile;
+import domain.UserInfo;
+import domain.UserType;
 
 public class NavigationServiceImpl implements NavigationService {
 
@@ -76,5 +80,18 @@ public class NavigationServiceImpl implements NavigationService {
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
         return null == networkInfo;
+    }
+
+    @Override
+    public void hideMenuItems(Menu menu, UserInfo userInfo) {
+        MenuItem item;
+        if(userInfo.getUserType() == UserType.ADMIN) {
+            item = menu.findItem(R.id.createOffer);
+            item.setVisible(false);
+            item = menu.findItem(R.id.requests);
+            item.setVisible(false);
+        } else if(userInfo.getUserType() == UserType.DRIVER) {
+
+        }
     }
 }
