@@ -8,7 +8,6 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
@@ -42,7 +41,6 @@ import java.util.List;
 
 import domain.Offer;
 import domain.Request;
-import domain.UserInfo;
 import service.NavigationService;
 import service.NavigationServiceImpl;
 import service.UserIntentService;
@@ -154,36 +152,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @SuppressWarnings("unchecked")
     public void populateMap() {
-        OfferVolleyImpl offerVolley = new OfferVolleyImpl(new Callback() {
-            @Override
-            public void call(ArrayList<?> result) {
-                try {
-                    if(result.get(0) instanceof Offer) {
-                        offers = (ArrayList<Offer>) result;
+        switch(userIntentService.getUserFromIntent(getIntent()).getUserType()) {
+            case ADMIN:
+            case DRIVER:
+                new RequestVolleyImpl(new Callback() {
+                    @Override
+                    public void call(ArrayList<?> result) {
+                        try {
+                            if (result.get(0) instanceof Request) {
+                                requests = (ArrayList<Request>) result;
+                            }
+                        } catch (Exception e) {
+                            offers = new ArrayList<>();
+                        }
+                        createMarkers();
                     }
-                } catch(Exception e) {
-                    offers = new ArrayList<>();
-                }
-                createMarkers();
-            }
-        });
-
-        RequestVolleyImpl requestVolley = new RequestVolleyImpl(new Callback() {
-            @Override
-            public void call(ArrayList<?> result) {
-                try {
-                    if(result.get(0) instanceof Request) {
-                        requests = (ArrayList<Request>) result;
+                }).execute();
+            case PASSENGER:
+                new OfferVolleyImpl(new Callback() {
+                    @Override
+                    public void call(ArrayList<?> result) {
+                        try {
+                            if (result.get(0) instanceof Offer) {
+                                offers = (ArrayList<Offer>) result;
+                            }
+                        } catch (Exception e) {
+                            offers = new ArrayList<>();
+                        }
+                        createMarkers();
                     }
-                } catch(Exception e) {
-                    offers = new ArrayList<>();
-                }
-                createMarkers();
-            }
-        });
-
-        offerVolley.execute();
-        requestVolley.execute();
+                }).execute();
+        }
     }
 
     public void createMarkers() {
