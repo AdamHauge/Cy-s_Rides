@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.telecom.Call;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -46,6 +47,7 @@ public class CreateProfile extends AppCompatActivity {
     private RadioButton driverRadioButton;
     private RadioButton passengerRadioButton;
     private RadioGroup radioGroup;
+    private Button createProfileButton;
 
     private static final int RB1_ID = 1000; //first radio button id
     private static final int RB2_ID = 1001; //second radio button id
@@ -72,18 +74,21 @@ public class CreateProfile extends AppCompatActivity {
         setContentView(R.layout.activity_create_profile);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        netIDView = (EditText) findViewById(R.id.NetID);
         passwordView = (EditText) findViewById(R.id.Password);
         fNameView = (EditText) findViewById(R.id.First_Name);
         lNameView = (EditText) findViewById(R.id.Last_Name);
         venmoView = (EditText) findViewById(R.id.Venmo);
         profileDescriptionView = (EditText) findViewById(R.id.Description);
+        createProfileButton = (Button) findViewById(R.id.createProfileButton);
+
         driverRadioButton = (RadioButton) findViewById(R.id.driverRadioButton);
         passengerRadioButton = (RadioButton) findViewById(R.id.passengerRadioButton);
         radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
         driverRadioButton.setId(RB1_ID);
         passengerRadioButton.setId(RB2_ID);
-        radioGroup
-                .setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(RadioGroup group, int checkedId) {
                         if (checkedId == RB1_ID) {
@@ -94,9 +99,69 @@ public class CreateProfile extends AppCompatActivity {
                     }
                 });
 
+        final Context context = this.getApplicationContext();
+
+        createProfileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Context currentContext = context;
+
+                netID = netIDView.getText().toString();
+                if (!isEmailValid(netID)) {
+                    Toast.makeText(CreateProfile.this, "You did not enter an iastate.edu email", Toast.LENGTH_LONG).show();
+                }
+
+                password = passwordView.getText().toString();
+                if (!isPasswordValid(password)) {
+                    Toast.makeText(CreateProfile.this, "You did not enter a valid password", Toast.LENGTH_LONG).show();
+                }
+
+                firstName = fNameView.getText().toString();
+                lastName = lNameView.getText().toString();
+                if (!isNameValid(firstName, lastName)) {
+                    Toast.makeText(CreateProfile.this, "You did not enter a valid name", Toast.LENGTH_LONG).show();
+                }
+
+                venmo = venmoView.getText().toString();
+                if(!isVenmoValid(venmo)){
+                    Toast.makeText(CreateProfile.this, "You did not enter a valid venmo", Toast.LENGTH_LONG).show();
+                }
+
+                profileDescription = profileDescriptionView.getText().toString();
+                if(!isDescriptionValid(profileDescription)){
+                    Toast.makeText(CreateProfile.this, "You did not enter a long enough profile description", Toast.LENGTH_LONG).show();
+                }
+
+                Random rand = new Random();
+                confirmationCode = String.format("%04d", rand.nextInt(10000));
+
+                if (!isTypeSelected()) {
+                    Toast.makeText(CreateProfile.this, "You did not select a user type", Toast.LENGTH_LONG).show();
+                }
+
+                List<Offer> offers = new ArrayList<Offer>();
+                List<Request> requests = new ArrayList<Request>();
+
+                if (inputsValid()) {
+                    UserInfo user = new UserInfo(netID, password, confirmationCode, firstName, lastName, venmo, profileDescription,
+                            userType, 0, offers, requests);
+                    userVolley.createUser(CreateProfile.this, user);
+                    finish();
+
+                    i = userIntentService.createIntent(currentContext, DialogConfirmationCode.class, user);
+
+                    EmailVolley emailVolley = new EmailVolleyImpl();
+                    emailVolley.sendEmail(user.getNetID(), "cysrides@iastate.edu", "Welcome to Cy's Rides!",
+                            ("Here's your confimation code: " + user.getConfirmationCode()), currentContext);
+
+                    startActivity(i);
+                }
+            }
+        });
+
     }
 
-    public void onCreateProfileButtonClicked(View view) {
+    /*public void onCreateProfileButtonClicked(View view) {
         netID = netIDView.getText().toString();
         if (!isEmailValid(netID)) {
             Toast.makeText(CreateProfile.this, "You did not enter an iastate.edu email", Toast.LENGTH_LONG).show();
@@ -162,7 +227,7 @@ public class CreateProfile extends AppCompatActivity {
             startActivity(i);
         }
 
-    }
+    }*/
 
     public void displayConfirmationInput() {
         AlertDialog.Builder builder;
