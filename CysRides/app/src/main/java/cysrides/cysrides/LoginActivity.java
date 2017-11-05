@@ -220,6 +220,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         } else if (!isEmailValid(email)) {
             mEmailView.setError("This email is not an iastate.edu email");
             focusView = mEmailView;
+            
             cancel = true;
         }
 
