@@ -27,6 +27,7 @@ public class Request {
     private int groupID;
     private Context context;
 
+    //constructs new Request
     public Request(int numBags, String email, String destination, LatLng coordinates, String description, Date date) {
         this.numBags = numBags;
         this.email = email;
@@ -37,6 +38,8 @@ public class Request {
 
         group = new Group(email, "REQUEST");
     }
+
+    //constructor for pulling requests from the database
     public Request(int numBags, String email, String destination, LatLng coordinates, String description, Date date, int groupID, Context context) {
         this.numBags = numBags;
         this.email = email;

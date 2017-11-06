@@ -28,6 +28,7 @@ public class Offer {
     private Group group;
     private int groupID;
 
+    //create offer
     public Offer(double cost, String email, String destination, LatLng coordinates, String description, Date date) {
         this.cost = cost;
         this.email = email;
@@ -39,6 +40,7 @@ public class Offer {
         group = new Group(email, "OFFER");
 
     }
+    //constructer used to pull offers
     public Offer(double cost, String email, String destination, LatLng coordinates, String description, Date date, int groupID, Context context) {
         this.cost = cost;
         this.email = email;
@@ -54,7 +56,7 @@ public class Offer {
     public Offer() {
 
     }
-
+    //pulls group from the database and sets this.group to the fetched group
     public void pullGroup(Context context, int groupID){
         GroupVolleyImpl gvi = new GroupVolleyImpl(context, new Callback() {
             @Override

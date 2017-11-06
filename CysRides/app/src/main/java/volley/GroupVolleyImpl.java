@@ -49,7 +49,7 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
         this.currentContext = currentContext;
         callback = c;
     }
-
+    //adds group to the database
     @Override
     public void createGroup(Context context, Group g) {
         this.group = g;
@@ -103,6 +103,7 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
 
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
+    //pulls group from the database
     public void getGroup(final Context currentContext, final int groupNum) {
         this.currentContext = currentContext;
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getGroupUrl,
@@ -168,7 +169,7 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
 
-
+    //adds a user to a group as a new rider
     @Override
     public void addRider(Context context, final Group g, final String netID) {
         currentContext = context;
@@ -213,6 +214,7 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
 
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
+    //adds user to a group as a driver
     @Override
     public void addDriver(Context context, final Group g, final String netID) {
         currentContext = context;

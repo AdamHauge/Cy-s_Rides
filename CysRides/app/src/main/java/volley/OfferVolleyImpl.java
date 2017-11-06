@@ -53,6 +53,7 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
         callback = o;
     }
 
+    //add offer to the database
     @Override
     public void createOffer(final Context context, final Offer offer, String latLongName) {
         newOffer = offer;
@@ -90,6 +91,7 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
 
+    //gives specified offer the given groupID
     public void giveOfferGroup(Context context, final int offerId, final int groupId){
         currentContext = context;
         StringRequest stringRequest = new StringRequest(Request.Method.POST, giveOfferGroupUrl,
