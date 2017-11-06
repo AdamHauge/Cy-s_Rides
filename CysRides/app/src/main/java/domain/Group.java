@@ -27,6 +27,7 @@ public class Group {
             groupMembers.add(null);
             groupMembers.add(user);
         }
+
     }
 
     public Group(int groupID, ArrayList<String> groupMembers, int offerID, int requestID){

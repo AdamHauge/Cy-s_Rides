@@ -31,7 +31,7 @@ public class ViewRequest extends Fragment {
         v.findViewById(R.id.join).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                g.addRider(context, request.getGroup(), "myNetId");
+                g.addRider(context, request.getGroup(), request.getEmail());
 
             }
         });
@@ -39,7 +39,7 @@ public class ViewRequest extends Fragment {
 
            @Override
            public void onClick(View view) {
-                g.addDriver(context, request.getGroup(), "DRIVER");
+                g.addDriver(context, request.getGroup(), request.getEmail());
            }
        }
 

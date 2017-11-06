@@ -31,7 +31,7 @@ public class ViewOffer extends Fragment {
         v.findViewById(R.id.join).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                g.addRider(context, offer.getGroup(), "myNetid");
+                g.addRider(context, offer.getGroup(), offer.getEmail());
             }
         });
 

@@ -166,7 +166,7 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
                 }
 
                 if(allValid) {
-                    Request r = new Request(numBags, "email", (String) destination.getName(), destination.getLatLng(), description, new GregorianCalendar(year, month, day).getTime());
+                    Request r = new Request(numBags, userIntentService.getUserFromIntent(getIntent()).getNetID(), (String) destination.getName(), destination.getLatLng(), description, new GregorianCalendar(year, month, day).getTime());
                     requestService.createRequest(CreateRequest.this, r);
                     finish();
                     startActivity(getIntent());
