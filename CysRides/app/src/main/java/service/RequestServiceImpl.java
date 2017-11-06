@@ -32,6 +32,10 @@ public class RequestServiceImpl implements RequestService {
         }
         return emailRequests;
     }
+    @Override
+    public void giveRequestGroup(Context context, int requestID, int groupID){
+        requestVolley.giveRequestGroup(context, requestID, groupID);
+    }
 
     //protected List<Offer> getDriverOfferRequests() {
     //    return offerJdbc.getDriverOffers();

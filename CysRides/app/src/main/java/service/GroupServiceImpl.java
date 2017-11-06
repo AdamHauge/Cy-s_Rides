@@ -21,6 +21,8 @@ public class GroupServiceImpl implements GroupService{
     }
     @Override
     public void addRider(Context context, Group g, String netid){groupVolley.addRider(context,g,netid);}
-
+    @Override
     public void addDriver(Context context, Group g, String netid){groupVolley.addDriver(context, g, netid);}
+    @Override
+    public void getGroup(Context context, int groupNum){groupVolley.getGroup(context, groupNum);}
 }
