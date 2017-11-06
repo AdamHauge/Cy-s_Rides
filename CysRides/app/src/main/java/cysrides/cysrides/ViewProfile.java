@@ -57,15 +57,8 @@ public class ViewProfile extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Intent intent = getIntent();
-        String previous = intent.getStringExtra("caller");
         finish();
-        if(previous.equals("Create Offer") || previous.equals("Create Request")) {
-            intent = new Intent(ViewProfile.this, MainActivity.class);
-            intent = userIntentService.createIntent(ViewProfile.this, MainActivity.class, userIntentService.getUserFromIntent(this.getIntent()));
-            startActivity(intent);
-        }
-        else {
-            super.onBackPressed();
-        }
+        intent = userIntentService.createIntent(ViewProfile.this, MainActivity.class, userIntentService.getUserFromIntent(this.getIntent()));
+        startActivity(intent);
     }
 }
