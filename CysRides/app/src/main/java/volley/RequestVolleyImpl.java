@@ -48,6 +48,11 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
 
     public RequestVolleyImpl() { }
 
+    /*
+     * constructor that stores the caller data
+     *
+     * Param: Callback data for caller
+     */
     public RequestVolleyImpl(Callback o) {
         callback = o;
     }
@@ -118,10 +123,15 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
 
-
+    /*
+     * Method that parses data pulled from database
+     *
+     * Param: JSONArray of ride request data pulled from database
+     */
     @Override
     protected void onPostExecute(JSONArray jsonArray) {
         try{
+            /* parse ride request data and place in arraylist */
             requests = new ArrayList<>();
             for(int i=0; i < jsonArray.length();i++){
                 Log.d("JSON",jsonArray.toString());
@@ -153,15 +163,21 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
         }catch (Exception e){
             e.printStackTrace();
         }
+
+        /* send list of ride requests back to caller */
         callback.call(requests);
     }
 
+    /*
+     * Method that runs a new thread in the background to pull data from database
+     */
     @Override
     protected JSONArray doInBackground(Void... aVoid) {
         HttpURLConnection urlConnection = null;
         StringBuilder result = new StringBuilder();
 
         try {
+            /* pull data from database */
             URL url = new URL(getRequestsUrl);
             urlConnection = (HttpURLConnection) url.openConnection();
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
@@ -177,6 +193,7 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
             e.printStackTrace();
         }
         finally {
+            /* disconnect from server */
             try {
                 if(null != urlConnection) {
                     urlConnection.disconnect();
@@ -194,16 +211,19 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
             e.printStackTrace();
         }
 
+        /* return data from database */
         return array;
     }
 
 
 
+    /* parse destination from string */
     private String getDestinationName(String stringDestination) {
         String[] splitDestination = stringDestination.split(" lat/lng: ");
         return splitDestination[0];
     }
 
+    /* parse LatLng from string */
     private LatLng getLatLngFromDatabase(String stringDestination) {
         String[] splitDestination = stringDestination.split(" lat/lng: ");
         String latLong = splitDestination[1];

@@ -55,6 +55,7 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        /* initialize page input/output items */
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_requests_activity);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -67,6 +68,7 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
         Menu menu = navigationView.getMenu();
         navigationService.hideMenuItems(menu, userIntentService.getUserFromIntent(this.getIntent()));
 
+        /* initialize page refreshing to take input from user */
         refresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
         refresh.setColorSchemeColors(ContextCompat.getColor(this.getApplicationContext(), R.color.colorGold),
                 ContextCompat.getColor(this.getApplicationContext(), R.color.colorCardinal));
@@ -76,14 +78,18 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
                 getRequestsList();
             }
         });
+
+        /* notify requests volley to pull from database */
         getRequestsList();
 
+        /* display list of ride requests on screen */
         ListView listView = (ListView)findViewById(R.id.ride_requests_list);
         adapter = new ArrayAdapter<>(RideRequests.this, android.R.layout.simple_list_item_1, destinations);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                /* notify fragment handler to display fragment to user */
                 ViewRequest viewRequest = new ViewRequest();
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
@@ -95,11 +101,15 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
             }
         });
 
+        /* check for internet connection */
         if(navigationService.checkInternetConnection(getApplicationContext())) {
             connectionPopUp();
         }
     }
 
+    /*
+     * Method that notifies request volley to pull all ride request data from database
+     */
     @SuppressWarnings("unchecked")
     public void getRequestsList() {
         RequestVolleyImpl volley = new RequestVolleyImpl(new Callback() {
@@ -112,12 +122,14 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
                     requests = new ArrayList<>();
                 }
 
+                /* display all data to user */
                 adapter.clear();
                 destinations.clear();
                 for(int i = 0; i < requests.size(); i++) {
                     destinations.add(requests.get(i).getDestination());
                 }
 
+                /* stop refreshing page */
                 if(refresh.isRefreshing()) {
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -135,16 +147,23 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
         volley.execute();
     }
 
+    /*
+     * Method that handles back press
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_requests_activity);
+
+        /* close drawer */
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         }
+        /* close all fragments */
         else if(fragmentManager.getBackStackEntryCount() > 0) {
             fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
         else {
+            /* return to main activity */
             finish();
             i = new Intent(RideRequests.this, MainActivity.class);
             i = userIntentService.createIntent(RideRequests.this, MainActivity.class, userIntentService.getUserFromIntent(this.getIntent()));
@@ -152,6 +171,11 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    /*
+     * Method to handle user's menu item selection
+     *
+     * Param: selected item
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -159,6 +183,11 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+    /*
+     * Method to handle user's menu item selection
+     *
+     * Param: selected item
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -176,6 +205,11 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
         return super.onOptionsItemSelected(item);
     }
 
+    /*
+     * Method to handle user's menu item selection
+     *
+     * Param: selected item
+     */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -200,12 +234,15 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
             return true;
         }
         else if(navigationService.checkInternetConnection(getApplicationContext())) {
+            /* check for wifi connection */
             connectionPopUp();
+            /* close drawer */
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_requests_activity);
             drawer.closeDrawer(GravityCompat.START);
             return false;
         }
         else {
+            /* close drawer and move to next activity */
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_requests_activity);
             drawer.closeDrawer(GravityCompat.START);
             startActivity(i);
@@ -213,6 +250,9 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    /*
+     * insert option to connect to wifi
+     */
     public void connectionPopUp() {
         Snackbar snackbar = Snackbar.make(findViewById(R.id.ride_requests_activity),
                 "Cy's Rides Requires\nInternet Connection", Snackbar.LENGTH_INDEFINITE);

@@ -66,37 +66,42 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        PlaceAutocompleteFragment placeAutoComplete;
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        /* Initialize side drawer */
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        /* Initialize page navigation */
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        /* Initialize menu */
         Menu menu = navigationView.getMenu();
         navigationService.hideMenuItems(menu, userIntentService.getUserFromIntent(this.getIntent()));
 
+        /* Initialize Floating Action Button */
         findViewById(R.id.fab_main).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                /* when clicked, reinitialize map */
                 populateMap();
             }
         });
 
-        placeAutoComplete = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete);
+        /* Initialize PlaceAutoComplete Fragment */
+        PlaceAutocompleteFragment placeAutoComplete = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete);
         placeAutoComplete.setHint("Where would you like to go?");
         placeAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
+                /* Move camera to display chosen location */
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), defaultZoom));
             }
 
@@ -106,19 +111,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+        /* Initialize Google Map */
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        /* Notify ride offer and ride request volley to get data for map */
         populateMap();
 
+        /* check for internet connection */
         if(navigationService.checkInternetConnection(getApplicationContext())) {
             connectionPopUp();
         }
     }
 
+    /*
+     * Method to handle Google Map display
+     *
+     * Param: GoogleMap to be displayed on screen
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        /* initialize map to display Iowa State */
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(iowaState, defaultZoom));
+
+        /* handle marker click events */
         googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
@@ -126,23 +142,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Offer offerData;
                 Request requestData;
 
-                /* Check if marker is for an offer*/
+                /* Check if marker is for an offer and open fragment */
                 if(null != (offerData = offerMarkers.get(marker))) {
                     ViewOffer viewOffer = new ViewOffer();
                     viewOffer.setData(offerData);
                     fragmentTransaction.replace(R.id.activity_main, viewOffer);
                 }
 
-                /* Check if marker is for a request */
+                /* Check if marker is for a request and open fragment */
                 else if(null != (requestData = requestMarkers.get(marker))) {
                     ViewRequest viewRequest = new ViewRequest();
                     viewRequest.setData(requestData);
                     fragmentTransaction.replace(R.id.activity_main, viewRequest);
                 }
+
+                /* error */
                 else {
                     return false;
                 }
 
+                /* display fragment */
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
 
@@ -153,11 +172,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.googleMap = googleMap;
     }
 
+    /*
+     * Method used to notify offer volley and requests volley to pull data from database
+     */
     @SuppressWarnings("unchecked")
     public void populateMap() {
         switch(userIntentService.getUserFromIntent(getIntent()).getUserType()) {
             case ADMIN:
             case DRIVER:
+                /* Admins and Drivers can see ride request data  and ride offer data */
+                /* Notify request volley to get ride request data */
                 new RequestVolleyImpl(new Callback() {
                     @Override
                     public void call(ArrayList<?> result) {
@@ -172,6 +196,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 }).execute();
             case PASSENGER:
+                /* Passengers can only see ride offer data */
+                /* Notify offer volley to get ride offer data */
                 new OfferVolleyImpl(new Callback() {
                     @Override
                     public void call(ArrayList<?> result) {
@@ -188,42 +214,58 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    /*
+     * Creates Markers that are displayed on Google Map
+     */
     public void createMarkers() {
         offerMarkers = new HashMap<>();
         requestMarkers = new HashMap<>();
 
+        /* reset the map */
         googleMap.clear();
 
+        /* for all offers received from volley, display a marker on Google Map */
         for(int i = 0; i < offers.size(); i++) {
             LatLng coordinates = offers.get(i).getCoordinates();
             Marker marker = googleMap.addMarker(new MarkerOptions()
                     .position(coordinates)
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
 
+            /* place marker in hash table */
             offerMarkers.put(marker, offers.get(i));
         }
 
+        /* for all requests received from volley, display a marker on Google Map */
         for(int i = 0; i < requests.size(); i++) {
             LatLng coordinates = requests.get(i).getCoordinates();
             Marker marker = googleMap.addMarker(new MarkerOptions()
                     .position(coordinates)
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
 
+            /* for all requests received from volley, display a marker on Google Map */
             requestMarkers.put(marker, requests.get(i));
         }
+
+        /* display map */
         onMapReady(googleMap);
     }
 
+    /*
+     * Method that handles back button press
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main);
 
+        /* if the drawer is open, close it */
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         }
+        /* if there is a fragment open, close it */
         else if(fragmentManager.getBackStackEntryCount() > 0) {
             fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
+        /* close the app */
         else {
             if(backPressed) {
                 moveTaskToBack(true);
@@ -240,6 +282,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    /*
+     * method that initializes menu
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -247,6 +292,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+    /*
+     * Method to handle user's menu item selection
+     *
+     * Param: selected item
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -264,6 +314,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return super.onOptionsItemSelected(item);
     }
 
+    /*
+     * method to handle user's menu selection
+     *
+     * Param: selected menu item
+     */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -271,9 +326,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
         i = navigationService.getNavigationIntent(item, MainActivity.this, this.getIntent());
 
+        /* close drawer */
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main);
         drawer.closeDrawer(GravityCompat.START);
 
+        /* check if the user  wants to logout */
         if(R.id.logout == id) {
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
             alert.setTitle("Logout");
@@ -287,16 +344,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             alert.show();
             return true;
         }
+        /* check for internet connection before doing anything */
         else if(navigationService.checkInternetConnection(getApplicationContext())) {
             connectionPopUp();
             return false;
         }
+        /* go to requested page */
         else {
             startActivity(i);
             return true;
         }
     }
 
+    /*
+     * insert option to connect to wifi
+     */
     public void connectionPopUp() {
         Snackbar snackbar = Snackbar.make(findViewById(R.id.activity_main),
                 "Cy's Rides Requires\nInternet Connection", Snackbar.LENGTH_INDEFINITE);

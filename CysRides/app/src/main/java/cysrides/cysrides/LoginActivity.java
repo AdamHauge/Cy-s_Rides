@@ -85,6 +85,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        /* if a user is already logged in, use their profile */
         if(SaveSharedPreference.getUsernamePassword(LoginActivity.this).length() != 0) {
             String data[] = SaveSharedPreference.getUsernamePassword(LoginActivity.this).split(":");
             login(data[0], data[1]);

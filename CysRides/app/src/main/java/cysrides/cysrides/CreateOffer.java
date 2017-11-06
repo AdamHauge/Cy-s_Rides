@@ -79,6 +79,8 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
         Menu menu = navigationView.getMenu();
         navigationService.hideMenuItems(menu, userIntentService.getUserFromIntent(this.getIntent()));
 
+        /* initialize all data input points */
+
         PlaceAutocompleteFragment placeAutoComplete;
         placeAutoComplete = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete);
         placeAutoComplete.setHint("Where are you going?");
@@ -151,6 +153,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
                 boolean noDate = 0 == year;
                 boolean allValid = false;
 
+                /* check that all input data is valid */
                 if (noDestination || noCost || noDate) {
                     Snackbar.make(findViewById(R.id.submit), "All data fields required", Snackbar.LENGTH_LONG).show();
                 }
@@ -191,6 +194,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
+            /* discard current request */
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
             alert.setTitle("Discard Request");
             alert.setMessage("This will discard your current offer. Continue anyway?");
@@ -215,6 +219,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
+        /* check if user wants to discard request */
         i = this.getIntent();
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Discard Offer");
@@ -259,6 +264,9 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
         return retValue;
     }
 
+    /*
+     * insert option to connect to wifi
+     */
     public void connectionPopUp() {
         Snackbar snackbar = Snackbar.make(findViewById(R.id.create_offer_activity),
                 "Cy's Rides Requires\nInternet Connection", Snackbar.LENGTH_INDEFINITE);

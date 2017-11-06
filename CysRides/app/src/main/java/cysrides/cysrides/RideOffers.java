@@ -78,12 +78,14 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
         });
         getOffersList();
 
+        /* display list of ride offers on screen */
         ListView listView = (ListView)findViewById(R.id.ride_offers_list);
         adapter = new ArrayAdapter<>(RideOffers.this, android.R.layout.simple_list_item_1, destinations);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                /* notify fragment manager to display ride offer information */
                 ViewOffer viewOffer = new ViewOffer();
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
@@ -100,8 +102,12 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
         }
     }
 
+    /*
+     * Method which notifies ride offer volley to pull ride offer data from database
+     */
     @SuppressWarnings("unchecked")
     public void getOffersList() {
+        /* notify offer volley to pull data */
         OfferVolleyImpl volley = new OfferVolleyImpl(this, new Callback() {
             public void call(ArrayList<?> result) {
                 try {
@@ -112,12 +118,14 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
                     offers = new ArrayList<>();
                 }
 
+                /* display data to user */
                 adapter.clear();
                 destinations.clear();
                 for(int i = 0; i < offers.size(); i++) {
                     destinations.add(offers.get(i).getDestination());
                 }
 
+                /* stop refreshing page */
                 if(refresh.isRefreshing()) {
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -135,15 +143,21 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
         volley.execute();
     }
 
+    /*
+    * Method that handles back button press
+    */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_offers_activity);
+        /* close drawer */
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         }
+        /* close any open fragment */
         else if(fragmentManager.getBackStackEntryCount() > 0) {
             fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
+        /* return to main activity */
         else {
             finish();
             i = new Intent(RideOffers.this, MainActivity.class);
@@ -152,6 +166,9 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
         }
     }
 
+    /*
+     * Initialize options menu
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -159,6 +176,9 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
         return true;
     }
 
+    /*
+     * Moves to new page based on user selection
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -166,7 +186,7 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+
         if (id == R.id.my_profile) {
             i = userIntentService.createIntent(RideOffers.this, ViewProfile.class, userIntentService.getUserFromIntent(this.getIntent()));
             i.putExtra("caller", "Ride Offers");
@@ -176,6 +196,9 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
         return super.onOptionsItemSelected(item);
     }
 
+    /*
+     * Moves to new page based on user selection
+     */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -183,6 +206,7 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
         int id = item.getItemId();
         i = navigationService.getNavigationIntent(item, RideOffers.this, this.getIntent());
 
+        /* check if user wants to log out */
         if(R.id.logout == id) {
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
             alert.setTitle("Logout");
@@ -199,12 +223,14 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
             drawer.closeDrawer(GravityCompat.START);
             return true;
         }
+        /* check if user needs to connect to wifi */
         else if(navigationService.checkInternetConnection(getApplicationContext())) {
             connectionPopUp();
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_offers_activity);
             drawer.closeDrawer(GravityCompat.START);
             return false;
         }
+        /* move to desired page */
         else {
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_offers_activity);
             drawer.closeDrawer(GravityCompat.START);
@@ -213,6 +239,9 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
         }
     }
 
+    /*
+     * insert option to connect to wifi
+     */
     public void connectionPopUp() {
         Snackbar snackbar = Snackbar.make(findViewById(R.id.ride_offers_activity),
                 "Cy's Rides Requires\nInternet Connection", Snackbar.LENGTH_INDEFINITE);
