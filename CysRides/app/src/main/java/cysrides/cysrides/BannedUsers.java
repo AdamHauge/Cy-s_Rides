@@ -45,6 +45,7 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
     private SwipeRefreshLayout refresh;
     private ArrayAdapter<String> adapter;
     private List<Ban> bans = new ArrayList<>();
+    private ArrayList<String> bansString = new ArrayList();
     private FragmentManager fragmentManager = this.getSupportFragmentManager();
 
     @Override
@@ -78,7 +79,7 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
         getBansList();
 
         ListView listView = (ListView)findViewById(R.id.banned_users_list);
-        adapter = new ArrayAdapter<>(BannedUsers.this, android.R.layout.simple_list_item_1);
+        adapter = new ArrayAdapter<>(BannedUsers.this, android.R.layout.simple_list_item_1, bansString);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -111,6 +112,10 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
                 }
 
                 adapter.clear();
+                bansString.clear();
+                for(int i = 0; i < bans.size(); i++) {
+                    bansString.add(bans.get(i).getEmail() + " " + bans.get(i).getReason());
+                }
 
                 if(refresh.isRefreshing()) {
                     new Handler().postDelayed(new Runnable() {
