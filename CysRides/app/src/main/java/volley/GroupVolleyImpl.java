@@ -44,7 +44,10 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
     private int groupNum;
 
     public GroupVolleyImpl(){};
-    public GroupVolleyImpl(Callback c) {callback = c;}
+    public GroupVolleyImpl(Context currentContext, Callback c) {
+        this.currentContext = currentContext;
+        callback = c;
+    }
 
     @Override
     public void createGroup(Context context, Group g) {

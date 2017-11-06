@@ -56,7 +56,7 @@ public class Offer {
     }
 
     public void pullGroup(Context context, int groupID){
-        GroupVolleyImpl gvi = new GroupVolleyImpl(new Callback() {
+        GroupVolleyImpl gvi = new GroupVolleyImpl(context, new Callback() {
             @Override
             public void call(ArrayList<?> result) {
                 try{
