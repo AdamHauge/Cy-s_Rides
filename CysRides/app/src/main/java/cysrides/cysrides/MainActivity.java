@@ -182,7 +182,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case DRIVER:
                 /* Admins and Drivers can see ride request data  and ride offer data */
                 /* Notify request volley to get ride request data */
-
                 new RequestVolleyImpl(this, new Callback() {
                     @Override
                     public void call(ArrayList<?> result) {

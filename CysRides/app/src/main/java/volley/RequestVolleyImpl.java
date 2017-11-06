@@ -58,7 +58,9 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
         callback = o;
     }
 
-    //add request to the database
+    /*
+     * Method that adds request to the database
+     */
     @Override
     public void createRequest(Context context, domain.Request request, String latLongName) {
         newRequest = request;
@@ -93,10 +95,13 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
             }
         };
 
+        /* push request to database */
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
 
-    //takes group number that was just created and sets the groupID of the given request to the given group id
+    /*
+     * Method that takes group number that was just created and sets the groupID of the given request to the given group id
+     */
     public void giveRequestGroup(Context context, final int requestId, final int groupId){
         currentContext = context;
         StringRequest stringRequest = new StringRequest(Request.Method.POST, giveRequestGroupUrl,
