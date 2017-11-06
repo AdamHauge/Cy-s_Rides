@@ -63,6 +63,14 @@
             android:name=".CreateProfile"
             android:label="@string/title_activity_create_profile"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".BanUser"
+            android:label="Ban User"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".BannedUsers"
+            android:label="Banned Users"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".DialogConfirmationCode"></activity>
     </application>
 

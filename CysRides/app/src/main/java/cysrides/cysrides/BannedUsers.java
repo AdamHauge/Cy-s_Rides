@@ -111,7 +111,6 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
                 }
 
                 adapter.clear();
-                adapter.notifyDataSetChanged();
 
                 if(refresh.isRefreshing()) {
                     new Handler().postDelayed(new Runnable() {
