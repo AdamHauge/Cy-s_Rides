@@ -1,14 +1,18 @@
 package domain;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
 import java.util.Date;
 
+import cysrides.cysrides.Callback;
 import cysrides.cysrides.ViewRequest;
+import volley.GroupVolleyImpl;
 
 
 public class Request {
@@ -21,7 +25,7 @@ public class Request {
     private Date date;
     private Group group;
     private int groupID;
-
+    private Context context;
     public Request(int numBags, String email, String destination, LatLng coordinates, String description, Date date) {
         this.numBags = numBags;
         this.email = email;
@@ -31,6 +35,34 @@ public class Request {
         this.date = date;
 
         group = new Group("Creator", "REQUEST");
+    }
+    public Request(int numBags, String email, String destination, LatLng coordinates, String description, Date date, int groupID, Context context) {
+        this.numBags = numBags;
+        this.email = email;
+        this.destination = destination;
+        this.coordinates = coordinates;
+        this.description = description;
+        this.date = date;
+        this.groupID = groupID;
+        this.context = context;
+
+        pullGroup(context, groupID);
+
+    }
+    public void pullGroup(Context context, int groupID){
+        GroupVolleyImpl gvi = new GroupVolleyImpl(context, new Callback() {
+            @Override
+            public void call(ArrayList<?> result) {
+                try{
+                    if(result.get(0) instanceof  Group){
+                        group = (Group) result.get(0);
+                    }
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
+        gvi.getGroup(context, groupID);
     }
 
     @Override

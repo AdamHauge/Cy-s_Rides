@@ -36,6 +36,12 @@ public class Group {
         this.requestID = requestID;
         this.driver = groupMembers.get(0);
 
+        if(this.offerID == Integer.MIN_VALUE){
+            this.type = "REQUEST";
+        }else{
+            this.type = "OFFER";
+        }
+
     }
 
 

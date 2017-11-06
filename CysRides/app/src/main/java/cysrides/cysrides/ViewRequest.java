@@ -1,5 +1,6 @@
 package cysrides.cysrides;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,10 +10,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import domain.Request;
+import service.GroupServiceImpl;
 
 public class ViewRequest extends Fragment {
 
     private Request request;
+    private GroupServiceImpl g = new GroupServiceImpl();
+    private Context context;
 
     public ViewRequest() {
         // Required empty public constructor
@@ -28,7 +32,7 @@ public class ViewRequest extends Fragment {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getActivity(), "NEED TO JOIN TRIP", Toast.LENGTH_LONG).show();
-                //offers.get(position).getGroup().addUser(ME);
+                g.addRider(context, request.getGroup(), "myNetId");
             }
         });
         return v;
@@ -37,6 +41,8 @@ public class ViewRequest extends Fragment {
     public void setData(Request request) {
         this.request = request;
     }
+
+    public void setContext(Context context){this.context = context;}
 
     public void setTextInfo(View v) {
         TextView info = v.findViewById(R.id.request);

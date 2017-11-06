@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch(userIntentService.getUserFromIntent(getIntent()).getUserType()) {
             case ADMIN:
             case DRIVER:
-                new RequestVolleyImpl(new Callback() {
+                new RequestVolleyImpl(this, new Callback() {
                     @Override
                     public void call(ArrayList<?> result) {
                         try {
@@ -167,6 +167,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             }
                         } catch (Exception e) {
                             offers = new ArrayList<>();
+                            e.printStackTrace();
                         }
                         createMarkers();
                     }

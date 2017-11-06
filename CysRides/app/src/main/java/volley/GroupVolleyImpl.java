@@ -108,7 +108,6 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Toast.makeText(currentContext, response, Toast.LENGTH_SHORT).show();
                         try {
                             JSONArray jarr = new JSONArray(response);
                             JSONObject jGroup = jarr.getJSONObject(0);
@@ -177,7 +176,6 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Toast.makeText(currentContext, response, Toast.LENGTH_SHORT).show();
 
                     }
                 },
@@ -201,9 +199,13 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
                         size += 1;
                     }
                 }
+                if(group.getType().equals("REQUEST") && (group.getGroupMembers().get(0) == null || group.getGroupMembers().get(0).equals("null"))){
+                    size+=1;
+                }
 
                 params.put("rider_num", Integer.toString(size));
-                params.put("offer_id", Integer.toString(group.getOfferId()));
+                params.put("id", Integer.toString(group.getId()));
+                params.put("type", group.getType());
                 return params;
             }
         };

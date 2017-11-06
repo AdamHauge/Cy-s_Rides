@@ -48,7 +48,8 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
 
     public RequestVolleyImpl() { }
 
-    public RequestVolleyImpl(Callback o) {
+    public RequestVolleyImpl(Context c, Callback o) {
+        currentContext = c;
         callback = o;
     }
 
@@ -140,13 +141,15 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
                 String stringDate = jsonOffer.getString("DATE");
                 Date date =  new Date();
 
+                int group_id = jsonOffer.getInt("GROUP_ID");
+
                 try {
                     date = new SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(stringDate);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
-                domain.Request request = new domain.Request(numBags, email, destinationName, latitudeLongitude, description, date);
+                domain.Request request = new domain.Request(numBags, email, destinationName, latitudeLongitude, description, date, group_id, this.currentContext);
                 requests.add(request);
                 Log.d("size", requests.size()+"");
             }
