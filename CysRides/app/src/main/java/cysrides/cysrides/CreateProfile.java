@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -38,8 +39,8 @@ import volley.UserVolleyImpl;
 
 public class CreateProfile extends AppCompatActivity {
 
-    private EditText netIDView;
-    private EditText passwordView;
+    private TextView netIDView;
+    private TextView passwordView;
     private EditText fNameView;
     private EditText lNameView;
     private EditText venmoView;
@@ -74,8 +75,8 @@ public class CreateProfile extends AppCompatActivity {
         setContentView(R.layout.activity_create_profile);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        netIDView = (EditText) findViewById(R.id.NetID);
-        passwordView = (EditText) findViewById(R.id.Password);
+        netIDView = (TextView) findViewById(R.id.NetID);
+        passwordView = (TextView) findViewById(R.id.Password);
         fNameView = (EditText) findViewById(R.id.First_Name);
         lNameView = (EditText) findViewById(R.id.Last_Name);
         venmoView = (EditText) findViewById(R.id.Venmo);
@@ -87,6 +88,14 @@ public class CreateProfile extends AppCompatActivity {
         radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
         driverRadioButton.setId(RB1_ID);
         passengerRadioButton.setId(RB2_ID);
+
+        netID = this.getIntent().getExtras().getString("netID");
+        password = this.getIntent().getExtras().getString("password");
+
+        netIDView.append(netID);
+        passwordView.append(password);
+
+        //netIDView.append(//user);
 
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                     @Override
@@ -106,7 +115,7 @@ public class CreateProfile extends AppCompatActivity {
             public void onClick(View view) {
                 Context currentContext = context;
 
-                netID = netIDView.getText().toString();
+                /*netID = netIDView.getText().toString();
                 if (!isEmailValid(netID)) {
                     Toast.makeText(CreateProfile.this, "You did not enter an iastate.edu email", Toast.LENGTH_LONG).show();
                 }
@@ -114,7 +123,7 @@ public class CreateProfile extends AppCompatActivity {
                 password = passwordView.getText().toString();
                 if (!isPasswordValid(password)) {
                     Toast.makeText(CreateProfile.this, "You did not enter a valid password", Toast.LENGTH_LONG).show();
-                }
+                }*/
 
                 firstName = fNameView.getText().toString();
                 lastName = lNameView.getText().toString();

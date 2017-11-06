@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import cysrides.cysrides.BanUser;
+import cysrides.cysrides.BannedUsers;
 import cysrides.cysrides.Contacts;
 import cysrides.cysrides.CreateOffer;
 import cysrides.cysrides.CreateRequest;
@@ -63,7 +64,7 @@ public class NavigationServiceImpl implements NavigationService {
                 intent = userIntentService.createIntent(context, CreateRequest.class, userIntentService.getUserFromIntent(intent));
                 break;
             case R.id.bannedUsers:
-                intent = userIntentService.createIntent(context, CreateRequest.class, userIntentService.getUserFromIntent(intent));
+                intent = userIntentService.createIntent(context, BannedUsers.class, userIntentService.getUserFromIntent(intent));
                 break;
             case R.id.banUser:
                 intent = userIntentService.createIntent(context, BanUser.class, userIntentService.getUserFromIntent(intent));

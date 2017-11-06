@@ -157,11 +157,21 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onRegisterClick(View view){
-        //sendEmail(view);
-
-        Intent i;
-        i = new Intent(LoginActivity.this, CreateProfile.class);
-        startActivity(i);
+        if((isEmailValid(mEmailView.getText().toString()) && isPasswordValid(mPasswordView.getText().toString()))) {
+            Intent i;
+            i = new Intent(LoginActivity.this, CreateProfile.class);
+            i.putExtra("netID", mEmailView.getText().toString());
+            i.putExtra("password", mPasswordView.getText().toString());
+            startActivity(i);
+        }
+        else if(!isEmailValid(mEmailView.getText().toString())){
+            Toast toast = Toast.makeText(getApplicationContext(), "Enter an iastate.edu email", Toast.LENGTH_LONG);
+            toast.show();
+        }
+        else if(!isPasswordValid(mPasswordView.getText().toString())){
+            Toast toast = Toast.makeText(getApplicationContext(), "Password must be longer than 8 characters and contain a digit", Toast.LENGTH_LONG);
+            toast.show();
+        }
     }
 
     @SuppressWarnings("unchecked")

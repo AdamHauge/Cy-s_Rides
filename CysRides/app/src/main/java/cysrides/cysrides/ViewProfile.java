@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
@@ -30,6 +31,9 @@ public class ViewProfile extends AppCompatActivity {
     private TextView netIDView;
     private TextView firstNameView;
     private TextView lastNameView;
+    private TextView descriptionView;
+    private TextView venmoView;
+    private RatingBar userRatingBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,31 +45,24 @@ public class ViewProfile extends AppCompatActivity {
         netIDView = (TextView) findViewById(R.id.netIDView);
         firstNameView = (TextView) findViewById(R.id.firstNameView);
         lastNameView = (TextView) findViewById(R.id.lastNameView);
+        descriptionView = (TextView) findViewById(R.id.descriptionView);
+        venmoView = (TextView) findViewById(R.id.venmoView);
+        userRatingBar = (RatingBar) findViewById((R.id.userRatingBar));
 
         user = userIntentService.getUserFromIntent(this.getIntent());
 
         netIDView.setText(user.getNetID().split("@iastate.edu")[0]);
-
-        //firstNameView.setText(firstNameView.getText(), TextView.BufferType.EDITABLE);
         firstNameView.setText(user.getFirstName());
-
-        //lastNameView.setText(lastNameView.getText(), TextView.BufferType.EDITABLE);
         lastNameView.setText(user.getLastName());
-
+        descriptionView.setText(user.getProfileDescription());
+        venmoView.append(user.getVenmoName());
+        userRatingBar.setRating(user.getUserRating());
     }
 
     @Override
     public void onBackPressed() {
-        Intent intent = getIntent();
-        String previous = intent.getStringExtra("caller");
         finish();
-        if(previous.equals("Create Offer") || previous.equals("Create Request")) {
-            intent = new Intent(ViewProfile.this, MainActivity.class);
-            intent = userIntentService.createIntent(ViewProfile.this, MainActivity.class, userIntentService.getUserFromIntent(this.getIntent()));
-            startActivity(intent);
-        }
-        else {
-            super.onBackPressed();
-        }
+        Intent intent = userIntentService.createIntent(ViewProfile.this, MainActivity.class, userIntentService.getUserFromIntent(this.getIntent()));
+        startActivity(intent);
     }
 }
