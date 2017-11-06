@@ -56,9 +56,8 @@ public class ViewProfile extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent intent = getIntent();
         finish();
-        intent = userIntentService.createIntent(ViewProfile.this, MainActivity.class, userIntentService.getUserFromIntent(this.getIntent()));
+        Intent intent = userIntentService.createIntent(ViewProfile.this, MainActivity.class, userIntentService.getUserFromIntent(this.getIntent()));
         startActivity(intent);
     }
 }
