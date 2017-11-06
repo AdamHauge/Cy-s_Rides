@@ -189,6 +189,7 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
             alert.setMessage("Do you really want to logout?");
             alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
+                    SaveSharedPreference.clearUsernamePassword(RideOffers.this);
                     startActivity(i);
                 }});
             alert.setNegativeButton(android.R.string.no, null);

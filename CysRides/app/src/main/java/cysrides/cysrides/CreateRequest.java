@@ -254,6 +254,7 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
                     alert.setMessage("Do you really want to logout?");
                     alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
+                            SaveSharedPreference.clearUsernamePassword(CreateRequest.this);
                             startActivity(i);
                         }
                     });

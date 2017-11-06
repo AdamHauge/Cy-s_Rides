@@ -280,6 +280,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             alert.setMessage("Do you really want to logout?");
             alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
+                    SaveSharedPreference.clearUsernamePassword(MainActivity.this);
                     startActivity(i);
                 }});
             alert.setNegativeButton(android.R.string.no, null);
