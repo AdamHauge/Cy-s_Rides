@@ -31,10 +31,19 @@ public class ViewRequest extends Fragment {
         v.findViewById(R.id.join).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "NEED TO JOIN TRIP", Toast.LENGTH_LONG).show();
                 g.addRider(context, request.getGroup(), "myNetId");
+
             }
         });
+        v.findViewById(R.id.JoinAsDriverButton).setOnClickListener(new View.OnClickListener(){
+
+           @Override
+           public void onClick(View view) {
+                g.addDriver(context, request.getGroup(), "DRIVER");
+           }
+       }
+
+        );
         return v;
     }
 

@@ -35,6 +35,7 @@ public class ViewOffer extends Fragment {
             }
         });
 
+
         return v;
     }
 

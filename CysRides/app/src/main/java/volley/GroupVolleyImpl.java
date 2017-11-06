@@ -36,6 +36,7 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
     private String createGroupUrl = "http://proj-309-sa-b-5.cs.iastate.edu/createGroup_TEST.php";
     private String addRiderUrl =    "http://proj-309-sa-b-5.cs.iastate.edu/addRider.php";
     private String getGroupUrl =    "http://proj-309-sa-b-5.cs.iastate.edu/getGroup.php";
+    private String addDriverUrl =   "http://proj-309-sa-b-5.cs.iastate.edu/addDriver.php";
     private Group group;
     private Context currentContext;
     private Callback callback;
@@ -206,6 +207,37 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
                 params.put("rider_num", Integer.toString(size));
                 params.put("id", Integer.toString(group.getId()));
                 params.put("type", group.getType());
+                return params;
+            }
+        };
+
+        MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
+    }
+    @Override
+    public void addDriver(Context context, final Group g, final String netID) {
+        currentContext = context;
+        this.group = g;
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, addDriverUrl,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(currentContext, "Error...",Toast.LENGTH_SHORT).show();
+                        error.printStackTrace();
+                    }
+
+                }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("driver", netID);
+                params.put("id", Integer.toString(group.getId()));
+
                 return params;
             }
         };
