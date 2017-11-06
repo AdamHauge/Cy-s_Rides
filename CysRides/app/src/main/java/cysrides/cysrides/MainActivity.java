@@ -182,7 +182,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case DRIVER:
                 /* Admins and Drivers can see ride request data  and ride offer data */
                 /* Notify request volley to get ride request data */
-                new RequestVolleyImpl(new Callback() {
+
+                new RequestVolleyImpl(this, new Callback() {
                     @Override
                     public void call(ArrayList<?> result) {
                         try {
@@ -191,6 +192,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             }
                         } catch (Exception e) {
                             offers = new ArrayList<>();
+                            e.printStackTrace();
                         }
                         createMarkers();
                     }
@@ -198,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case PASSENGER:
                 /* Passengers can only see ride offer data */
                 /* Notify offer volley to get ride offer data */
-                new OfferVolleyImpl(new Callback() {
+                new OfferVolleyImpl(this, new Callback() {
                     @Override
                     public void call(ArrayList<?> result) {
                         try {
@@ -207,6 +209,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             }
                         } catch (Exception e) {
                             offers = new ArrayList<>();
+                            e.printStackTrace();
                         }
                         createMarkers();
                     }

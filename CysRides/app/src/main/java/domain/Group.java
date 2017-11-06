@@ -17,24 +17,35 @@ public class Group {
     private int requestID;
     private String type;
 
+    //Group that is created in offer
     public Group(String user, String type){
+
         this.type = type;
+        //if this is an offer, add the user as a driver
         if(type.equals("OFFER")) {
             groupMembers.add(user);
             driver = user;
         }
+        //if this is a request, add a null
         if(type.equals("REQUEST")){
             groupMembers.add(null);
             groupMembers.add(user);
         }
-    }
 
+    }
+    //Group that is pulled from database
     public Group(int groupID, ArrayList<String> groupMembers, int offerID, int requestID){
         this.groupMembers = groupMembers;
         this.groupID = groupID;
         this.offerID = offerID;
         this.requestID = requestID;
         this.driver = groupMembers.get(0);
+
+        if(this.offerID == Integer.MIN_VALUE){
+            this.type = "REQUEST";
+        }else{
+            this.type = "OFFER";
+        }
 
     }
 

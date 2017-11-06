@@ -116,6 +116,7 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
                     }
                 } catch(Exception e) {
                     offers = new ArrayList<>();
+                    e.printStackTrace();
                 }
 
                 /* display data to user */

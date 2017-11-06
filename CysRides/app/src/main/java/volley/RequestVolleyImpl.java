@@ -53,10 +53,12 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
      *
      * Param: Callback data for caller
      */
-    public RequestVolleyImpl(Callback o) {
+    public RequestVolleyImpl(Context c, Callback o) {
+        currentContext = c;
         callback = o;
     }
 
+    //add request to the database
     @Override
     public void createRequest(Context context, domain.Request request, String latLongName) {
         newRequest = request;
@@ -94,6 +96,7 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
 
+    //takes group number that was just created and sets the groupID of the given request to the given group id
     public void giveRequestGroup(Context context, final int requestId, final int groupId){
         currentContext = context;
         StringRequest stringRequest = new StringRequest(Request.Method.POST, giveRequestGroupUrl,
@@ -150,13 +153,15 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
                 String stringDate = jsonOffer.getString("DATE");
                 Date date =  new Date();
 
+                int group_id = jsonOffer.getInt("GROUP_ID");
+
                 try {
                     date = new SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(stringDate);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
-                domain.Request request = new domain.Request(numBags, email, destinationName, latitudeLongitude, description, date);
+                domain.Request request = new domain.Request(numBags, email, destinationName, latitudeLongitude, description, date, group_id, this.currentContext);
                 requests.add(request);
                 Log.d("size", requests.size()+"");
             }

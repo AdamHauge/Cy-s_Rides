@@ -10,4 +10,6 @@ import service.ListenerService;
 
 public interface OfferVolley {
     void createOffer(Context context, Offer offer, String latLongName);
+    public void giveOfferGroup(Context context, final int offerId, final int groupId);
+
 }

@@ -94,6 +94,7 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
                 viewRequest.setData(requests.get(position));
+                viewRequest.setContext(RideRequests.this);
 
                 fragmentTransaction.replace(R.id.ride_requests_activity, viewRequest);
                 fragmentTransaction.addToBackStack(null);
@@ -112,7 +113,7 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
      */
     @SuppressWarnings("unchecked")
     public void getRequestsList() {
-        RequestVolleyImpl volley = new RequestVolleyImpl(new Callback() {
+        RequestVolleyImpl volley = new RequestVolleyImpl(this, new Callback() {
             public void call(ArrayList<?> result) {
                 try {
                     if (result.get(0) instanceof Request) {

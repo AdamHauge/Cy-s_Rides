@@ -22,6 +22,10 @@ public class OfferServiceImpl implements OfferService {
         offerVolley.createOffer(context, offer, latLongName);
     }
 
+    public void giveOfferGroup(Context context, final int offerId, final int groupId){
+        offerVolley.giveOfferGroup(context, offerId, groupId);
+    }
+
     @Override
     public ArrayList<Offer> findOffersByEmail(ArrayList<Offer> offers, UserInfo userInfo) {
         ArrayList<Offer> emailOffers = new ArrayList<>();

@@ -36,6 +36,7 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
     private String createGroupUrl = "http://proj-309-sa-b-5.cs.iastate.edu/createGroup_TEST.php";
     private String addRiderUrl =    "http://proj-309-sa-b-5.cs.iastate.edu/addRider.php";
     private String getGroupUrl =    "http://proj-309-sa-b-5.cs.iastate.edu/getGroup.php";
+    private String addDriverUrl =   "http://proj-309-sa-b-5.cs.iastate.edu/addDriver.php";
     private Group group;
     private Context currentContext;
     private Callback callback;
@@ -44,8 +45,11 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
     private int groupNum;
 
     public GroupVolleyImpl(){};
-    public GroupVolleyImpl(Callback c) {callback = c;}
-
+    public GroupVolleyImpl(Context currentContext, Callback c) {
+        this.currentContext = currentContext;
+        callback = c;
+    }
+    //adds group to the database
     @Override
     public void createGroup(Context context, Group g) {
         this.group = g;
@@ -99,13 +103,13 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
 
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
+    //pulls group from the database
     public void getGroup(final Context currentContext, final int groupNum) {
         this.currentContext = currentContext;
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getGroupUrl,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Toast.makeText(currentContext, response, Toast.LENGTH_SHORT).show();
                         try {
                             JSONArray jarr = new JSONArray(response);
                             JSONObject jGroup = jarr.getJSONObject(0);
@@ -129,10 +133,12 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
                             rider = jGroup.getString("RIDER_7");
                             members.add(rider);
 
-                            int offerNum = jGroup.getInt("OFFER_ID");
-                            int requestNum = jGroup.getInt("REQUEST_ID");
-
-                            group = new Group(groupNum, members, offerNum, requestNum);
+                            String  offerNum = jGroup.getString("OFFER_ID");
+                            if(!offerNum.equals("null")){
+                                group = new Group(groupNum, members,Integer.parseInt(offerNum), Integer.MIN_VALUE);
+                            }else {
+                                group = new Group(groupNum, members, Integer.MIN_VALUE, Integer.parseInt(jGroup.getString("REQUEST_ID")));
+                            }
                             ArrayList<Group> groupList = new ArrayList<>();
                             groupList.add(group);
                             callback.call(groupList);
@@ -163,7 +169,7 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
 
-
+    //adds a user to a group as a new rider
     @Override
     public void addRider(Context context, final Group g, final String netID) {
         currentContext = context;
@@ -172,7 +178,6 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Toast.makeText(currentContext, response, Toast.LENGTH_SHORT).show();
 
                     }
                 },
@@ -196,9 +201,45 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
                         size += 1;
                     }
                 }
+                if(group.getType().equals("REQUEST") && (group.getGroupMembers().get(0) == null || group.getGroupMembers().get(0).equals("null"))){
+                    size+=1;
+                }
 
                 params.put("rider_num", Integer.toString(size));
-                params.put("offer_id", Integer.toString(group.getOfferId()));
+                params.put("id", Integer.toString(group.getId()));
+                params.put("type", group.getType());
+                return params;
+            }
+        };
+
+        MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
+    }
+    //adds user to a group as a driver
+    @Override
+    public void addDriver(Context context, final Group g, final String netID) {
+        currentContext = context;
+        this.group = g;
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, addDriverUrl,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(currentContext, "Error...",Toast.LENGTH_SHORT).show();
+                        error.printStackTrace();
+                    }
+
+                }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("driver", netID);
+                params.put("id", Integer.toString(group.getId()));
+
                 return params;
             }
         };
