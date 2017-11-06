@@ -39,6 +39,7 @@ import volley.UserVolleyImpl;
 
 public class CreateProfile extends AppCompatActivity {
 
+    //UI references fields
     private TextView netIDView;
     private TextView passwordView;
     private EditText fNameView;
@@ -53,6 +54,7 @@ public class CreateProfile extends AppCompatActivity {
     private static final int RB1_ID = 1000; //first radio button id
     private static final int RB2_ID = 1001; //second radio button id
 
+    //User object fields
     private String netID;
     private String password;
     private String firstName;
@@ -61,20 +63,24 @@ public class CreateProfile extends AppCompatActivity {
     private String profileDescription;
     private String confirmationCode;
     private UserType userType;
+
     private Callback call;
-
     private UserIntentService userIntentService = new UserIntentServiceImpl();
-
     private UserVolley userVolley = new UserVolleyImpl(call);
-
     private Intent i;
 
+    /*
+    Initializes all UI components in the class to the ones in the xml file.
+    Grabs username and password from the previous intent and adds then to the text fields.
+    Listeners for radio group and create profile button.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_profile);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         netIDView = (TextView) findViewById(R.id.NetID);
         passwordView = (TextView) findViewById(R.id.Password);
         fNameView = (EditText) findViewById(R.id.First_Name);
@@ -82,7 +88,6 @@ public class CreateProfile extends AppCompatActivity {
         venmoView = (EditText) findViewById(R.id.Venmo);
         profileDescriptionView = (EditText) findViewById(R.id.Description);
         createProfileButton = (Button) findViewById(R.id.createProfileButton);
-
         driverRadioButton = (RadioButton) findViewById(R.id.driverRadioButton);
         passengerRadioButton = (RadioButton) findViewById(R.id.passengerRadioButton);
         radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
@@ -94,8 +99,6 @@ public class CreateProfile extends AppCompatActivity {
 
         netIDView.append(netID);
         passwordView.append(password);
-
-        //netIDView.append(//user);
 
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                     @Override
@@ -110,20 +113,15 @@ public class CreateProfile extends AppCompatActivity {
 
         final Context context = this.getApplicationContext();
 
+        /*
+        When the profile button is selected, all inputs are verified. If inputs are invalid, a toast appears saying so.
+        If all user inputs are valid, the user is created. An email is sent to the net-id the user entered.
+        User is taken to the confirmation code page.
+         */
         createProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Context currentContext = context;
-
-                /*netID = netIDView.getText().toString();
-                if (!isEmailValid(netID)) {
-                    Toast.makeText(CreateProfile.this, "You did not enter an iastate.edu email", Toast.LENGTH_LONG).show();
-                }
-
-                password = passwordView.getText().toString();
-                if (!isPasswordValid(password)) {
-                    Toast.makeText(CreateProfile.this, "You did not enter a valid password", Toast.LENGTH_LONG).show();
-                }*/
 
                 firstName = fNameView.getText().toString();
                 lastName = lNameView.getText().toString();
@@ -170,37 +168,12 @@ public class CreateProfile extends AppCompatActivity {
 
     }
 
-    public void displayConfirmationInput() {
-        AlertDialog.Builder builder;
-        builder = new AlertDialog.Builder(this);
-        final EditText input = new EditText(this);
-        builder.setView(input);
-        builder.setTitle("Confirmation Code")
-                .setMessage("Enter your four-digit confirmation code below: ")
-                .setPositiveButton("OKAY", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // continue with delete
-                        String inputCode = input.toString();
-                        if (inputCode.length() != 3) {
-                            Toast.makeText(CreateProfile.this, "You did not enter a four-digit number", Toast.LENGTH_LONG).show();
-                            //CROSS-REFERENCE CODE WITH USER CONFIRMATION CODE IN DATABASE
-                        }
-                    }
-                })
-                .setNegativeButton("BACK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // do nothing
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
-    }
-
+    /* An email is valid if it contains "@iastate.edu"*/
     private boolean isEmailValid(String email) {
         return email.contains("@iastate.edu");
     }
 
-
+    /* A password is valid if it contains a digit and is at least eight characters long*/
     private boolean isPasswordValid(String password) {
         if (password.length() > 8) {
             for (int i = 0; i < password.length(); i++) {
@@ -212,6 +185,7 @@ public class CreateProfile extends AppCompatActivity {
         return false;
     }
 
+    /* A description is valid if it is longer than 10 characters*/
     private boolean isDescriptionValid(String profileDescription) {
         if (profileDescription.length() > 10) {
             return true;
@@ -219,6 +193,7 @@ public class CreateProfile extends AppCompatActivity {
         return false;
     }
 
+    /* A name is valid if the first and last name are greater than one character and do not contain a digit*/
     private boolean isNameValid(String firstName, String lastName) {
         if (firstName.length() > 1 && lastName.length() > 1) {
             for (int i = 0; i < firstName.length(); i++) {
@@ -237,6 +212,7 @@ public class CreateProfile extends AppCompatActivity {
         }
     }
 
+    /* A venmo is valid if it is longer than 2 characters*/
     private boolean isVenmoValid(String venmo){
         if(venmo.length() > 2){
             return true;
@@ -244,10 +220,12 @@ public class CreateProfile extends AppCompatActivity {
         return false;
     }
 
+    /* A user type is valid if the driver or the passenger button is selected*/
     private boolean isTypeSelected(){
         return (driverRadioButton.isSelected() || passengerRadioButton.isChecked());
     }
 
+    /* All inputs are valid if the aforementioned methods are true*/
     private boolean inputsValid(){
         return (isEmailValid(netID) && isPasswordValid(password) && isDescriptionValid(profileDescription) &&
                 isNameValid(firstName, lastName) && isVenmoValid(venmo) && isTypeSelected());
