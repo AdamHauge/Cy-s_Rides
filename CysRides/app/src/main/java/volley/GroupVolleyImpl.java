@@ -132,10 +132,12 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
                             rider = jGroup.getString("RIDER_7");
                             members.add(rider);
 
-                            int offerNum = jGroup.getInt("OFFER_ID");
-                            int requestNum = jGroup.getInt("REQUEST_ID");
-
-                            group = new Group(groupNum, members, offerNum, requestNum);
+                            String  offerNum = jGroup.getString("OFFER_ID");
+                            if(!offerNum.equals("null")){
+                                group = new Group(groupNum, members,Integer.parseInt(offerNum), Integer.MIN_VALUE);
+                            }else {
+                                group = new Group(groupNum, members, Integer.MIN_VALUE, Integer.parseInt(jGroup.getString("REQUEST_ID")));
+                            }
                             ArrayList<Group> groupList = new ArrayList<>();
                             groupList.add(group);
                             callback.call(groupList);

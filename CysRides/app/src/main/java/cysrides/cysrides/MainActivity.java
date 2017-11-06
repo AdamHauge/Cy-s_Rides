@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 }).execute();
             case PASSENGER:
-                new OfferVolleyImpl(new Callback() {
+                new OfferVolleyImpl(this, new Callback() {
                     @Override
                     public void call(ArrayList<?> result) {
                         try {
@@ -181,6 +181,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             }
                         } catch (Exception e) {
                             offers = new ArrayList<>();
+                            e.printStackTrace();
                         }
                         createMarkers();
                     }
