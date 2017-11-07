@@ -13,12 +13,14 @@ public class RequestServiceImpl implements RequestService {
 
     RequestVolley requestVolley = new RequestVolleyImpl();
 
+    //Formats the information before passing it into the volley code
     @Override
     public void createRequest(Context context, Request request) {
         String latLongName = String.format("%s %s", request.getDestination(), request.getCoordinates().toString());
         requestVolley.createRequest(context, request, latLongName);
     }
 
+    //Finds the requests for a specific email
     @Override
     public ArrayList<Request> findRequestsByEmail(ArrayList<Request> requests, UserInfo userInfo) {
         ArrayList<Request> emailRequests = new ArrayList<>();

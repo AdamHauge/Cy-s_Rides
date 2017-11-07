@@ -16,6 +16,7 @@ public class OfferServiceImpl implements OfferService {
 
     OfferVolley offerVolley = new OfferVolleyImpl();
 
+    //Formats the information before passing it into the volley code
     @Override
     public void createOffer(Context context, Offer offer) {
         String latLongName = String.format("%s %s", offer.getDestination(), offer.getCoordinates().toString());
@@ -27,6 +28,7 @@ public class OfferServiceImpl implements OfferService {
         offerVolley.giveOfferGroup(context, offerId, groupId);
     }
 
+    //Finds the offers for a specific email
     @Override
     public ArrayList<Offer> findOffersByEmail(ArrayList<Offer> offers, UserInfo userInfo) {
         ArrayList<Offer> emailOffers = new ArrayList<>();
