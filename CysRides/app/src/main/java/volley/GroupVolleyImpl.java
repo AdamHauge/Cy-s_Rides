@@ -104,6 +104,7 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
     //pulls group from the database
+    @Override
     public void getGroup(final Context currentContext, final int groupNum) {
         this.currentContext = currentContext;
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getGroupUrl,
