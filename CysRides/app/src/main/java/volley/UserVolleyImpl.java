@@ -40,7 +40,6 @@ public class UserVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements 
     private ArrayList<UserInfo> users;
     private UserInfo user;
     private Callback callback;
-    private String netID;
 
     public UserVolleyImpl(Callback call){
         callback = call;
