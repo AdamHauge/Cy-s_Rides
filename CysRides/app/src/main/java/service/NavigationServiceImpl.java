@@ -25,6 +25,7 @@ import cysrides.cysrides.CreateOffer;
 import cysrides.cysrides.CreateRequest;
 import cysrides.cysrides.LoginActivity;
 import cysrides.cysrides.R;
+import cysrides.cysrides.RequestsOffers;
 import cysrides.cysrides.RideOffers;
 import cysrides.cysrides.RideRequests;
 import cysrides.cysrides.ViewProfile;
@@ -62,6 +63,9 @@ public class NavigationServiceImpl implements NavigationService {
                 break;
             case R.id.createRequest:
                 intent = userIntentService.createIntent(context, CreateRequest.class, userIntentService.getUserFromIntent(intent));
+                break;
+            case R.id.requestsOffers:
+                intent = userIntentService.createIntent(context, RequestsOffers.class, userIntentService.getUserFromIntent(intent));
                 break;
             case R.id.bannedUsers:
                 intent = userIntentService.createIntent(context, BannedUsers.class, userIntentService.getUserFromIntent(intent));

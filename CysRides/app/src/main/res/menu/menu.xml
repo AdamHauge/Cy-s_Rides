@@ -31,6 +31,10 @@
         android:title="@string/create_request" />
 
     <item
+        android:id="@+id/requestsOffers"
+        android:title="View Requests and Offers" />
+
+    <item
         android:id="@+id/banUser"
         android:title="Ban User" />
 

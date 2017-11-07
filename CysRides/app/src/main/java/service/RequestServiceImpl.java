@@ -4,11 +4,8 @@ import android.content.Context;
 
 import java.util.ArrayList;
 
-import domain.Offer;
 import domain.Request;
 import domain.UserInfo;
-import volley.OfferVolley;
-import volley.OfferVolleyImpl;
 import volley.RequestVolley;
 import volley.RequestVolleyImpl;
 
@@ -23,7 +20,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public ArrayList<Request> findOffersByEmail(ArrayList<Request> requests, UserInfo userInfo) {
+    public ArrayList<Request> findRequestsByEmail(ArrayList<Request> requests, UserInfo userInfo) {
         ArrayList<Request> emailRequests = new ArrayList<>();
         for(int i=0 ; i<requests.size() ; i++) {
             if(requests.get(i).getEmail().equals(userInfo.getNetID())) {
