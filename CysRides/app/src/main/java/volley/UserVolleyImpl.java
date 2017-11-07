@@ -46,6 +46,10 @@ public class UserVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements 
         callback = call;
     }
 
+    /*
+    Creates a user row in the database based on the information given in the UserInfo object.
+    Sends a map over of the fields of the current user to the createUser php file.
+     */
     @Override
     public void createUser(Context context, final UserInfo user) {
         currentUser = user;
@@ -84,6 +88,12 @@ public class UserVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements 
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
 
+    /*
+    Part of the asynchronous process of grabbing a list of users from the database. For the given
+    JSONArray, it parses JSONObjects from it and then creates UserInfo objects based on the Strings in
+    the JSONObject. Adds each individual user to the users ArrayList. Calls the callback function on
+    the users ArrayList.
+     */
     @Override
     public void onPostExecute(JSONArray jsonArray) {
         try{
@@ -120,6 +130,10 @@ public class UserVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements 
         callback.call(users);
     }
 
+    /*
+    Part of the asynchronous process of grabbing a list of users from the database. Reads the strings from the
+    JSONObjects received from the database and adds them to the JSONArray.
+     */
     @Override
     protected JSONArray doInBackground(Void... aVoid) {
         HttpURLConnection urlConnection = null;

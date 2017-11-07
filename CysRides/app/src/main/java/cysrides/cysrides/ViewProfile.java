@@ -35,6 +35,10 @@ public class ViewProfile extends AppCompatActivity {
     private TextView venmoView;
     private RatingBar userRatingBar;
 
+    /*
+    When this activity is created, it initializes all the UI components to the values of the UserInfo
+    object.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +63,9 @@ public class ViewProfile extends AppCompatActivity {
         userRatingBar.setRating(user.getUserRating());
     }
 
+    /*
+    On back pressed, the app screen returns to the Main Activity.
+     */
     @Override
     public void onBackPressed() {
         finish();

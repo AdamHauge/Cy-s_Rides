@@ -19,6 +19,11 @@ public class DialogConfirmationCode extends AppCompatActivity {
     private Button goButton;
     private UserInfo user;
 
+    /*
+    This method primarily listens for the "goButton" to be clicked. When clicked, it references the
+    code the user inputs to the code in the database for that user. If the user inputs the wrong code,
+    a toast appears saying so.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +43,7 @@ public class DialogConfirmationCode extends AppCompatActivity {
                     startActivity(i);
                 }
                 else{
-                    Toast toast = Toast.makeText(getApplicationContext(), "Not valid credentials, " + user.getConfirmationCode(), Toast.LENGTH_LONG);
+                    Toast toast = Toast.makeText(getApplicationContext(), "Not valid credentials, " /*+ user.getConfirmationCode()*/, Toast.LENGTH_LONG);
                     toast.show();
                 }
             }
