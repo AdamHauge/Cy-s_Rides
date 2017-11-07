@@ -64,6 +64,10 @@
             android:label="@string/title_activity_create_profile"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".RequestsOffers"
+            android:label="Ride Requests and Offers"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".BanUser"
             android:label="Ban User"
             android:theme="@style/AppTheme.NoActionBar" />

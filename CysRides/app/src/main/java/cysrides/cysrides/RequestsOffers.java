@@ -60,11 +60,11 @@ public class RequestsOffers extends AppCompatActivity implements NavigationView.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ride_offers);
+        setContentView(R.layout.activity_requests_offers);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_offers_activity);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.requests_offers_activity);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -89,7 +89,7 @@ public class RequestsOffers extends AppCompatActivity implements NavigationView.
         getOffersList();
         getRequestsList();
 
-        ListView listView = (ListView)findViewById(R.id.ride_offers_list);
+        ListView listView = (ListView)findViewById(R.id.requests_offers_list);
         adapter = new ArrayAdapter<>(RequestsOffers.this, android.R.layout.simple_list_item_1, destinations);
         listView.setAdapter(adapter);
 //        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -191,7 +191,7 @@ public class RequestsOffers extends AppCompatActivity implements NavigationView.
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_offers_activity);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.requests_offers_activity);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         }
@@ -249,18 +249,18 @@ public class RequestsOffers extends AppCompatActivity implements NavigationView.
             alert.setNegativeButton(android.R.string.no, null);
             alert.show();
 
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_offers_activity);
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.requests_offers_activity);
             drawer.closeDrawer(GravityCompat.START);
             return true;
         }
         else if(navigationService.checkInternetConnection(getApplicationContext())) {
             connectionPopUp();
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_offers_activity);
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.requests_offers_activity);
             drawer.closeDrawer(GravityCompat.START);
             return false;
         }
         else {
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_offers_activity);
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.requests_offers_activity);
             drawer.closeDrawer(GravityCompat.START);
             startActivity(i);
             return true;
@@ -268,7 +268,7 @@ public class RequestsOffers extends AppCompatActivity implements NavigationView.
     }
 
     public void connectionPopUp() {
-        Snackbar snackbar = Snackbar.make(findViewById(R.id.ride_offers_activity),
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.requests_offers_activity),
                 "Cy's Rides Requires\nInternet Connection", Snackbar.LENGTH_INDEFINITE);
 
         snackbar.setAction("Connect WIFI", new View.OnClickListener() {

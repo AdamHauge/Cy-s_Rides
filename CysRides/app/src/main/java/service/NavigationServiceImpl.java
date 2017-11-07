@@ -39,6 +39,7 @@ public class NavigationServiceImpl implements NavigationService {
     private Intent intent;
     private Context context;
 
+    //Sets the intent when traversing through pages
     @Override
     public Intent getNavigationIntent(@NonNull MenuItem item, Context c, Intent i) {
         int id = item.getItemId();
@@ -91,6 +92,7 @@ public class NavigationServiceImpl implements NavigationService {
         return null == networkInfo;
     }
 
+    //Hides menu options depending on what the userType is
     @Override
     public void hideMenuItems(Menu menu, UserInfo userInfo) {
         MenuItem item;
