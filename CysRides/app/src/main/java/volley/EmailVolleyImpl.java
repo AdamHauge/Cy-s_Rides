@@ -35,6 +35,11 @@ public class EmailVolleyImpl implements EmailVolley {
     private Context currentContext;
     private String to, from, subject, message;
 
+    /*
+    Method to send the user a confirmation email. Takes parameters for the email fields like to, from,
+    subject, and the message. Also needs current context. Makes volley request to sendEmail.php. Sends
+    given parameters over as a map.
+     */
     public void sendEmail(String toData, String fromData, String subjectData, String messageData, Context context)
     {
         currentContext = context;
