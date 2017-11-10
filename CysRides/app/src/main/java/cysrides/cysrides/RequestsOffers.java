@@ -35,6 +35,8 @@ import service.NavigationService;
 import service.NavigationServiceImpl;
 import service.OfferService;
 import service.OfferServiceImpl;
+import service.RefreshService;
+import service.RefreshServiceImpl;
 import service.RequestService;
 import service.RequestServiceImpl;
 import service.UserIntentService;
@@ -48,6 +50,7 @@ public class RequestsOffers extends AppCompatActivity implements NavigationView.
     private NavigationService navigationService = new NavigationServiceImpl();
     private OfferService offerService = new OfferServiceImpl();
     private RequestService requestService = new RequestServiceImpl();
+    private RefreshService refreshService = new RefreshServiceImpl();
 
     private Intent i;
     private SwipeRefreshLayout refresh;
@@ -134,13 +137,7 @@ public class RequestsOffers extends AppCompatActivity implements NavigationView.
                 }
 
                 if(refresh.isRefreshing()) {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            refresh.setRefreshing(false);
-                            adapter.notifyDataSetChanged();
-                        }
-                    }, 1000);
+                    refreshService.stopRefreshing(refresh, adapter);
                 }
                 else {
                     adapter.notifyDataSetChanged();
@@ -173,13 +170,7 @@ public class RequestsOffers extends AppCompatActivity implements NavigationView.
                 }
 
                 if(refresh.isRefreshing()) {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            refresh.setRefreshing(false);
-                            adapter.notifyDataSetChanged();
-                        }
-                    }, 1000);
+                    refreshService.stopRefreshing(refresh, adapter);
                 }
                 else {
                     adapter.notifyDataSetChanged();

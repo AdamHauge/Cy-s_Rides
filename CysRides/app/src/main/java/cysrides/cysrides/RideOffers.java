@@ -32,6 +32,8 @@ import java.util.List;
 import domain.Offer;
 import service.NavigationService;
 import service.NavigationServiceImpl;
+import service.RefreshService;
+import service.RefreshServiceImpl;
 import service.UserIntentService;
 import service.UserIntentServiceImpl;
 import volley.OfferVolleyImpl;
@@ -40,6 +42,7 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
 
     private UserIntentService userIntentService = new UserIntentServiceImpl();
     private NavigationService navigationService = new NavigationServiceImpl();
+    private RefreshService refreshService = new RefreshServiceImpl();
 
     private Intent i;
     private SwipeRefreshLayout refresh;
@@ -128,13 +131,7 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
 
                 /* stop refreshing page */
                 if(refresh.isRefreshing()) {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            refresh.setRefreshing(false);
-                            adapter.notifyDataSetChanged();
-                        }
-                    }, 1000);
+                    refreshService.stopRefreshing(refresh, adapter);
                 }
                 else {
                     adapter.notifyDataSetChanged();
