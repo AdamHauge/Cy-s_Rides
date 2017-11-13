@@ -4,7 +4,6 @@ import android.content.Context;
 
 import java.util.ArrayList;
 
-import domain.Offer;
 import domain.Request;
 import domain.UserInfo;
 

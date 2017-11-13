@@ -5,8 +5,6 @@ import android.net.wifi.WifiManager;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 
-import cysrides.cysrides.R;
-
 public class ActivityServiceImpl implements ActivityService {
 
     @Override

@@ -2,13 +2,10 @@ package service;
 
 import android.content.Context;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 
 import domain.Offer;
 import domain.UserInfo;
-import domain.UserType;
 import volley.OfferVolley;
 import volley.OfferVolleyImpl;
 

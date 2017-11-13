@@ -1,20 +1,13 @@
 package domain;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
 
-import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.Date;
 
 import cysrides.cysrides.Callback;
-import service.GroupServiceImpl;
 import volley.GroupVolleyImpl;
 
 public class Offer {

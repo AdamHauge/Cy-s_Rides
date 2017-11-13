@@ -7,10 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import domain.Offer;
-import service.GroupService;
 import service.GroupServiceImpl;
 
 public class ViewOffer extends Fragment {

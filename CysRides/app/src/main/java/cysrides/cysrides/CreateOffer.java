@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -33,7 +32,6 @@ import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import domain.Group;
 import domain.Offer;
 import service.ActivityService;
 import service.ActivityServiceImpl;
@@ -84,8 +82,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
 
         /* initialize all data input points */
 
-        PlaceAutocompleteFragment placeAutoComplete;
-        placeAutoComplete = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete);
+        PlaceAutocompleteFragment placeAutoComplete = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete);
         placeAutoComplete.setHint("Where are you going?");
         placeAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
