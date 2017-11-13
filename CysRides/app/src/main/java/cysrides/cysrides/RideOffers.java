@@ -205,6 +205,8 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
         i = navigationService.getNavigationIntent(item, RideOffers.this, this.getIntent());
 
         /* check if user wants to log out */
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_offers_activity);
+        drawer.closeDrawer(GravityCompat.START);
         if(R.id.logout == id) {
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
             alert.setTitle("Logout");
@@ -217,21 +219,15 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
             alert.setNegativeButton(android.R.string.no, null);
             alert.show();
 
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_offers_activity);
-            drawer.closeDrawer(GravityCompat.START);
             return true;
         }
         /* check if user needs to connect to wifi */
         else if(navigationService.checkInternetConnection(getApplicationContext())) {
             connectionPopUp();
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_offers_activity);
-            drawer.closeDrawer(GravityCompat.START);
             return false;
         }
         /* move to desired page */
         else {
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_offers_activity);
-            drawer.closeDrawer(GravityCompat.START);
             startActivity(i);
             return true;
         }

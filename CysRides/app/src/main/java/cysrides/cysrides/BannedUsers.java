@@ -179,6 +179,8 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
         int id = item.getItemId();
         i = navigationService.getNavigationIntent(item, BannedUsers.this, this.getIntent());
 
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.banned_users_activity);
+        drawer.closeDrawer(GravityCompat.START);
         if(R.id.logout == id) {
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
             alert.setTitle("Logout");
@@ -190,19 +192,13 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
             alert.setNegativeButton(android.R.string.no, null);
             alert.show();
 
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.banned_users_activity);
-            drawer.closeDrawer(GravityCompat.START);
             return true;
         }
         else if(navigationService.checkInternetConnection(getApplicationContext())) {
             connectionPopUp();
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.banned_users_activity);
-            drawer.closeDrawer(GravityCompat.START);
             return false;
         }
         else {
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.banned_users_activity);
-            drawer.closeDrawer(GravityCompat.START);
             startActivity(i);
             return true;
         }

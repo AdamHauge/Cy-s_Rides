@@ -248,6 +248,8 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
 
                 i = navigationService.getNavigationIntent(item, CreateRequest.this, i);
 
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.create_offer_activity);
+                drawer.closeDrawer(GravityCompat.START);
                 if (R.id.logout == id) {
                     AlertDialog.Builder alert = new AlertDialog.Builder(CreateRequest.this);
                     alert.setTitle("Logout");
@@ -261,13 +263,9 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
                     alert.setNegativeButton(android.R.string.no, null);
                     alert.show();
 
-                    DrawerLayout drawer = (DrawerLayout) findViewById(R.id.create_offer_activity);
-                    drawer.closeDrawer(GravityCompat.START);
                     retValue = true;
                 } else if (navigationService.checkInternetConnection(getApplicationContext())) {
                     connectionPopUp();
-                    DrawerLayout drawer = (DrawerLayout) findViewById(R.id.create_offer_activity);
-                    drawer.closeDrawer(GravityCompat.START);
                     retValue = false;
                 } else {
                     startActivity(i);

@@ -215,6 +215,8 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
         i = navigationService.getNavigationIntent(item, RideRequests.this, this.getIntent());
 
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_requests_activity);
+        drawer.closeDrawer(GravityCompat.START);
         if(R.id.logout == id) {
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
             alert.setTitle("Logout");
@@ -227,22 +229,16 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
             alert.setNegativeButton(android.R.string.no, null);
             alert.show();
 
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_requests_activity);
-            drawer.closeDrawer(GravityCompat.START);
             return true;
         }
         else if(navigationService.checkInternetConnection(getApplicationContext())) {
             /* check for wifi connection */
             connectionPopUp();
             /* close drawer */
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_requests_activity);
-            drawer.closeDrawer(GravityCompat.START);
             return false;
         }
         else {
             /* close drawer and move to next activity */
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_requests_activity);
-            drawer.closeDrawer(GravityCompat.START);
             startActivity(i);
             return true;
         }

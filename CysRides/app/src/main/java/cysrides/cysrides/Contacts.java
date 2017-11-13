@@ -125,6 +125,8 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
         int id = item.getItemId();
         i = navigationService.getNavigationIntent(item, Contacts.this, this.getIntent());
 
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.contacts_activity);
+        drawer.closeDrawer(GravityCompat.START);
         if(R.id.logout == id) {
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
             alert.setTitle("Logout");
@@ -137,19 +139,13 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
             alert.setNegativeButton(android.R.string.no, null);
             alert.show();
 
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.contacts_activity);
-            drawer.closeDrawer(GravityCompat.START);
             return true;
         }
         else if(navigationService.checkInternetConnection(getApplicationContext())) {
             connectionPopUp();
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.contacts_activity);
-            drawer.closeDrawer(GravityCompat.START);
             return false;
         }
         else {
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.contacts_activity);
-            drawer.closeDrawer(GravityCompat.START);
             startActivity(i);
             return true;
         }

@@ -228,6 +228,8 @@ public class RequestsOffers extends AppCompatActivity implements NavigationView.
         int id = item.getItemId();
         i = navigationService.getNavigationIntent(item, RequestsOffers.this, this.getIntent());
 
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.requests_offers_activity);
+        drawer.closeDrawer(GravityCompat.START);
         if(R.id.logout == id) {
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
             alert.setTitle("Logout");
@@ -240,19 +242,13 @@ public class RequestsOffers extends AppCompatActivity implements NavigationView.
             alert.setNegativeButton(android.R.string.no, null);
             alert.show();
 
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.requests_offers_activity);
-            drawer.closeDrawer(GravityCompat.START);
             return true;
         }
         else if(navigationService.checkInternetConnection(getApplicationContext())) {
             connectionPopUp();
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.requests_offers_activity);
-            drawer.closeDrawer(GravityCompat.START);
             return false;
         }
         else {
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.requests_offers_activity);
-            drawer.closeDrawer(GravityCompat.START);
             startActivity(i);
             return true;
         }
