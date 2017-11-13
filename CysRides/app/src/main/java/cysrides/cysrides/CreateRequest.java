@@ -238,6 +238,7 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
     @Override
     public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
         i = this.getIntent();
+        final Context context = this.getApplicationContext();
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Discard Request");
         alert.setMessage("This will discard your current request. Continue anyway?");
@@ -251,16 +252,13 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
                 DrawerLayout drawer = (DrawerLayout) findViewById(R.id.create_offer_activity);
                 drawer.closeDrawer(GravityCompat.START);
                 if (R.id.logout == id) {
-                    AlertDialog.Builder alert = new AlertDialog.Builder(CreateRequest.this);
-                    alert.setTitle("Logout");
-                    alert.setMessage("Do you really want to logout?");
+                    AlertDialog.Builder alert = navigationService.logOutButton(context);
                     alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                             SaveSharedPreference.clearUsernamePassword(CreateRequest.this);
                             startActivity(i);
                         }
                     });
-                    alert.setNegativeButton(android.R.string.no, null);
                     alert.show();
 
                     retValue = true;

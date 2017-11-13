@@ -334,15 +334,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         /* check if the user  wants to logout */
         if(R.id.logout == id) {
-            AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            alert.setTitle("Logout");
-            alert.setMessage("Do you really want to logout?");
+            AlertDialog.Builder alert = navigationService.logOutButton(this.getApplicationContext());
             alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     SaveSharedPreference.clearUsernamePassword(MainActivity.this);
                     startActivity(i);
                 }});
-            alert.setNegativeButton(android.R.string.no, null);
             alert.show();
             return true;
         }

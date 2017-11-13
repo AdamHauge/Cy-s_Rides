@@ -142,7 +142,6 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
         }
         else {
             finish();
-            i = new Intent(BannedUsers.this, MainActivity.class);
             i = userIntentService.createIntent(BannedUsers.this, MainActivity.class, userIntentService.getUserFromIntent(this.getIntent()));
             startActivity(i);
         }
@@ -182,14 +181,11 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.banned_users_activity);
         drawer.closeDrawer(GravityCompat.START);
         if(R.id.logout == id) {
-            AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            alert.setTitle("Logout");
-            alert.setMessage("Do you really want to logout?");
+            AlertDialog.Builder alert = navigationService.logOutButton(this.getApplicationContext());
             alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     startActivity(i);
                 }});
-            alert.setNegativeButton(android.R.string.no, null);
             alert.show();
 
             return true;

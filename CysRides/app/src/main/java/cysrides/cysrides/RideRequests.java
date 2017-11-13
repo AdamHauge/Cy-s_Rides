@@ -218,15 +218,12 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_requests_activity);
         drawer.closeDrawer(GravityCompat.START);
         if(R.id.logout == id) {
-            AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            alert.setTitle("Logout");
-            alert.setMessage("Do you really want to logout?");
+            AlertDialog.Builder alert = navigationService.logOutButton(this.getApplicationContext());
             alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     SaveSharedPreference.clearUsernamePassword(RideRequests.this);
                     startActivity(i);
                 }});
-            alert.setNegativeButton(android.R.string.no, null);
             alert.show();
 
             return true;
