@@ -1,9 +1,7 @@
 package volley;
 
 import android.content.Context;
-import android.content.pm.LauncherApps;
 import android.os.AsyncTask;
-import android.telecom.Call;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -17,15 +15,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
-import domain.Group;
 import cysrides.cysrides.Callback;
+import domain.Group;
 
 /**
  * Created by Ryan on 10/18/2017.
@@ -104,6 +99,7 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
     //pulls group from the database
+    @Override
     public void getGroup(final Context currentContext, final int groupNum) {
         this.currentContext = currentContext;
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getGroupUrl,

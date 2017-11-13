@@ -1,13 +1,9 @@
 package cysrides.cysrides;
 
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -17,26 +13,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
-import com.google.android.gms.location.places.ui.PlaceSelectionListener;
-
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
 import domain.Ban;
-import domain.Offer;
-import service.GroupService;
-import service.GroupServiceImpl;
+import service.ActivityService;
+import service.ActivityServiceImpl;
 import service.NavigationService;
 import service.NavigationServiceImpl;
 import service.OfferService;
@@ -47,7 +32,8 @@ import volley.BanVolleyImpl;
 
 public class BanUser extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    UserIntentService userIntentService = new UserIntentServiceImpl();
+    private UserIntentService userIntentService = new UserIntentServiceImpl();
+    private ActivityService activityService = new ActivityServiceImpl();
 
     private String email, reason;
     private Intent i;
@@ -115,7 +101,6 @@ public class BanUser extends AppCompatActivity implements NavigationView.OnNavig
             alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     finish();
-//                i = new Intent(CreateOffer.this, MainActivity.class);
                     startActivity(i);
                 }});
             alert.setNegativeButton(android.R.string.no, null);
@@ -134,6 +119,7 @@ public class BanUser extends AppCompatActivity implements NavigationView.OnNavig
     @Override
     public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
         i = this.getIntent();
+        final Context context = this.getApplicationContext();
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Discard Offer");
         alert.setMessage("This will discard your current offer. Continue anyway?");
@@ -144,25 +130,20 @@ public class BanUser extends AppCompatActivity implements NavigationView.OnNavig
 
                 i = navigationService.getNavigationIntent(item, BanUser.this, i);
 
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.create_offer_activity);
+                drawer.closeDrawer(GravityCompat.START);
                 if (R.id.logout == id) {
-                    AlertDialog.Builder alert = new AlertDialog.Builder(BanUser.this);
-                    alert.setTitle("Logout");
-                    alert.setMessage("Do you really want to logout?");
+                    AlertDialog.Builder alert = navigationService.logOutButton(context);
                     alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                             startActivity(i);
                         }
                     });
-                    alert.setNegativeButton(android.R.string.no, null);
                     alert.show();
 
-                    DrawerLayout drawer = (DrawerLayout) findViewById(R.id.create_offer_activity);
-                    drawer.closeDrawer(GravityCompat.START);
                     retValue = true;
                 } else if (navigationService.checkInternetConnection(getApplicationContext())) {
                     connectionPopUp();
-                    DrawerLayout drawer = (DrawerLayout) findViewById(R.id.create_offer_activity);
-                    drawer.closeDrawer(GravityCompat.START);
                     retValue = false;
                 } else {
                     startActivity(i);
@@ -177,16 +158,7 @@ public class BanUser extends AppCompatActivity implements NavigationView.OnNavig
     }
 
     public void connectionPopUp() {
-        Snackbar snackbar = Snackbar.make(findViewById(R.id.create_offer_activity),
-                "Cy's Rides Requires\nInternet Connection", Snackbar.LENGTH_INDEFINITE);
-
-        snackbar.setAction("Connect WIFI", new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-                wifi.setWifiEnabled(true);
-            }
-        });
+        Snackbar snackbar = activityService.setupConnection(this.getApplicationContext(), findViewById(R.id.contacts_activity));
         snackbar.show();
     }
 }

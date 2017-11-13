@@ -2,26 +2,14 @@ package cysrides.cysrides;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.View;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-
-import domain.Offer;
-import domain.Request;
 import domain.UserInfo;
-import domain.UserType;
 import service.UserIntentService;
 import service.UserIntentServiceImpl;
-import volley.UserVolleyImpl;
 
 public class ViewProfile extends AppCompatActivity {
 
@@ -35,6 +23,10 @@ public class ViewProfile extends AppCompatActivity {
     private TextView venmoView;
     private RatingBar userRatingBar;
 
+    /*
+    When this activity is created, it initializes all the UI components to the values of the UserInfo
+    object.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +51,9 @@ public class ViewProfile extends AppCompatActivity {
         userRatingBar.setRating(user.getUserRating());
     }
 
+    /*
+    On back pressed, the app screen returns to the Main Activity.
+     */
     @Override
     public void onBackPressed() {
         finish();

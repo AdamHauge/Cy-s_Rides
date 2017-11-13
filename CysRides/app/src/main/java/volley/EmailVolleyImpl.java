@@ -1,8 +1,6 @@
 package volley;
 
 import android.content.Context;
-import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -11,22 +9,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
-
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 
 public class EmailVolleyImpl implements EmailVolley {
 
@@ -35,6 +19,11 @@ public class EmailVolleyImpl implements EmailVolley {
     private Context currentContext;
     private String to, from, subject, message;
 
+    /*
+    Method to send the user a confirmation email. Takes parameters for the email fields like to, from,
+    subject, and the message. Also needs current context. Makes volley request to sendEmail.php. Sends
+    given parameters over as a map.
+     */
     public void sendEmail(String toData, String fromData, String subjectData, String messageData, Context context)
     {
         currentContext = context;

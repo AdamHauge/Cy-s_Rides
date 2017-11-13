@@ -29,7 +29,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import cysrides.cysrides.Callback;
-import domain.Offer;
 
 
 public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements RequestVolley {

@@ -2,13 +2,10 @@ package service;
 
 import android.content.Context;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 
 import domain.Offer;
 import domain.UserInfo;
-import domain.UserType;
 import volley.OfferVolley;
 import volley.OfferVolleyImpl;
 
@@ -16,16 +13,19 @@ public class OfferServiceImpl implements OfferService {
 
     OfferVolley offerVolley = new OfferVolleyImpl();
 
+    //Formats the information before passing it into the volley code
     @Override
     public void createOffer(Context context, Offer offer) {
         String latLongName = String.format("%s %s", offer.getDestination(), offer.getCoordinates().toString());
         offerVolley.createOffer(context, offer, latLongName);
     }
 
+    @Override
     public void giveOfferGroup(Context context, final int offerId, final int groupId){
         offerVolley.giveOfferGroup(context, offerId, groupId);
     }
 
+    //Finds the offers for a specific email
     @Override
     public ArrayList<Offer> findOffersByEmail(ArrayList<Offer> offers, UserInfo userInfo) {
         ArrayList<Offer> emailOffers = new ArrayList<>();

@@ -1,11 +1,9 @@
 package cysrides.cysrides;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.wifi.WifiManager;
-import android.os.Handler;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -17,7 +15,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,8 +27,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import domain.Offer;
+import service.ActivityService;
+import service.ActivityServiceImpl;
 import service.NavigationService;
 import service.NavigationServiceImpl;
+import service.RefreshService;
+import service.RefreshServiceImpl;
 import service.UserIntentService;
 import service.UserIntentServiceImpl;
 import volley.OfferVolleyImpl;
@@ -40,6 +41,8 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
 
     private UserIntentService userIntentService = new UserIntentServiceImpl();
     private NavigationService navigationService = new NavigationServiceImpl();
+    private RefreshService refreshService = new RefreshServiceImpl();
+    private ActivityService activityService = new ActivityServiceImpl();
 
     private Intent i;
     private SwipeRefreshLayout refresh;
@@ -128,13 +131,7 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
 
                 /* stop refreshing page */
                 if(refresh.isRefreshing()) {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            refresh.setRefreshing(false);
-                            adapter.notifyDataSetChanged();
-                        }
-                    }, 1000);
+                    refreshService.stopRefreshing(refresh, adapter);
                 }
                 else {
                     adapter.notifyDataSetChanged();
@@ -161,7 +158,6 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
         /* return to main activity */
         else {
             finish();
-            i = new Intent(RideOffers.this, MainActivity.class);
             i = userIntentService.createIntent(RideOffers.this, MainActivity.class, userIntentService.getUserFromIntent(this.getIntent()));
             startActivity(i);
         }
@@ -208,33 +204,26 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
         i = navigationService.getNavigationIntent(item, RideOffers.this, this.getIntent());
 
         /* check if user wants to log out */
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_offers_activity);
+        drawer.closeDrawer(GravityCompat.START);
         if(R.id.logout == id) {
-            AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            alert.setTitle("Logout");
-            alert.setMessage("Do you really want to logout?");
+            AlertDialog.Builder alert = navigationService.logOutButton(this.getApplicationContext());
             alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     SaveSharedPreference.clearUsernamePassword(RideOffers.this);
                     startActivity(i);
                 }});
-            alert.setNegativeButton(android.R.string.no, null);
             alert.show();
 
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_offers_activity);
-            drawer.closeDrawer(GravityCompat.START);
             return true;
         }
         /* check if user needs to connect to wifi */
         else if(navigationService.checkInternetConnection(getApplicationContext())) {
             connectionPopUp();
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_offers_activity);
-            drawer.closeDrawer(GravityCompat.START);
             return false;
         }
         /* move to desired page */
         else {
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_offers_activity);
-            drawer.closeDrawer(GravityCompat.START);
             startActivity(i);
             return true;
         }
@@ -244,16 +233,7 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
      * insert option to connect to wifi
      */
     public void connectionPopUp() {
-        Snackbar snackbar = Snackbar.make(findViewById(R.id.ride_offers_activity),
-                "Cy's Rides Requires\nInternet Connection", Snackbar.LENGTH_INDEFINITE);
-
-        snackbar.setAction("Connect WIFI", new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-                wifi.setWifiEnabled(true);
-            }
-        });
+        Snackbar snackbar = activityService.setupConnection(this.getApplicationContext(), findViewById(R.id.contacts_activity));
         snackbar.show();
     }
 }

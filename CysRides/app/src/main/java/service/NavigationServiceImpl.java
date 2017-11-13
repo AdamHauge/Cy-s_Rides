@@ -2,21 +2,13 @@ package service;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 
 import cysrides.cysrides.BanUser;
 import cysrides.cysrides.BannedUsers;
@@ -25,19 +17,21 @@ import cysrides.cysrides.CreateOffer;
 import cysrides.cysrides.CreateRequest;
 import cysrides.cysrides.LoginActivity;
 import cysrides.cysrides.R;
+import cysrides.cysrides.RequestsOffers;
 import cysrides.cysrides.RideOffers;
 import cysrides.cysrides.RideRequests;
 import cysrides.cysrides.ViewProfile;
 import domain.UserInfo;
 import domain.UserType;
 
-public class NavigationServiceImpl implements NavigationService {
+public class NavigationServiceImpl extends AppCompatActivity implements NavigationService {
 
     private UserIntentService userIntentService = new UserIntentServiceImpl();
 
     private Intent intent;
     private Context context;
 
+    //Sets the intent when traversing through pages
     @Override
     public Intent getNavigationIntent(@NonNull MenuItem item, Context c, Intent i) {
         int id = item.getItemId();
@@ -63,6 +57,9 @@ public class NavigationServiceImpl implements NavigationService {
             case R.id.createRequest:
                 intent = userIntentService.createIntent(context, CreateRequest.class, userIntentService.getUserFromIntent(intent));
                 break;
+            case R.id.requestsOffers:
+                intent = userIntentService.createIntent(context, RequestsOffers.class, userIntentService.getUserFromIntent(intent));
+                break;
             case R.id.bannedUsers:
                 intent = userIntentService.createIntent(context, BannedUsers.class, userIntentService.getUserFromIntent(intent));
                 break;
@@ -87,6 +84,7 @@ public class NavigationServiceImpl implements NavigationService {
         return null == networkInfo;
     }
 
+    //Hides menu options depending on what the userType is
     @Override
     public void hideMenuItems(Menu menu, UserInfo userInfo) {
         MenuItem item;
@@ -105,5 +103,14 @@ public class NavigationServiceImpl implements NavigationService {
             item = menu.findItem(R.id.banUser);
             item.setVisible(false);
         }
+    }
+
+    @Override
+    public AlertDialog.Builder logOutButton(Context c) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Logout");
+        alert.setMessage("Do you really want to logout?");
+        alert.setNegativeButton(android.R.string.no, null);
+        return alert;
     }
 }
