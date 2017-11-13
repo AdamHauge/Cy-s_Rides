@@ -30,6 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import domain.Ban;
+import service.ActivityService;
+import service.ActivityServiceImpl;
 import service.NavigationService;
 import service.NavigationServiceImpl;
 import service.RefreshService;
@@ -43,6 +45,7 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
     private UserIntentService userIntentService = new UserIntentServiceImpl();
     private NavigationService navigationService = new NavigationServiceImpl();
     private RefreshService refreshService = new RefreshServiceImpl();
+    private ActivityService activityService = new ActivityServiceImpl();
 
     private Intent i;
     private SwipeRefreshLayout refresh;
@@ -201,16 +204,7 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
     }
 
     public void connectionPopUp() {
-        Snackbar snackbar = Snackbar.make(findViewById(R.id.banned_users_activity),
-                "Cy's Rides Requires\nInternet Connection", Snackbar.LENGTH_INDEFINITE);
-
-        snackbar.setAction("Connect WIFI", new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-                wifi.setWifiEnabled(true);
-            }
-        });
+        Snackbar snackbar = activityService.setupConnection(this.getApplicationContext(), findViewById(R.id.contacts_activity));
         snackbar.show();
     }
 

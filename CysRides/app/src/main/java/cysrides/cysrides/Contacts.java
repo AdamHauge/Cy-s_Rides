@@ -25,6 +25,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import domain.UserInfo;
+import service.ActivityService;
+import service.ActivityServiceImpl;
 import service.NavigationService;
 import service.NavigationServiceImpl;
 import service.UserIntentService;
@@ -34,6 +36,7 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
 
     private NavigationService navigationService = new NavigationServiceImpl();
     private UserIntentService userIntentService = new UserIntentServiceImpl();
+    private ActivityService activityService = new ActivityServiceImpl();
 
     private ListView listView;
     private ArrayList list = new ArrayList();
@@ -149,16 +152,7 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
     }
 
     public void connectionPopUp() {
-        Snackbar snackbar = Snackbar.make(findViewById(R.id.contacts_activity),
-                "Cy's Rides Requires\nInternet Connection", Snackbar.LENGTH_INDEFINITE);
-
-        snackbar.setAction("Connect WIFI", new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-                wifi.setWifiEnabled(true);
-            }
-        });
+        Snackbar snackbar = activityService.setupConnection(this.getApplicationContext(), findViewById(R.id.contacts_activity));
         snackbar.show();
     }
 }

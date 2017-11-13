@@ -35,6 +35,8 @@ import java.util.GregorianCalendar;
 
 import domain.Group;
 import domain.Offer;
+import service.ActivityService;
+import service.ActivityServiceImpl;
 import service.GroupService;
 import service.GroupServiceImpl;
 import service.NavigationService;
@@ -47,6 +49,7 @@ import service.UserIntentServiceImpl;
 public class CreateOffer extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     UserIntentService userIntentService = new UserIntentServiceImpl();
+    private ActivityService activityService = new ActivityServiceImpl();
 
     private DatePickerDialog.OnDateSetListener dateSetListener;
     private Place destination;
@@ -264,16 +267,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
      * insert option to connect to wifi
      */
     public void connectionPopUp() {
-        Snackbar snackbar = Snackbar.make(findViewById(R.id.create_offer_activity),
-                "Cy's Rides Requires\nInternet Connection", Snackbar.LENGTH_INDEFINITE);
-
-        snackbar.setAction("Connect WIFI", new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-                wifi.setWifiEnabled(true);
-            }
-        });
+        Snackbar snackbar = activityService.setupConnection(this.getApplicationContext(), findViewById(R.id.contacts_activity));
         snackbar.show();
     }
 }
