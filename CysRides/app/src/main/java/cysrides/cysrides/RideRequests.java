@@ -166,7 +166,6 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
         else {
             /* return to main activity */
             finish();
-            i = new Intent(RideRequests.this, MainActivity.class);
             i = userIntentService.createIntent(RideRequests.this, MainActivity.class, userIntentService.getUserFromIntent(this.getIntent()));
             startActivity(i);
         }
