@@ -45,9 +45,15 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
     private GroupVolleyImpl groupVolley = new GroupVolleyImpl();
     public OfferVolleyImpl() { }
 
+    /*
+     * constructor that stores the caller data
+     *
+     * Param: Callback data for caller
+     */
     public OfferVolleyImpl(Callback o) {
         callback = o;
     }
+
     public OfferVolleyImpl(Context currentContext, Callback o) {
         this.currentContext = currentContext;
         callback = o;
@@ -121,6 +127,11 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
 
+    /*
+     * Method that parses data pulled from database
+     *
+     * Param: JSONArray of ride request data pulled from database
+     */
     @Override
     protected void onPostExecute(JSONArray jsonArray) {
         try{
