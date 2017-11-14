@@ -230,7 +230,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         /* for all offers received from volley, display a marker on Google Map */
         for(int i = 0; i < offers.size(); i++) {
-            LatLng coordinates = offers.get(i).getCoordinates();
+            LatLng coordinates = offers.get(i).getDestCoordinates();
             Marker marker = googleMap.addMarker(new MarkerOptions()
                     .position(coordinates)
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));

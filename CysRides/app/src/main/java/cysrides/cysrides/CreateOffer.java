@@ -51,6 +51,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
 
     private DatePickerDialog.OnDateSetListener dateSetListener;
     private Place destination;
+    private Place start;
     private int year, month, day;
     private boolean dateChanged = false;
     private String description;
@@ -82,9 +83,9 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
 
         /* initialize all data input points */
 
-        PlaceAutocompleteFragment placeAutoComplete = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete);
-        placeAutoComplete.setHint("Where are you going?");
-        placeAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+        PlaceAutocompleteFragment destinationAutoComplete = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.destination_autocomplete);
+        destinationAutoComplete.setHint("Where are you going?");
+        destinationAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
                 destination = place;
@@ -96,6 +97,22 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
                 Log.d("Maps", "An error occurred: " + status);
             }
         });
+
+        PlaceAutocompleteFragment startAutoComplete = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.start_autocomplete);
+        startAutoComplete.setHint("Where are you leaving from?");
+        startAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                start = place;
+                Log.d("Maps", "Place selected: " + place.getName());
+            }
+
+            @Override
+            public void onError(Status status) {
+                Log.d("Maps", "An error occurred: " + status);
+            }
+        });
+
         EditText displayDate = (EditText) findViewById(R.id.LeaveDate);
         displayDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,12 +166,13 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
             public void onClick(View view) {
                 EditText data = (EditText) findViewById(R.id.Cost);
                 boolean noDestination = null == destination;
+                boolean noStart = null == start;
                 boolean noCost = null == data.getText();
                 boolean noDate = 0 == year;
                 boolean allValid = false;
 
                 /* check that all input data is valid */
-                if (noDestination || noCost || noDate) {
+                if (noDestination || noStart || noCost || noDate) {
                     Snackbar.make(findViewById(R.id.submit), "All data fields required", Snackbar.LENGTH_LONG).show();
                 }
                 else {
@@ -172,7 +190,11 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
                 }
 
                 if(allValid) {
-                    Offer o = new Offer(cost, userIntentService.getUserFromIntent(getIntent()).getNetID(), (String) destination.getName(), destination.getLatLng(), description, new GregorianCalendar(year, month, day).getTime());
+                    Offer o = new Offer(cost, userIntentService.getUserFromIntent(
+                            getIntent()).getNetID(), (String) destination.getName(),
+                            destination.getLatLng(), (String) start.getName(), start.getLatLng(),
+                            description, new GregorianCalendar(year, month, day).getTime());
+
                     offerService.createOffer(CreateOffer.this, o);
 
                     /* Refresh the page */
