@@ -11,13 +11,14 @@ import volley.OfferVolleyImpl;
 
 public class OfferServiceImpl implements OfferService {
 
-    OfferVolley offerVolley = new OfferVolleyImpl();
+    private OfferVolley offerVolley = new OfferVolleyImpl();
 
     //Formats the information before passing it into the volley code
     @Override
     public void createOffer(Context context, Offer offer) {
-        String latLongName = String.format("%s %s", offer.getDestination(), offer.getCoordinates().toString());
-        offerVolley.createOffer(context, offer, latLongName);
+        String destination = String.format("%s %s", offer.getDestination(), offer.getDestCoordinates().toString());
+        String start = String.format("%s %s", offer.getStart(), offer.getStartCoordinates().toString());
+        offerVolley.createOffer(context, offer, destination, start);
     }
 
     @Override

@@ -39,7 +39,8 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
     private Offer newOffer;
     private Context currentContext;
     private ArrayList<Offer> offers;
-    private String latitudeLongitudeName;
+    private String destinationName;
+    private String startName;
     private Callback callback;
     private GroupVolleyImpl groupVolley = new GroupVolleyImpl();
     public OfferVolleyImpl() { }
@@ -60,15 +61,15 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
 
     //add offer to the database
     @Override
-    public void createOffer(final Context context, final Offer offer, String latLongName) {
+    public void createOffer(final Context context, final Offer offer, String destination, String start) {
         newOffer = offer;
         currentContext = context;
-        latitudeLongitudeName = latLongName;
+        destinationName = destination;
+        startName = start;
         StringRequest stringRequest = new StringRequest(Request.Method.POST, createOfferUrl,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-
                         newOffer.getGroup().setOfferID(Integer.parseInt(response));
                         groupVolley.createGroup(currentContext, newOffer.getGroup());
                     }
@@ -86,7 +87,8 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
                 Map<String, String> params = new HashMap<>();
                 params.put("cost", newOffer.getCost()+"");
                 params.put("email", newOffer.getEmail());
-                params.put("destination", latitudeLongitudeName);
+                params.put("destination", destinationName);
+                params.put("start", startName);
                 params.put("description", newOffer.getDescription());
                 params.put("date", String.format("%s '%s'", "DATE", new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(newOffer.getDate())));
                 return params;
@@ -160,7 +162,7 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
                     e.printStackTrace();
                 }
 
-                Offer offer = new Offer(cost, email, destinationName, latitudeLongitude, description, date, groupID, this.currentContext);
+                Offer offer = new Offer(cost, email, destinationName, latitudeLongitude, null, null, description, date, groupID, this.currentContext);
                 //Log.d("offer", offer.toString());
                 offers.add(offer);
                 Log.d("size", offers.size()+"");
