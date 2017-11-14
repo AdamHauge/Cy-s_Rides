@@ -59,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         /* if a user is already logged in, use their profile */
-        if(SaveSharedPreference.getUsernamePassword(LoginActivity.this).length() != 0) {
+        if(0 != SaveSharedPreference.getUsernamePassword(LoginActivity.this).length()) {
             String data[] = SaveSharedPreference.getUsernamePassword(LoginActivity.this).split(":");
             login(data[0], data[1]);
         }
@@ -168,8 +168,15 @@ public class LoginActivity extends AppCompatActivity {
                     Intent i = userIntentService.createIntent(LoginActivity.this, MainActivity.class, userInfo);
                     startActivity(i);
                 } else {
-                    Toast toast = Toast.makeText(getApplicationContext(), "Not valid credentials", Toast.LENGTH_LONG);
-                    toast.show();
+                    /* For testing purposes, in case a user gets deleted from database, clear saved data and restart log in */
+                    if(0 != SaveSharedPreference.getUsernamePassword(LoginActivity.this).length()) {
+                        SaveSharedPreference.clearUsernamePassword(LoginActivity.this);
+                        finish();
+                        startActivity(getIntent());
+                    }
+                    else { /* User entered invalid credentials, everything else is fine */
+                        Toast.makeText(getApplicationContext(), "Not valid credentials", Toast.LENGTH_LONG).show();
+                    }
                 }
 
             }
