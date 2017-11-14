@@ -24,10 +24,10 @@
         <activity
             android:name=".LoginActivity"
             android:clearTaskOnLaunch="true"
-            android:label="@string/app_name" >
-            <intent-filter
-                android:label="@string/app_name">
+            android:label="@string/app_name">
+            <intent-filter android:label="@string/app_name">
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -75,7 +75,8 @@
             android:name=".BannedUsers"
             android:label="Banned Users"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".DialogConfirmationCode"></activity>
+        <activity android:name=".DialogConfirmationCode" />
+        <activity android:name=".ViewMyGroups"></activity>
     </application>
 
 </manifest>

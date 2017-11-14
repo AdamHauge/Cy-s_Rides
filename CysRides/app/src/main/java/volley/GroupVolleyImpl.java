@@ -21,6 +21,7 @@ import java.util.Map;
 
 import service.Callback;
 import domain.Group;
+import service.OfferService;
 
 /**
  * Created by Ryan on 10/18/2017.
@@ -36,6 +37,7 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
     private Context currentContext;
     private Callback callback;
     private OfferVolleyImpl ovi;
+
     private RequestVolleyImpl rvi;
     private int groupNum;
 
@@ -49,7 +51,7 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
     public void createGroup(Context context, Group g) {
         this.group = g;
         if(this.group.getType().equals("OFFER")) {
-            this.ovi = new OfferVolleyImpl();
+         this.ovi = new OfferVolleyImpl();
         }else{
             this.rvi = new RequestVolleyImpl();
         }
