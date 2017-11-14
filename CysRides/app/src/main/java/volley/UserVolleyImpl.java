@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cysrides.cysrides.Callback;
+import service.Callback;
 import domain.Offer;
 import domain.UserInfo;
 import domain.UserType;

@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import cysrides.cysrides.Callback;
+import service.Callback;
 import domain.Ban;
 
 

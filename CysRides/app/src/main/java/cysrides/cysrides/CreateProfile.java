@@ -21,6 +21,7 @@ import domain.Offer;
 import domain.Request;
 import domain.UserInfo;
 import domain.UserType;
+import service.Callback;
 import service.UserIntentService;
 import service.UserIntentServiceImpl;
 import volley.EmailVolley;

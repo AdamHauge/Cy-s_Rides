@@ -16,6 +16,7 @@ import java.util.Locale;
 import java.util.Random;
 
 import domain.UserInfo;
+import service.Callback;
 import service.LoginService;
 import service.LoginServiceImpl;
 import service.UserIntentService;

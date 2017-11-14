@@ -27,6 +27,7 @@ import domain.Offer;
 import domain.Request;
 import service.ActivityService;
 import service.ActivityServiceImpl;
+import service.Callback;
 import service.NavigationService;
 import service.NavigationServiceImpl;
 import service.OfferService;

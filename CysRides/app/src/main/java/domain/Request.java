@@ -10,7 +10,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 import java.util.Date;
 
-import cysrides.cysrides.Callback;
+import service.Callback;
 import cysrides.cysrides.ViewRequest;
 import volley.GroupVolleyImpl;
 
