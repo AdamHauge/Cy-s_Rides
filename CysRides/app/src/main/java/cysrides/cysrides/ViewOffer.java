@@ -16,6 +16,7 @@ public class ViewOffer extends Fragment {
     private Offer offer;
     private Context context;
     private GroupServiceImpl g = new GroupServiceImpl();
+    private String email;
     public ViewOffer() {
         // Required empty public constructor
     }
@@ -29,7 +30,8 @@ public class ViewOffer extends Fragment {
         v.findViewById(R.id.join).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                g.addRider(context, offer.getGroup(), offer.getEmail());
+                g.addRider(context, offer.getGroup(), email);
+
             }
         });
 
@@ -40,6 +42,8 @@ public class ViewOffer extends Fragment {
     public void setData(Offer offer) {
         this.offer = offer;
     }
+
+    public void setEmail(String email){ this.email = email; }
 
     public void setContext(Context context){this.context = context;}
 
