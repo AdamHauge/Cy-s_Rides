@@ -172,6 +172,23 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
     public void addRider(Context context, final Group g, final String netID) {
         currentContext = context;
         this.group = g;
+
+        //check if going to overflow
+        ArrayList<String> gMembers = group.getGroupMembers();
+        int tempsize = 0;
+        for (String s : gMembers) {
+            if(!s.equals("null")){
+                tempsize += 1;
+            }
+        }
+        if(group.getGroupMembers().get(0) == null || group.getGroupMembers().get(0).equals("null")){
+            tempsize+=1;
+        }
+        if(tempsize>7){
+            Toast.makeText(currentContext, "Sorry, this group is full", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        final int size = tempsize;
         StringRequest stringRequest = new StringRequest(Request.Method.POST, addRiderUrl,
                 new Response.Listener<String>() {
                     @Override
@@ -191,21 +208,8 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("rider", netID);
-
-                ArrayList<String> gMembers = group.getGroupMembers();
-                int size = 0;
-                for (String s : gMembers) {
-                    if(!s.equals("null")){
-                        size += 1;
-                    }
-                }
-                if(group.getType().equals("REQUEST") && (group.getGroupMembers().get(0) == null || group.getGroupMembers().get(0).equals("null"))){
-                    size+=1;
-                }
-
                 params.put("rider_num", Integer.toString(size));
                 params.put("id", Integer.toString(group.getId()));
-                params.put("type", group.getType());
                 return params;
             }
         };
@@ -221,7 +225,9 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-
+                        if(response.equals("Group already has a driver")){
+                            Toast.makeText(currentContext, response, Toast.LENGTH_SHORT).show();
+                        }
                     }
                 },
                 new Response.ErrorListener() {
