@@ -2,9 +2,6 @@ package domain;
 
 import java.util.ArrayList;
 
-import service.GroupServiceImpl;
-import volley.GroupVolleyImpl;
-
 /**
  * Created by Ryan on 10/17/2017.
  */

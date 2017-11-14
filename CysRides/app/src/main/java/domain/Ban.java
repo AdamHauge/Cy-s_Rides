@@ -1,9 +1,5 @@
 package domain;
 
-/**
- * Created by ZachKnoll on 10/30/2017.
- */
-
 public class Ban {
     private String email;
     private String reason;

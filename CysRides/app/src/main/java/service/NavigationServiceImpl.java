@@ -2,21 +2,13 @@ package service;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 
 import cysrides.cysrides.BanUser;
 import cysrides.cysrides.BannedUsers;
@@ -32,7 +24,7 @@ import cysrides.cysrides.ViewProfile;
 import domain.UserInfo;
 import domain.UserType;
 
-public class NavigationServiceImpl implements NavigationService {
+public class NavigationServiceImpl extends AppCompatActivity implements NavigationService {
 
     private UserIntentService userIntentService = new UserIntentServiceImpl();
 
@@ -111,5 +103,14 @@ public class NavigationServiceImpl implements NavigationService {
             item = menu.findItem(R.id.banUser);
             item.setVisible(false);
         }
+    }
+
+    @Override
+    public AlertDialog.Builder logOutButton(Context c) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Logout");
+        alert.setMessage("Do you really want to logout?");
+        alert.setNegativeButton(android.R.string.no, null);
+        return alert;
     }
 }

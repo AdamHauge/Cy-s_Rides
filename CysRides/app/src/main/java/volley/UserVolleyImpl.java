@@ -2,10 +2,9 @@ package volley;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.telecom.Call;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -26,7 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cysrides.cysrides.Callback;
+import service.Callback;
 import domain.Offer;
 import domain.UserInfo;
 import domain.UserType;

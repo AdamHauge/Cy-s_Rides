@@ -7,7 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.wifi.WifiManager;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -15,7 +15,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -34,6 +33,8 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import domain.Request;
+import service.ActivityService;
+import service.ActivityServiceImpl;
 import service.NavigationService;
 import service.NavigationServiceImpl;
 import service.RequestService;
@@ -44,6 +45,7 @@ import service.UserIntentServiceImpl;
 public class CreateRequest extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private UserIntentService userIntentService = new UserIntentServiceImpl();
+    private ActivityService activityService = new ActivityServiceImpl();
 
     private DatePickerDialog.OnDateSetListener dateSetListener;
     private Place destination;
@@ -75,9 +77,8 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
         Menu menu = navigationView.getMenu();
         navigationService.hideMenuItems(menu, userIntentService.getUserFromIntent(this.getIntent()));
 
-        PlaceAutocompleteFragment placeAutoComplete;
-        placeAutoComplete = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete);
-        placeAutoComplete.setHint("Where do you need to go?");
+        PlaceAutocompleteFragment placeAutoComplete = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete);
+        placeAutoComplete.setHint("Where are you going?");
         placeAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
@@ -238,6 +239,7 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
     @Override
     public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
         i = this.getIntent();
+        final Context context = this.getApplicationContext();
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Discard Request");
         alert.setMessage("This will discard your current request. Continue anyway?");
@@ -248,26 +250,21 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
 
                 i = navigationService.getNavigationIntent(item, CreateRequest.this, i);
 
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.create_request_activity);
+                drawer.closeDrawer(GravityCompat.START);
                 if (R.id.logout == id) {
-                    AlertDialog.Builder alert = new AlertDialog.Builder(CreateRequest.this);
-                    alert.setTitle("Logout");
-                    alert.setMessage("Do you really want to logout?");
+                    AlertDialog.Builder alert = navigationService.logOutButton(context);
                     alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                             SaveSharedPreference.clearUsernamePassword(CreateRequest.this);
                             startActivity(i);
                         }
                     });
-                    alert.setNegativeButton(android.R.string.no, null);
                     alert.show();
 
-                    DrawerLayout drawer = (DrawerLayout) findViewById(R.id.create_offer_activity);
-                    drawer.closeDrawer(GravityCompat.START);
                     retValue = true;
                 } else if (navigationService.checkInternetConnection(getApplicationContext())) {
                     connectionPopUp();
-                    DrawerLayout drawer = (DrawerLayout) findViewById(R.id.create_offer_activity);
-                    drawer.closeDrawer(GravityCompat.START);
                     retValue = false;
                 } else {
                     startActivity(i);
@@ -282,16 +279,7 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
     }
 
     public void connectionPopUp() {
-        Snackbar snackbar = Snackbar.make(findViewById(R.id.create_request_activity),
-                "Cy's Rides Requires\nInternet Connection", Snackbar.LENGTH_INDEFINITE);
-
-        snackbar.setAction("Connect WIFI", new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-                wifi.setWifiEnabled(true);
-            }
-        });
+        Snackbar snackbar = activityService.setupConnection(this.getApplicationContext(), findViewById(R.id.contacts_activity));
         snackbar.show();
     }
 }

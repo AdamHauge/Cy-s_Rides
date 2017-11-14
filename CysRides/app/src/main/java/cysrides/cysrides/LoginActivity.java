@@ -1,46 +1,22 @@
 package cysrides.cysrides;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.IntentCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.app.LoaderManager.LoaderCallbacks;
-
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.AsyncTask;
-
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.text.TextUtils;
-import android.view.KeyEvent;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
 import domain.UserInfo;
-import service.GmailSenderServiceImpl;
+import service.Callback;
 import service.LoginService;
 import service.LoginServiceImpl;
 import service.UserIntentService;
@@ -48,8 +24,6 @@ import service.UserIntentServiceImpl;
 import volley.EmailVolley;
 import volley.EmailVolleyImpl;
 import volley.UserVolleyImpl;
-
-import static android.Manifest.permission.READ_CONTACTS;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -94,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         /* if a user is already logged in, use their profile */
-        if(SaveSharedPreference.getUsernamePassword(LoginActivity.this).length() != 0) {
+        if(0 != SaveSharedPreference.getUsernamePassword(LoginActivity.this).length()) {
             String data[] = SaveSharedPreference.getUsernamePassword(LoginActivity.this).split(":");
             login(data[0], data[1]);
         }
@@ -228,8 +202,15 @@ public class LoginActivity extends AppCompatActivity {
                     Intent i = userIntentService.createIntent(LoginActivity.this, MainActivity.class, userInfo);
                     startActivity(i);
                 } else {
-                    Toast toast = Toast.makeText(getApplicationContext(), "Not valid credentials", Toast.LENGTH_LONG);
-                    toast.show();
+                    /* For testing purposes, in case a user gets deleted from database, clear saved data and restart log in */
+                    if(0 != SaveSharedPreference.getUsernamePassword(LoginActivity.this).length()) {
+                        SaveSharedPreference.clearUsernamePassword(LoginActivity.this);
+                        finish();
+                        startActivity(getIntent());
+                    }
+                    else { /* User entered invalid credentials, everything else is fine */
+                        Toast.makeText(getApplicationContext(), "Not valid credentials", Toast.LENGTH_LONG).show();
+                    }
                 }
 
             }

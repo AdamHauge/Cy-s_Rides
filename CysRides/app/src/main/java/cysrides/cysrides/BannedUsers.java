@@ -1,12 +1,9 @@
 package cysrides.cysrides;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -30,8 +27,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import domain.Ban;
+import service.ActivityService;
+import service.ActivityServiceImpl;
+import service.Callback;
 import service.NavigationService;
 import service.NavigationServiceImpl;
+import service.RefreshService;
+import service.RefreshServiceImpl;
 import service.UserIntentService;
 import service.UserIntentServiceImpl;
 import volley.BanVolleyImpl;
@@ -40,6 +42,8 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
 
     private UserIntentService userIntentService = new UserIntentServiceImpl();
     private NavigationService navigationService = new NavigationServiceImpl();
+    private RefreshService refreshService = new RefreshServiceImpl();
+    private ActivityService activityService = new ActivityServiceImpl();
 
     private Intent i;
     private SwipeRefreshLayout refresh;
@@ -118,13 +122,7 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
                 }
 
                 if(refresh.isRefreshing()) {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            refresh.setRefreshing(false);
-                            adapter.notifyDataSetChanged();
-                        }
-                    }, 1000);
+                    refreshService.stopRefreshing(refresh, adapter);
                 }
                 else {
                     adapter.notifyDataSetChanged();
@@ -145,7 +143,6 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
         }
         else {
             finish();
-            i = new Intent(BannedUsers.this, MainActivity.class);
             i = userIntentService.createIntent(BannedUsers.this, MainActivity.class, userIntentService.getUserFromIntent(this.getIntent()));
             startActivity(i);
         }
@@ -182,46 +179,30 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
         int id = item.getItemId();
         i = navigationService.getNavigationIntent(item, BannedUsers.this, this.getIntent());
 
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.banned_users_activity);
+        drawer.closeDrawer(GravityCompat.START);
         if(R.id.logout == id) {
-            AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            alert.setTitle("Logout");
-            alert.setMessage("Do you really want to logout?");
+            AlertDialog.Builder alert = navigationService.logOutButton(this.getApplicationContext());
             alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     startActivity(i);
                 }});
-            alert.setNegativeButton(android.R.string.no, null);
             alert.show();
 
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.banned_users_activity);
-            drawer.closeDrawer(GravityCompat.START);
             return true;
         }
         else if(navigationService.checkInternetConnection(getApplicationContext())) {
             connectionPopUp();
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.banned_users_activity);
-            drawer.closeDrawer(GravityCompat.START);
             return false;
         }
         else {
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.banned_users_activity);
-            drawer.closeDrawer(GravityCompat.START);
             startActivity(i);
             return true;
         }
     }
 
     public void connectionPopUp() {
-        Snackbar snackbar = Snackbar.make(findViewById(R.id.banned_users_activity),
-                "Cy's Rides Requires\nInternet Connection", Snackbar.LENGTH_INDEFINITE);
-
-        snackbar.setAction("Connect WIFI", new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-                wifi.setWifiEnabled(true);
-            }
-        });
+        Snackbar snackbar = activityService.setupConnection(this.getApplicationContext(), findViewById(R.id.contacts_activity));
         snackbar.show();
     }
 

@@ -2,9 +2,7 @@ package service;
 
 import java.util.ArrayList;
 
-import cysrides.cysrides.Callback;
 import domain.UserInfo;
-import volley.UserVolleyImpl;
 
 public class LoginServiceImpl implements LoginService {
 

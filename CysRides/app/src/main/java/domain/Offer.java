@@ -1,20 +1,13 @@
 package domain;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
 
-import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.Date;
 
-import cysrides.cysrides.Callback;
-import service.GroupServiceImpl;
+import service.Callback;
 import volley.GroupVolleyImpl;
 
 public class Offer {
@@ -22,18 +15,22 @@ public class Offer {
     private double cost;
     private String email;
     private String destination;
-    private LatLng coordinates;
+    private String start;
+    private LatLng destCoordinates;
+    private LatLng startCoordinates;
     private String description;
     private Date date;
     private Group group;
     private int groupID;
 
     //create offer
-    public Offer(double cost, String email, String destination, LatLng coordinates, String description, Date date) {
+    public Offer(double cost, String email, String destination, LatLng destCoordinates, String start, LatLng startCoordinates, String description, Date date) {
         this.cost = cost;
         this.email = email;
         this.destination = destination;
-        this.coordinates = coordinates;
+        this.destCoordinates = destCoordinates;
+        this.start = start;
+        this.startCoordinates = startCoordinates;
         this.description = description;
         this.date = date;
 
@@ -41,12 +38,14 @@ public class Offer {
 
     }
     //constructer used to pull offers
-    public Offer(double cost, String email, String destination, LatLng coordinates, String description, Date date, int groupID, Context context) {
+    public Offer(double cost, String email, String destination, LatLng destCoordinates, String start, LatLng startCoordinates, String description, Date date, int groupID, Context context) {
         this.cost = cost;
         this.email = email;
         this.destination = destination;
-        this.coordinates = coordinates;
+        this.destCoordinates = destCoordinates;
         this.description = description;
+        this.start = start;
+        this.startCoordinates = startCoordinates;
         this.date = date;
         this.groupID = groupID;
         //USE CALLBACK SOMEHOW TO GET THE GROUP BACK
@@ -75,7 +74,9 @@ public class Offer {
 
     @Override
     public String toString() {
-        return "cost=$" + cost +
+        return  "destination=" + destination +
+                "\nstart=" + start +
+                "\ncost=$" + cost +
                 "\nemail=" + email +
                 "\ndescription=" + description +
                 "\ndate=" + date;
@@ -105,9 +106,21 @@ public class Offer {
         this.destination = destination;
     }
 
-    public LatLng getCoordinates() { return coordinates; }
+    public String getStart() {
+        return start;
+    }
 
-    public void setCoordinates(LatLng coordinates) { this.coordinates = coordinates; }
+    public void setStart(String destination) {
+        this.destination = start;
+    }
+
+    public LatLng getDestCoordinates() { return destCoordinates; }
+
+    public void setDestCoordinates(LatLng coordinates) { this.destCoordinates = coordinates; }
+
+    public LatLng getStartCoordinates() { return startCoordinates; }
+
+    public void setStartCoordinates(LatLng coordinates) { this.destCoordinates = coordinates; }
 
     public String getDescription() {
         return description;

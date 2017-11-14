@@ -1,4 +1,4 @@
-package cysrides.cysrides;
+package service;
 
 import java.util.ArrayList;
 
