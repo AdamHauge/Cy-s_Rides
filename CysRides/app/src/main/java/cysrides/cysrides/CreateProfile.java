@@ -22,6 +22,8 @@ import domain.Request;
 import domain.UserInfo;
 import domain.UserType;
 import service.Callback;
+import service.EmailSenderService;
+import service.EmailSenderServiceImpl;
 import service.UserIntentService;
 import service.UserIntentServiceImpl;
 import volley.EmailVolley;
@@ -58,6 +60,7 @@ public class CreateProfile extends AppCompatActivity {
 
     private Callback call;
     private UserIntentService userIntentService = new UserIntentServiceImpl();
+    private EmailSenderService emailSenderService = new EmailSenderServiceImpl();
     private UserVolley userVolley = new UserVolleyImpl(call);
     private Intent i;
 
@@ -149,9 +152,7 @@ public class CreateProfile extends AppCompatActivity {
 
                     i = userIntentService.createIntent(currentContext, DialogConfirmationCode.class, user);
 
-                    EmailVolley emailVolley = new EmailVolleyImpl();
-                    emailVolley.sendEmail(user.getNetID(), "cysrides@iastate.edu", "Welcome to Cy's Rides!",
-                            ("Here's your confimation code: " + user.getConfirmationCode()), currentContext);
+                    emailSenderService.sendEmail(user, currentContext);
 
                     startActivity(i);
                 }
