@@ -33,7 +33,7 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
     private String addRiderUrl =        "http://proj-309-sa-b-5.cs.iastate.edu/addRider_TEST.php";
     private String getGroupUrl =        "http://proj-309-sa-b-5.cs.iastate.edu/getGroup.php";
     private String addDriverUrl =       "http://proj-309-sa-b-5.cs.iastate.edu/addDriver_TEST.php";
-    private String checkIfInGroupUrl =  "http://proj-309-sa-b-5.cs.iastate.edu/checkIfInGroup.php";
+    private String getMyGroupsUrl =     "http://proj-309-sa-b-5.cs.iastate.edu/getMyGroups.php";
     private Group group;
     private Context currentContext;
     private Callback callback;
@@ -265,7 +265,35 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
 
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
+    public void getMyGroups(Context context, final String netID) {
+        currentContext = context;
 
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getMyGroupsUrl,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(currentContext, "Error...",Toast.LENGTH_SHORT).show();
+                        error.printStackTrace();
+                    }
+
+                }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("netID", netID);
+
+                return params;
+            }
+        };
+
+        MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
+    }
 
     @Override
     protected JSONArray doInBackground(Void... voids) {
