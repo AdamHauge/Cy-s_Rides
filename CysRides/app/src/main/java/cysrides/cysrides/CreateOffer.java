@@ -240,44 +240,47 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
-        /* check if user wants to discard request */
-        i = this.getIntent();
-        final Context context = this.getApplicationContext();
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setTitle("Discard Offer");
-        alert.setMessage("This will discard your current offer. Continue anyway?");
-        alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                // Handle navigation view item clicks here.
-                int id = item.getItemId();
+        i = navigationService.getNavigationIntent(item, CreateOffer.this, this.getIntent());
+        AlertDialog.Builder alert;
 
-                i = navigationService.getNavigationIntent(item, CreateOffer.this, i);
-
-                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.create_offer_activity);
-                drawer.closeDrawer(GravityCompat.START);
-                if (R.id.logout == id) {
-                    AlertDialog.Builder alert = navigationService.logOutButton(context);
-                    alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            SaveSharedPreference.clearUsernamePassword(CreateOffer.this);
-                            startActivity(i);
-                        }
-                    });
-                    alert.show();
-
-                    retValue = true;
-                } else if (navigationService.checkInternetConnection(getApplicationContext())) {
-                    connectionPopUp();
-                    retValue = false;
-                } else {
+        /* check if user wants to log out */
+        if (R.id.logout == item.getItemId()) {
+            alert = navigationService.logOutButton(CreateOffer.this);
+            alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    SaveSharedPreference.clearUsernamePassword(CreateOffer.this);
                     startActivity(i);
-                    retValue = true;
                 }
-            }
-        });
-        alert.setNegativeButton(android.R.string.no, null);
-        alert.show();
+            });
+            alert.show();
+            retValue = true;
+        }
+        else { /* check if user wants to discard their request */
+            alert = new AlertDialog.Builder(this);
+            alert.setTitle("Discard Offer");
+            alert.setMessage("This will discard your current offer. Continue anyway?");
+            alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    // Handle navigation view item clicks here.
+                    int id = item.getItemId();
 
+                    i = navigationService.getNavigationIntent(item, CreateOffer.this, i);
+
+                    DrawerLayout drawer = (DrawerLayout) findViewById(R.id.create_offer_activity);
+                    drawer.closeDrawer(GravityCompat.START);
+
+                    if (navigationService.checkInternetConnection(getApplicationContext())) {
+                        connectionPopUp();
+                        retValue = false;
+                    } else {
+                        startActivity(i);
+                        retValue = true;
+                    }
+                }
+            });
+            alert.setNegativeButton(android.R.string.no, null);
+            alert.show();
+        }
         return retValue;
     }
 

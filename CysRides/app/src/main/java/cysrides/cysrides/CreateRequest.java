@@ -238,43 +238,46 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
-        i = this.getIntent();
-        final Context context = this.getApplicationContext();
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setTitle("Discard Request");
-        alert.setMessage("This will discard your current request. Continue anyway?");
-        alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                // Handle navigation view item clicks here.
-                int id = item.getItemId();
+        i = navigationService.getNavigationIntent(item, CreateRequest.this, this.getIntent());
+        AlertDialog.Builder alert;
 
-                i = navigationService.getNavigationIntent(item, CreateRequest.this, i);
-
-                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.create_request_activity);
-                drawer.closeDrawer(GravityCompat.START);
-                if (R.id.logout == id) {
-                    AlertDialog.Builder alert = navigationService.logOutButton(context);
-                    alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            SaveSharedPreference.clearUsernamePassword(CreateRequest.this);
-                            startActivity(i);
-                        }
-                    });
-                    alert.show();
-
-                    retValue = true;
-                } else if (navigationService.checkInternetConnection(getApplicationContext())) {
-                    connectionPopUp();
-                    retValue = false;
-                } else {
+        if (R.id.logout == item.getItemId()) {
+            alert = navigationService.logOutButton(CreateRequest.this);
+            alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    SaveSharedPreference.clearUsernamePassword(CreateRequest.this);
                     startActivity(i);
-                    retValue = true;
                 }
-            }
-        });
-        alert.setNegativeButton(android.R.string.no, null);
-        alert.show();
+            });
+            alert.show();
+            retValue = true;
+        }
+        else {
+            alert = new AlertDialog.Builder(this);
+            alert.setTitle("Discard Offer");
+            alert.setMessage("This will discard your current offer. Continue anyway?");
+            alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    // Handle navigation view item clicks here.
+                    int id = item.getItemId();
 
+                    i = navigationService.getNavigationIntent(item, CreateRequest.this, i);
+
+                    DrawerLayout drawer = (DrawerLayout) findViewById(R.id.create_offer_activity);
+                    drawer.closeDrawer(GravityCompat.START);
+
+                    if (navigationService.checkInternetConnection(getApplicationContext())) {
+                        connectionPopUp();
+                        retValue = false;
+                    } else {
+                        startActivity(i);
+                        retValue = true;
+                    }
+                }
+            });
+            alert.setNegativeButton(android.R.string.no, null);
+            alert.show();
+        }
         return retValue;
     }
 

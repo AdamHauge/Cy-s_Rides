@@ -336,7 +336,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         /* check if the user  wants to logout */
         if(R.id.logout == id) {
-            AlertDialog.Builder alert = navigationService.logOutButton(this.getApplicationContext());
+            AlertDialog.Builder alert = navigationService.logOutButton(MainActivity.this);
             alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     SaveSharedPreference.clearUsernamePassword(MainActivity.this);
