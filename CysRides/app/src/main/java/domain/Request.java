@@ -20,7 +20,9 @@ public class Request {
     private int numBags;
     private String email;
     private String destination;
-    private LatLng coordinates;
+    private String start;
+    private LatLng destCoordinates;
+    private LatLng startCoordinates;
     private String description;
     private Date date;
     private Group group;
@@ -28,11 +30,13 @@ public class Request {
     private Context context;
 
     //constructs new Request
-    public Request(int numBags, String email, String destination, LatLng coordinates, String description, Date date) {
+    public Request(int numBags, String email, String destination, LatLng destCoordinates, String start, LatLng startCoordinates, String description, Date date) {
         this.numBags = numBags;
         this.email = email;
         this.destination = destination;
-        this.coordinates = coordinates;
+        this.destCoordinates = destCoordinates;
+        this.start = start;
+        this.startCoordinates = startCoordinates;
         this.description = description;
         this.date = date;
 
@@ -44,7 +48,7 @@ public class Request {
         this.numBags = numBags;
         this.email = email;
         this.destination = destination;
-        this.coordinates = coordinates;
+        this.destCoordinates = coordinates;
         this.description = description;
         this.date = date;
         this.groupID = groupID;
@@ -103,13 +107,25 @@ public class Request {
         this.destination = destination;
     }
 
-    public LatLng getCoordinates() {
-        return coordinates;
+    public String getStart() {
+        return start;
     }
 
-    public void setCoordinates(LatLng coordinates) {
-        this.coordinates = coordinates;
+    public void setStart(String destination) {
+        this.destination = start;
     }
+
+    public LatLng getDestCoordinates() {
+        return destCoordinates;
+    }
+
+    public void setDestCoordinates(LatLng destCoordinates) {
+        this.destCoordinates = destCoordinates;
+    }
+
+    public LatLng getStartCoordinates() { return startCoordinates; }
+
+    public void setStartCoordinates(LatLng coordinates) { this.destCoordinates = coordinates; }
 
     public String getDescription() {
         return description;

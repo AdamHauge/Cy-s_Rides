@@ -182,7 +182,7 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.banned_users_activity);
         drawer.closeDrawer(GravityCompat.START);
         if(R.id.logout == id) {
-            AlertDialog.Builder alert = navigationService.logOutButton(this.getApplicationContext());
+            AlertDialog.Builder alert = navigationService.logOutButton(BannedUsers.this);
             alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     startActivity(i);
