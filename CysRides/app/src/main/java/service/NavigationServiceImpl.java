@@ -12,6 +12,7 @@ import android.view.MenuItem;
 
 import cysrides.cysrides.BanUser;
 import cysrides.cysrides.BannedUsers;
+import cysrides.cysrides.Calendar;
 import cysrides.cysrides.Contacts;
 import cysrides.cysrides.CreateOffer;
 import cysrides.cysrides.CreateRequest;
@@ -68,6 +69,9 @@ public class NavigationServiceImpl extends AppCompatActivity implements Navigati
                 break;
             case R.id.logout:
                 intent = userIntentService.createIntent(context, LoginActivity.class, userIntentService.getUserFromIntent(intent));
+                break;
+            case R.id.calendar_activity:
+                intent = userIntentService.createIntent(context, Calendar.class, userIntentService.getUserFromIntent(intent));
                 break;
             default:
                 break;
