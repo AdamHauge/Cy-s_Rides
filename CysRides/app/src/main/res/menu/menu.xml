@@ -9,6 +9,10 @@
         app:showAsAction="ifRoom"/>
 
     <item
+        android:id="@+id/calendar_activity"
+        android:title="@string/calendar" />
+
+    <item
         android:id="@+id/requests"
         android:title="@string/requests"
         android:icon="@drawable/ic_search_black_24dp"
