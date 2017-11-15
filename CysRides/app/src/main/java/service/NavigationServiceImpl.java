@@ -107,7 +107,7 @@ public class NavigationServiceImpl extends AppCompatActivity implements Navigati
 
     @Override
     public AlertDialog.Builder logOutButton(Context c) {
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        AlertDialog.Builder alert = new AlertDialog.Builder(c);
         alert.setTitle("Logout");
         alert.setMessage("Do you really want to logout?");
         alert.setNegativeButton(android.R.string.no, null);

@@ -133,7 +133,7 @@ public class BanUser extends AppCompatActivity implements NavigationView.OnNavig
                 DrawerLayout drawer = (DrawerLayout) findViewById(R.id.create_offer_activity);
                 drawer.closeDrawer(GravityCompat.START);
                 if (R.id.logout == id) {
-                    AlertDialog.Builder alert = navigationService.logOutButton(context);
+                    AlertDialog.Builder alert = navigationService.logOutButton(BanUser.this);
                     alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                             startActivity(i);

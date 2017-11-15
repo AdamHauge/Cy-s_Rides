@@ -241,7 +241,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         /* for all requests received from volley, display a marker on Google Map */
         for(int i = 0; i < requests.size(); i++) {
-            LatLng coordinates = requests.get(i).getCoordinates();
+            LatLng coordinates = requests.get(i).getDestCoordinates();
             Marker marker = googleMap.addMarker(new MarkerOptions()
                     .position(coordinates)
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
@@ -336,7 +336,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         /* check if the user  wants to logout */
         if(R.id.logout == id) {
-            AlertDialog.Builder alert = navigationService.logOutButton(this.getApplicationContext());
+            AlertDialog.Builder alert = navigationService.logOutButton(MainActivity.this);
             alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     SaveSharedPreference.clearUsernamePassword(MainActivity.this);

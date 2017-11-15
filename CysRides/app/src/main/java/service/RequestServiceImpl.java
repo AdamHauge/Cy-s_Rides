@@ -11,13 +11,14 @@ import volley.RequestVolleyImpl;
 
 public class RequestServiceImpl implements RequestService {
 
-    RequestVolley requestVolley = new RequestVolleyImpl();
+    private RequestVolley requestVolley = new RequestVolleyImpl();
 
     //Formats the information before passing it into the volley code
     @Override
     public void createRequest(Context context, Request request) {
-        String latLongName = String.format("%s %s", request.getDestination(), request.getCoordinates().toString());
-        requestVolley.createRequest(context, request, latLongName);
+        String destName = String.format("%s %s", request.getDestination(), request.getDestCoordinates().toString());
+        String startName = String.format("%s %s", request.getStart(), request.getStartCoordinates().toString());
+        requestVolley.createRequest(context, request, destName, startName);
     }
 
     //Finds the requests for a specific email
