@@ -30,9 +30,9 @@ import service.OfferService;
 public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements GroupVolley {
 
     private String createGroupUrl =     "http://proj-309-sa-b-5.cs.iastate.edu/createGroup_TEST.php";
-    private String addRiderUrl =        "http://proj-309-sa-b-5.cs.iastate.edu/addRider.php";
+    private String addRiderUrl =        "http://proj-309-sa-b-5.cs.iastate.edu/addRider_TEST.php";
     private String getGroupUrl =        "http://proj-309-sa-b-5.cs.iastate.edu/getGroup.php";
-    private String addDriverUrl =       "http://proj-309-sa-b-5.cs.iastate.edu/addDriver.php";
+    private String addDriverUrl =       "http://proj-309-sa-b-5.cs.iastate.edu/addDriver_TEST.php";
     private String checkIfInGroupUrl =  "http://proj-309-sa-b-5.cs.iastate.edu/checkIfInGroup.php";
     private Group group;
     private Context currentContext;
@@ -168,37 +168,6 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
 
-    public void checkIfInGroup(Context context, final Group g, final String netID){
-        currentContext = context;
-        this.group = g;
-
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, checkIfInGroupUrl ,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(currentContext, "Error...",Toast.LENGTH_SHORT).show();
-                        error.printStackTrace();
-                    }
-
-                }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("netID", netID);
-                params.put("id", Integer.toString(group.getId()));
-                return params;
-            }
-        };
-
-        MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
-    }
-
     //adds a user to a group as a new rider
     @Override
     public void addRider(Context context, final Group g, final String netID) {
@@ -225,7 +194,14 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        Log.d("response", response);
+                        if(response.equals("You are already in this group")){
+                            Toast.makeText(currentContext, response, Toast.LENGTH_SHORT).show();
+                        }
+                        if(response.equals("Data insertion success...")){
+                            Toast.makeText(currentContext, "You are now in this group", Toast.LENGTH_SHORT).show();
 
+                        }
                     }
                 },
                 new Response.ErrorListener() {
@@ -257,8 +233,15 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        if(response.equals("You are already in this group")){
+                            Toast.makeText(currentContext, response, Toast.LENGTH_SHORT).show();
+                        }
                         if(response.equals("Group already has a driver")){
                             Toast.makeText(currentContext, response, Toast.LENGTH_SHORT).show();
+                        }
+                        if(response.equals("Data insertion success...")){
+                            Toast.makeText(currentContext, "You are now the driver of this group", Toast.LENGTH_SHORT).show();
+
                         }
                     }
                 },

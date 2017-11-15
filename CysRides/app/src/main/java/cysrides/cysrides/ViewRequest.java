@@ -16,6 +16,7 @@ public class ViewRequest extends Fragment {
     private Request request;
     private GroupServiceImpl g = new GroupServiceImpl();
     private Context context;
+    private String email;
 
     public ViewRequest() {
         // Required empty public constructor
@@ -30,7 +31,7 @@ public class ViewRequest extends Fragment {
         v.findViewById(R.id.join).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                g.addRider(context, request.getGroup(), request.getEmail());
+                g.addRider(context, request.getGroup(), email);
 
             }
         });
@@ -38,7 +39,7 @@ public class ViewRequest extends Fragment {
 
            @Override
            public void onClick(View view) {
-                g.addDriver(context, request.getGroup(), request.getEmail());
+                g.addDriver(context, request.getGroup(), email);
            }
        }
 
@@ -49,6 +50,8 @@ public class ViewRequest extends Fragment {
     public void setData(Request request) {
         this.request = request;
     }
+
+    public void setEmail(String email) { this.email =  email;}
 
     public void setContext(Context context){this.context = context;}
 

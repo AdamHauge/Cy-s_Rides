@@ -46,7 +46,7 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
     private ActivityService activityService = new ActivityServiceImpl();
 
     private Intent i;
-    private String curentUser;
+    private String currentUser;
     private SwipeRefreshLayout refresh;
     private ArrayAdapter<String> adapter;
     private List<Offer> offers = new ArrayList<>();
@@ -82,7 +82,7 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
             }
         });
         getOffersList();
-        this.curentUser = userIntentService.getUserFromIntent(this.getIntent()).getNetID();
+        this.currentUser = userIntentService.getUserFromIntent(this.getIntent()).getNetID();
         /* display list of ride offers on screen */
         ListView listView = (ListView)findViewById(R.id.ride_offers_list);
         adapter = new ArrayAdapter<>(RideOffers.this, android.R.layout.simple_list_item_1, destinations);
@@ -95,7 +95,7 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
                 viewOffer.setData(offers.get(position));
-                viewOffer.setEmail(curentUser);
+                viewOffer.setEmail(currentUser);
                 viewOffer.setContext(RideOffers.this);
                 fragmentTransaction.replace(R.id.ride_offers_activity, viewOffer);
                 fragmentTransaction.addToBackStack(null);

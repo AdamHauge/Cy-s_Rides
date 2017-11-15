@@ -46,6 +46,7 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
     private ActivityService activityService = new ActivityServiceImpl();
 
     private Intent i;
+    private String currentUser;
     private SwipeRefreshLayout refresh;
     private ArrayAdapter<String> adapter;
     private List<Request> requests = new ArrayList<>();
@@ -85,6 +86,7 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
 
         /* notify requests volley to pull from database */
         getRequestsList();
+        this.currentUser = userIntentService.getUserFromIntent(this.getIntent()).getNetID();
 
         /* display list of ride requests on screen */
         ListView listView = (ListView)findViewById(R.id.ride_requests_list);
@@ -98,6 +100,7 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
                 viewRequest.setData(requests.get(position));
+                viewRequest.setEmail(currentUser);
                 viewRequest.setContext(RideRequests.this);
 
                 fragmentTransaction.replace(R.id.ride_requests_activity, viewRequest);
