@@ -89,7 +89,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
 
         /* initialize all data input points */
 
-        PlaceAutocompleteFragment destinationAutoComplete = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.destination_autocomplete);
+        PlaceAutocompleteFragment destinationAutoComplete = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.offer_destination_autocomplete);
         destinationAutoComplete.setHint("Where are you going?");
         destinationAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
@@ -104,7 +104,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
             }
         });
 
-        PlaceAutocompleteFragment startAutoComplete = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.start_autocomplete);
+        PlaceAutocompleteFragment startAutoComplete = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.offer_start_autocomplete);
         startAutoComplete.setHint("Where are you leaving from?");
         startAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
@@ -183,6 +183,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
                 }
                 else {
                     allValid = true;
+                    /* check that cost is valid */
                     try {
                         cost = Double.parseDouble(data.getText().toString());
                     } catch (Exception e) {
@@ -190,6 +191,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
                         allValid = false;
                         Snackbar.make(findViewById(R.id.submit), "Cost must be a decimal number", Snackbar.LENGTH_LONG).show();
                     }
+                    /* check that start and end locations are valid */
                     try {
                         Geocoder gcd = new Geocoder(CreateOffer.this, Locale.getDefault());
                         List<Address> destAddress = gcd.getFromLocation(destination.getLatLng().latitude, destination.getLatLng().longitude, 1);
