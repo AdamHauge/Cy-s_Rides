@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -23,14 +25,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Locale;
 
 import domain.Offer;
 import service.ActivityService;
@@ -83,7 +89,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
 
         /* initialize all data input points */
 
-        PlaceAutocompleteFragment destinationAutoComplete = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.destination_autocomplete);
+        PlaceAutocompleteFragment destinationAutoComplete = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.offer_destination_autocomplete);
         destinationAutoComplete.setHint("Where are you going?");
         destinationAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
@@ -98,7 +104,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
             }
         });
 
-        PlaceAutocompleteFragment startAutoComplete = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.start_autocomplete);
+        PlaceAutocompleteFragment startAutoComplete = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.offer_start_autocomplete);
         startAutoComplete.setHint("Where are you leaving from?");
         startAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
@@ -177,12 +183,32 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
                 }
                 else {
                     allValid = true;
+                    /* check that cost is valid */
                     try {
                         cost = Double.parseDouble(data.getText().toString());
                     } catch (Exception e) {
                         cost = 0;
                         allValid = false;
                         Snackbar.make(findViewById(R.id.submit), "Cost must be a decimal number", Snackbar.LENGTH_LONG).show();
+                    }
+                    /* check that start and end locations are valid */
+                    try {
+                        Geocoder gcd = new Geocoder(CreateOffer.this, Locale.getDefault());
+                        List<Address> destAddress = gcd.getFromLocation(destination.getLatLng().latitude, destination.getLatLng().longitude, 1);
+                        List<Address> startAddress = gcd.getFromLocation(start.getLatLng().latitude, start.getLatLng().longitude, 1);
+
+                        if(!destAddress.get(0).getLocality().equals("Ames") && !startAddress.get(0).getLocality().equals("Ames") &&
+                                !destAddress.get(0).getAdminArea().equals("Iowa") && !startAddress.get(0).getAdminArea().equals("United States")) {
+                            allValid = false;
+                            Snackbar.make(findViewById(R.id.submit), "Ride must start or end in Ames, IA", Snackbar.LENGTH_LONG).show();
+                        }
+
+                        if(!destAddress.get(0).getCountryName().equals("United States") || !startAddress.get(0).getCountryName().equals("United States")) {
+                            allValid = false;
+                            Snackbar.make(findViewById(R.id.submit), "Ride must start and end in United States", Snackbar.LENGTH_LONG).show();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
 
                     data = (EditText) findViewById(R.id.Description);

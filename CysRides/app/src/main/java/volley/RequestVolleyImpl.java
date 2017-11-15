@@ -39,7 +39,8 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
 
     private domain.Request newRequest;
     private Context currentContext;
-    private String latitudeLongitudeName;
+    private String destinationName;
+    private String startName;
     private ArrayList<domain.Request> requests;
     private Callback callback;
     private GroupVolleyImpl groupVolley = new GroupVolleyImpl();
@@ -61,10 +62,11 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
      * Method that adds request to the database
      */
     @Override
-    public void createRequest(Context context, domain.Request request, String latLongName) {
+    public void createRequest(Context context, domain.Request request, String destination, String start) {
         newRequest = request;
         currentContext = context;
-        latitudeLongitudeName = latLongName;
+        destinationName = destination;
+        startName = start;
         StringRequest stringRequest = new StringRequest(Request.Method.POST, createRequestUrl,
                 new Response.Listener<String>() {
                     @Override
@@ -87,7 +89,8 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
                 Map<String, String> params = new HashMap<>();
                 params.put("numBags", newRequest.getNumBags()+"");
                 params.put("email", newRequest.getEmail());
-                params.put("destination", latitudeLongitudeName);
+                params.put("destination", destinationName);
+                params.put("start", startName);
                 params.put("description", newRequest.getDescription());
                 params.put("date", String.format("%s '%s'", "DATE", new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(newRequest.getDate())));
                 return params;

@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -29,8 +31,11 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Locale;
 
 import domain.Request;
 import service.ActivityService;
@@ -49,6 +54,7 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
 
     private DatePickerDialog.OnDateSetListener dateSetListener;
     private Place destination;
+    private Place start;
     private int year, month, day;
     private boolean dateChanged = false;
     private String description;
@@ -77,12 +83,27 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
         Menu menu = navigationView.getMenu();
         navigationService.hideMenuItems(menu, userIntentService.getUserFromIntent(this.getIntent()));
 
-        PlaceAutocompleteFragment placeAutoComplete = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete);
-        placeAutoComplete.setHint("Where are you going?");
-        placeAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+        PlaceAutocompleteFragment destinationAutoComplete = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.request_destination_autocomplete);
+        destinationAutoComplete.setHint("Where are you going?");
+        destinationAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
                 destination = place;
+                Log.d("Maps", "Place selected: " + place.getName());
+            }
+
+            @Override
+            public void onError(Status status) {
+                Log.d("Maps", "An error occurred: " + status);
+            }
+        });
+
+        PlaceAutocompleteFragment startAutoComplete = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.request_start_autocomplete);
+        startAutoComplete.setHint("Where are you leaving from?");
+        startAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                start = place;
                 Log.d("Maps", "Place selected: " + place.getName());
             }
 
@@ -145,15 +166,18 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
             public void onClick(View view) {
                 EditText data = (EditText) findViewById(R.id.numBags);
                 boolean noDestination = null == destination;
+                boolean noStart = null == start;
                 boolean noBags = null == data.getText();
                 boolean noDate = 0 == year;
                 boolean allValid = false;
 
-                if (noDestination || noBags || noDate) {
+                if (noDestination || noStart|| noBags || noDate) {
                     Snackbar.make(findViewById(R.id.submit), "All data fields required", Snackbar.LENGTH_LONG).show();
                 }
                 else {
                     allValid = true;
+
+                    /* check that number of bags is valid */
                     try {
                         numBags = Integer.parseInt(data.getText().toString());
                     } catch (Exception e) {
@@ -161,22 +185,41 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
                         allValid = false;
                         Snackbar.make(findViewById(R.id.submit), "Number of bags must be a number", Snackbar.LENGTH_LONG).show();
                     }
+                    /* check that start and end locations are valid */
+                    try {
+                        Geocoder gcd = new Geocoder(CreateRequest.this, Locale.getDefault());
+                        List<Address> destAddress = gcd.getFromLocation(destination.getLatLng().latitude, destination.getLatLng().longitude, 1);
+                        List<Address> startAddress = gcd.getFromLocation(start.getLatLng().latitude, start.getLatLng().longitude, 1);
+
+                        if(!destAddress.get(0).getLocality().equals("Ames") && !startAddress.get(0).getLocality().equals("Ames") &&
+                                !destAddress.get(0).getAdminArea().equals("Iowa") && !startAddress.get(0).getAdminArea().equals("United States")) {
+                            allValid = false;
+                            Snackbar.make(findViewById(R.id.submit), "Ride must start or end in Ames, IA", Snackbar.LENGTH_LONG).show();
+                        }
+
+                        if(!destAddress.get(0).getCountryName().equals("United States") || !startAddress.get(0).getCountryName().equals("United States")) {
+                            allValid = false;
+                            Snackbar.make(findViewById(R.id.submit), "Ride must start and end in United States", Snackbar.LENGTH_LONG).show();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
                     data = (EditText) findViewById(R.id.Description);
                     description = data.getText().toString();
                 }
 
                 if(allValid) {
-                    Request r = new Request(numBags, userIntentService.getUserFromIntent(getIntent()).getNetID(), (String) destination.getName(), destination.getLatLng(), description, new GregorianCalendar(year, month, day).getTime());
+                    Request r = new Request(numBags, userIntentService.getUserFromIntent(
+                            getIntent()).getNetID(), (String) destination.getName(),
+                            destination.getLatLng(), (String) start.getName(), start.getLatLng(),
+                            description, new GregorianCalendar(year, month, day).getTime());
                     requestService.createRequest(CreateRequest.this, r);
                     finish();
                     startActivity(getIntent());
                 }
             }
         });
-//        UserInfo ui = new UserInfo("rcerveny@iastate.edu", "password", 42, "Ryan", "Cerveny",
-//                "venmo","description", UserType.DRIVER, (float) 5.0,
-//                new ArrayList<Offer>(), new ArrayList<Request>());
 
         if(navigationService.checkInternetConnection(getApplicationContext())) {
             connectionPopUp();
