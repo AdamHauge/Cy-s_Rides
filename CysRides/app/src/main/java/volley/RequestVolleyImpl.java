@@ -168,7 +168,7 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
                     e.printStackTrace();
                 }
 
-                domain.Request request = new domain.Request(numBags, email, destinationName, latitudeLongitude, description, date, group_id, this.currentContext);
+                domain.Request request = new domain.Request(numBags, email, destinationName, latitudeLongitude, null, null, description, date, group_id, this.currentContext);
                 requests.add(request);
                 Log.d("size", requests.size()+"");
             }
