@@ -32,16 +32,12 @@ import volley.UserVolleyImpl;
 public class CreateProfile extends AppCompatActivity {
 
     //UI references fields
-    private TextView netIDView;
-    private TextView passwordView;
     private EditText fNameView;
     private EditText lNameView;
     private EditText venmoView;
     private EditText profileDescriptionView;
     private RadioButton driverRadioButton;
     private RadioButton passengerRadioButton;
-    private RadioGroup radioGroup;
-    private Button createProfileButton;
 
     private static final int RB1_ID = 1000; //first radio button id
     private static final int RB2_ID = 1001; //second radio button id
@@ -74,16 +70,16 @@ public class CreateProfile extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        netIDView = (TextView) findViewById(R.id.NetID);
-        passwordView = (TextView) findViewById(R.id.Password);
+        TextView netIDView = (TextView) findViewById(R.id.NetID);
+        TextView passwordView = (TextView) findViewById(R.id.Password);
         fNameView = (EditText) findViewById(R.id.First_Name);
         lNameView = (EditText) findViewById(R.id.Last_Name);
         venmoView = (EditText) findViewById(R.id.Venmo);
         profileDescriptionView = (EditText) findViewById(R.id.Description);
-        createProfileButton = (Button) findViewById(R.id.createProfileButton);
+        Button createProfileButton = (Button) findViewById(R.id.createProfileButton);
         driverRadioButton = (RadioButton) findViewById(R.id.driverRadioButton);
         passengerRadioButton = (RadioButton) findViewById(R.id.passengerRadioButton);
-        radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
+        RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
         driverRadioButton.setId(RB1_ID);
         passengerRadioButton.setId(RB2_ID);
 
@@ -206,7 +202,7 @@ public class CreateProfile extends AppCompatActivity {
 
     /* A user type is valid if the driver or the passenger button is selected*/
     private boolean isTypeSelected(){
-        return (driverRadioButton.isSelected() || passengerRadioButton.isChecked());
+        return (driverRadioButton.isChecked() || passengerRadioButton.isChecked());
     }
 
     /* All inputs are valid if the aforementioned methods are true*/
