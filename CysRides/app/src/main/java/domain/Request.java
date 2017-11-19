@@ -1,18 +1,10 @@
 package domain;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.ArrayList;
 import java.util.Date;
-
-import service.Callback;
-import cysrides.cysrides.ViewRequest;
-import volley.GroupVolleyImpl;
 
 public class Request extends Ride {
 

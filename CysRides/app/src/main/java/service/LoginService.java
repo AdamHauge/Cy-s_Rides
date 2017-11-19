@@ -6,6 +6,6 @@ import domain.UserInfo;
 
 public interface LoginService {
 
-    public boolean verifyLogin(String netID, String password);
+    boolean verifyLogin(String netID, String password);
     UserInfo getUserInfo(ArrayList<UserInfo> users, String netID, String enteredPassword);
 }

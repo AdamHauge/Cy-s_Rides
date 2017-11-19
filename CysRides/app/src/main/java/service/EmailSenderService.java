@@ -6,6 +6,6 @@ import domain.UserInfo;
 
 public interface EmailSenderService {
 
-    public void sendEmail(UserInfo user, Context currentContext);
+    void sendEmail(UserInfo user, Context currentContext);
 
 }

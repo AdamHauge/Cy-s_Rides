@@ -14,7 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -32,14 +31,6 @@ public class ViewProfile extends AppCompatActivity implements NavigationView.OnN
     private UserIntentService userIntentService = new UserIntentServiceImpl();
     private ActivityService activityService = new ActivityServiceImpl();
 
-    private UserInfo user;
-    private TextView netIDView;
-    private TextView firstNameView;
-    private TextView lastNameView;
-    private TextView descriptionView;
-    private TextView venmoView;
-    private RatingBar userRatingBar;
-
     private Intent i;
 
     /*
@@ -53,14 +44,14 @@ public class ViewProfile extends AppCompatActivity implements NavigationView.OnN
         setContentView(R.layout.activity_view_profile);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        netIDView = (TextView) findViewById(R.id.netIDView);
-        firstNameView = (TextView) findViewById(R.id.firstNameView);
-        lastNameView = (TextView) findViewById(R.id.lastNameView);
-        descriptionView = (TextView) findViewById(R.id.descriptionView);
-        venmoView = (TextView) findViewById(R.id.venmoView);
-        userRatingBar = (RatingBar) findViewById((R.id.userRatingBar));
+        TextView netIDView = (TextView) findViewById(R.id.netIDView);
+        TextView firstNameView = (TextView) findViewById(R.id.firstNameView);
+        TextView lastNameView = (TextView) findViewById(R.id.lastNameView);
+        TextView descriptionView = (TextView) findViewById(R.id.descriptionView);
+        TextView venmoView = (TextView) findViewById(R.id.venmoView);
+        RatingBar userRatingBar = (RatingBar) findViewById((R.id.userRatingBar));
 
-        user = userIntentService.getUserFromIntent(this.getIntent());
+        UserInfo user = userIntentService.getUserFromIntent(this.getIntent());
 
         netIDView.setText(user.getNetID().split("@iastate.edu")[0]);
         firstNameView.setText(user.getFirstName());

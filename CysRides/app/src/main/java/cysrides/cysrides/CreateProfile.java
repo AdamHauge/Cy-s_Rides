@@ -26,8 +26,6 @@ import service.EmailSenderService;
 import service.EmailSenderServiceImpl;
 import service.UserIntentService;
 import service.UserIntentServiceImpl;
-import volley.EmailVolley;
-import volley.EmailVolleyImpl;
 import volley.UserVolley;
 import volley.UserVolleyImpl;
 
@@ -116,7 +114,6 @@ public class CreateProfile extends AppCompatActivity {
         createProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Context currentContext = context;
 
                 firstName = fNameView.getText().toString();
                 lastName = lNameView.getText().toString();
@@ -141,8 +138,8 @@ public class CreateProfile extends AppCompatActivity {
                     Toast.makeText(CreateProfile.this, "You did not select a user type", Toast.LENGTH_LONG).show();
                 }
 
-                List<Offer> offers = new ArrayList<Offer>();
-                List<Request> requests = new ArrayList<Request>();
+                List<Offer> offers = new ArrayList<>();
+                List<Request> requests = new ArrayList<>();
 
                 if (inputsValid()) {
                     UserInfo user = new UserInfo(netID, password, confirmationCode, firstName, lastName, venmo, profileDescription,
@@ -150,9 +147,9 @@ public class CreateProfile extends AppCompatActivity {
                     userVolley.createUser(CreateProfile.this, user);
                     finish();
 
-                    i = userIntentService.createIntent(currentContext, DialogConfirmationCode.class, user);
+                    i = userIntentService.createIntent(context, DialogConfirmationCode.class, user);
 
-                    emailSenderService.sendEmail(user, currentContext);
+                    emailSenderService.sendEmail(user, context);
 
                     startActivity(i);
                 }
@@ -180,10 +177,7 @@ public class CreateProfile extends AppCompatActivity {
 
     /* A description is valid if it is longer than 10 characters*/
     private boolean isDescriptionValid(String profileDescription) {
-        if (profileDescription.length() > 10) {
-            return true;
-        }
-        return false;
+        return profileDescription.length() > 10;
     }
 
     /* A name is valid if the first and last name are greater than one character and do not contain a digit*/
@@ -207,10 +201,7 @@ public class CreateProfile extends AppCompatActivity {
 
     /* A venmo is valid if it is longer than 2 characters*/
     private boolean isVenmoValid(String venmo){
-        if(venmo.length() > 2){
-            return true;
-        }
-        return false;
+        return venmo.length() > 2;
     }
 
     /* A user type is valid if the driver or the passenger button is selected*/

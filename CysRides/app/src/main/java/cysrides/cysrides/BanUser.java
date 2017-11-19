@@ -24,8 +24,6 @@ import service.ActivityService;
 import service.ActivityServiceImpl;
 import service.NavigationService;
 import service.NavigationServiceImpl;
-import service.OfferService;
-import service.OfferServiceImpl;
 import service.UserIntentService;
 import service.UserIntentServiceImpl;
 import volley.BanVolleyImpl;
@@ -37,7 +35,6 @@ public class BanUser extends AppCompatActivity implements NavigationView.OnNavig
 
     private String email, reason;
     private Intent i;
-    private OfferService offerService = new OfferServiceImpl();
     private BanVolleyImpl banVolley = new BanVolleyImpl();
     private NavigationService navigationService = new NavigationServiceImpl();
     boolean retValue;
@@ -119,7 +116,6 @@ public class BanUser extends AppCompatActivity implements NavigationView.OnNavig
     @Override
     public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
         i = this.getIntent();
-        final Context context = this.getApplicationContext();
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Discard Offer");
         alert.setMessage("This will discard your current offer. Continue anyway?");

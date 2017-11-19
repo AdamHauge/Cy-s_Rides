@@ -2,7 +2,6 @@ package cysrides.cysrides;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -302,11 +301,9 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
             alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     // Handle navigation view item clicks here.
-                    int id = item.getItemId();
-
                     i = navigationService.getNavigationIntent(item, CreateRequest.this, i);
 
-                    DrawerLayout drawer = (DrawerLayout) findViewById(R.id.create_offer_activity);
+                    DrawerLayout drawer = (DrawerLayout) findViewById(R.id.create_request_activity);
                     drawer.closeDrawer(GravityCompat.START);
 
                     if (navigationService.checkInternetConnection(getApplicationContext())) {

@@ -22,10 +22,6 @@ import java.util.Map;
 import service.Callback;
 import domain.Group;
 
-/**
- * Created by Ryan on 10/18/2017.
- */
-
 public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements GroupVolley {
 
     private String createGroupUrl = "http://proj-309-sa-b-5.cs.iastate.edu/createGroup_TEST.php";

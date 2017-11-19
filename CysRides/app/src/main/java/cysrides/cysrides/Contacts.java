@@ -22,7 +22,6 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import domain.UserInfo;
 import service.ActivityService;
 import service.ActivityServiceImpl;
 import service.NavigationService;
@@ -36,16 +35,12 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
     private UserIntentService userIntentService = new UserIntentServiceImpl();
     private ActivityService activityService = new ActivityServiceImpl();
 
-    private ListView listView;
     private ArrayList list = new ArrayList();
-    private ArrayAdapter adapter;
     private Intent i;
-    private UserInfo userInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        userInfo = userIntentService.getUserFromIntent(getIntent());
         setContentView(R.layout.activity_contacts);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -62,13 +57,13 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
         Menu menu = navigationView.getMenu();
         navigationService.hideMenuItems(menu, userIntentService.getUserFromIntent(this.getIntent()));
 
+        ListView listView;
         listView = (ListView)findViewById(R.id.contacts_list);
 
         for(int i = 0; i < 20; i++) { //TODO the number needs to match the amount of contacts
             list.add("Item #" + (i + 1)); //TODO this needs to be changed to match the contact names
         }
-
-        adapter = new ArrayAdapter(Contacts.this, android.R.layout.simple_list_item_1, list);
+        ArrayAdapter adapter = new ArrayAdapter(Contacts.this, android.R.layout.simple_list_item_1, list);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

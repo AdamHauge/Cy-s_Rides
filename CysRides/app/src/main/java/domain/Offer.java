@@ -4,11 +4,7 @@ import android.content.Context;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.ArrayList;
 import java.util.Date;
-
-import service.Callback;
-import volley.GroupVolleyImpl;
 
 public class Offer extends Ride {
 

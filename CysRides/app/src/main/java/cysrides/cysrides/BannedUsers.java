@@ -49,7 +49,7 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
     private SwipeRefreshLayout refresh;
     private ArrayAdapter<String> adapter;
     private List<Ban> bans = new ArrayList<>();
-    private ArrayList<String> bansString = new ArrayList();
+    private ArrayList<String> bansString;
     private FragmentManager fragmentManager = this.getSupportFragmentManager();
 
     @Override
@@ -105,6 +105,7 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
 
     @SuppressWarnings("unchecked")
     public void getBansList() {
+        bansString = new ArrayList<>();
         BanVolleyImpl volley = new BanVolleyImpl(new Callback() {
             public void call(ArrayList<?> result) {
                 try {

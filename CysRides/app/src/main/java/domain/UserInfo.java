@@ -47,12 +47,11 @@ public class UserInfo {
         String profileDescription = "";
         UserType userType = UserType.PASSENGER;
         float userRating = 0;
-        List<Offer> offers = new ArrayList<Offer>();
-        List<Request> requests = new ArrayList<Request>();
+        List<Offer> offers = new ArrayList<>();
+        List<Request> requests = new ArrayList<>();
 
-        UserInfo userInfo = new UserInfo(netID, password, confirmationCode, firstName, lastName, venmoName,
+        return new UserInfo(netID, password, confirmationCode, firstName, lastName, venmoName,
                 profileDescription, userType, userRating, offers, requests);
-        return userInfo;
     }
 
     public String ratingToString(float userRating) {

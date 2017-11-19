@@ -16,7 +16,6 @@ public class DialogConfirmationCode extends AppCompatActivity {
 
     private UserIntentService userIntentService = new UserIntentServiceImpl();
     private EditText resultView;
-    private Button goButton;
     private UserInfo user;
 
     /*
@@ -29,7 +28,7 @@ public class DialogConfirmationCode extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dialog_confirmation_code);
         resultView = (EditText) findViewById(R.id.resultText);
-        goButton = (Button) findViewById(R.id.goButton);
+        Button goButton = (Button) findViewById(R.id.goButton);
         user = userIntentService.getUserFromIntent(this.getIntent());
 
         goButton.setOnClickListener(new View.OnClickListener() {

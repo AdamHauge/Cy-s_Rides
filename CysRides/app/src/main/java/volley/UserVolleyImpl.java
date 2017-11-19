@@ -37,7 +37,6 @@ public class UserVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements 
     private UserInfo currentUser;
     private Context currentContext;
     private ArrayList<UserInfo> users;
-    private UserInfo user;
     private Callback callback;
 
     public UserVolleyImpl(Callback call){
@@ -111,10 +110,10 @@ public class UserVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements 
                 UserType type = UserType.valueOf(userType);
                 float userRating = (float) jsonUser.getDouble("USER_RATING");
 
-                List<Offer> offers = new ArrayList<Offer>();
-                List<domain.Request> requests = new ArrayList<domain.Request>();
+                List<Offer> offers = new ArrayList<>();
+                List<domain.Request> requests = new ArrayList<>();
 
-                user = new UserInfo(netID, userPassword, confirmationCode, firstName, lastName,
+                UserInfo user = new UserInfo(netID, userPassword, confirmationCode, firstName, lastName,
                         venmo, profileDescription, type, userRating, offers, requests);
 
                 users.add(user);

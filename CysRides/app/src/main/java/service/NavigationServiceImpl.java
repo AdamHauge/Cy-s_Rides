@@ -29,15 +29,10 @@ public class NavigationServiceImpl extends AppCompatActivity implements Navigati
 
     private UserIntentService userIntentService = new UserIntentServiceImpl();
 
-    private Intent intent;
-    private Context context;
-
     //Sets the intent when traversing through pages
     @Override
-    public Intent getNavigationIntent(@NonNull MenuItem item, Context c, Intent i) {
+    public Intent getNavigationIntent(@NonNull MenuItem item, Context context, Intent intent) {
         int id = item.getItemId();
-        intent = i;
-        context = c;
         switch(id)
         {
             case R.id.profile:
