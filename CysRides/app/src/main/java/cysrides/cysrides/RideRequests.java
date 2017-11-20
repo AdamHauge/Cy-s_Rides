@@ -87,6 +87,7 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
         getRequestsList();
 
         /* display list of ride requests on screen */
+        i = this.getIntent();
         ListView listView = (ListView)findViewById(R.id.ride_requests_list);
         adapter = new ArrayAdapter<>(RideRequests.this, android.R.layout.simple_list_item_1, destinations);
         listView.setAdapter(adapter);
@@ -99,6 +100,7 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
 
                 viewRequest.setData(requests.get(position));
                 viewRequest.setContext(RideRequests.this);
+                viewRequest.setUserInfo(userIntentService.getUserFromIntent(i));
 
                 fragmentTransaction.replace(R.id.ride_requests_activity, viewRequest);
                 fragmentTransaction.addToBackStack(null);

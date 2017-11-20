@@ -147,7 +147,8 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
                 Log.d("JSON",jsonArray.toString());
                 JSONObject jsonOffer = jsonArray.getJSONObject(i);
 
-                String id = jsonOffer.getString("ID");
+                String stringId = jsonOffer.getString("ID");
+                int id = Integer.parseInt(stringId);
                 String stringCost = jsonOffer.getString("NUM_BAGS");
                 int numBags = Integer.parseInt(stringCost);
                 String email = jsonOffer.getString("EMAIL");
@@ -168,7 +169,7 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
                     e.printStackTrace();
                 }
 
-                domain.Request request = new domain.Request(numBags, email, destinationName, latitudeLongitude, null, null, description, date, group_id, this.currentContext);
+                domain.Request request = new domain.Request(numBags, id, email, destinationName, latitudeLongitude, null, null, description, date, group_id, this.currentContext);
                 requests.add(request);
                 Log.d("size", requests.size()+"");
             }

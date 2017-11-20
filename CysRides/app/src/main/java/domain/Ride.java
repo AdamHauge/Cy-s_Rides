@@ -12,6 +12,7 @@ import volley.GroupVolleyImpl;
 
 public class Ride {
 
+    private int id;
     private String email;
     private String destination;
     private String start;
@@ -38,7 +39,34 @@ public class Ride {
         group = new Group(email, type);
     }
 
+    public Ride(int id, String email, String destination, LatLng destCoordinates, String start, LatLng startCoordinates, String description, Date date, String type) {
+        this.id = id;
+        this.email = email;
+        this.destination = destination;
+        this.destCoordinates = destCoordinates;
+        this.start = start;
+        this.startCoordinates = startCoordinates;
+        this.description = description;
+        this.date = date;
+
+        group = new Group(email, type);
+    }
+
     public Ride(String email, String destination, LatLng destCoordinates, String start, LatLng startCoordinates, String description, Date date, int groupID, Context context) {
+        this.email = email;
+        this.destination = destination;
+        this.destCoordinates = destCoordinates;
+        this.description = description;
+        this.start = start;
+        this.startCoordinates = startCoordinates;
+        this.date = date;
+        this.groupID = groupID;
+        //USE CALLBACK SOMEHOW TO GET THE GROUP BACK
+        pullGroup(context, this.groupID);
+    }
+
+    public Ride(int id, String email, String destination, LatLng destCoordinates, String start, LatLng startCoordinates, String description, Date date, int groupID, Context context) {
+        this.id = id;
         this.email = email;
         this.destination = destination;
         this.destCoordinates = destCoordinates;
@@ -65,6 +93,14 @@ public class Ride {
             }
         });
         gvi.getGroup(context, groupID);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getEmail() {

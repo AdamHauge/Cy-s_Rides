@@ -8,14 +8,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import domain.Offer;
 import domain.Request;
+import domain.UserInfo;
+import domain.UserType;
+import service.GroupService;
 import service.GroupServiceImpl;
 
 public class ViewRequest extends Fragment {
 
+    private GroupService groupService = new GroupServiceImpl();
+
     private Request request;
-    private GroupServiceImpl g = new GroupServiceImpl();
     private Context context;
+    private UserInfo userInfo;
 
     public ViewRequest() {
         // Required empty public constructor
@@ -30,7 +36,7 @@ public class ViewRequest extends Fragment {
         v.findViewById(R.id.join).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                g.addRider(context, request.getGroup(), request.getEmail());
+                groupService.addRider(context, request.getGroup(), request.getEmail());
 
             }
         });
@@ -38,7 +44,7 @@ public class ViewRequest extends Fragment {
 
            @Override
            public void onClick(View view) {
-                g.addDriver(context, request.getGroup(), request.getEmail());
+               groupService.addDriver(context, request.getGroup(), request.getEmail());
            }
        }
 
@@ -52,8 +58,33 @@ public class ViewRequest extends Fragment {
 
     public void setContext(Context context){this.context = context;}
 
+    public void setUserInfo(UserInfo userInfo) {
+        this.userInfo = userInfo;
+    }
+
     public void setTextInfo(View v) {
+        if(userInfo.getUserType() == UserType.ADMIN) {
+            setAdminTextInfo(v);
+        } else {
+            setNonAdminTextInfo(v);
+        }
+    }
+
+    private void setNonAdminTextInfo(View v) {
         TextView info = v.findViewById(R.id.request);
         info.setText(request.toString());
+    }
+
+    private void setAdminTextInfo(View v) {
+        TextView info = v.findViewById(R.id.request);
+        info.setText(adminRequest(request));
+    }
+
+    private String adminRequest(Request request ) {
+        return  "id=" + request.getId() +
+                "\nnum bags=" + request.getNumBags() +
+                "\nemail=" + request.getEmail() +
+                "\ndescription=" + request.getDescription() +
+                "\ndate=" + request.getDate();
     }
 }

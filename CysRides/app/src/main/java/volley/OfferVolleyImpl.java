@@ -141,7 +141,8 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
                 Log.d("JSON",jsonArray.toString());
                 JSONObject jsonOffer = jsonArray.getJSONObject(i);
 
-                String id = jsonOffer.getString("ID");
+                String stringId = jsonOffer.getString("ID");
+                int id = Integer.parseInt(stringId);
                 String stringCost = jsonOffer.getString("COST");
                 double cost = Double.parseDouble(stringCost);
                 String email = jsonOffer.getString("EMAIL");
@@ -162,7 +163,7 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
                     e.printStackTrace();
                 }
 
-                Offer offer = new Offer(cost, email, destinationName, latitudeLongitude, null, null, description, date, groupID, this.currentContext);
+                Offer offer = new Offer(cost, id, email, destinationName, latitudeLongitude, null, null, description, date, groupID, this.currentContext);
                 //Log.d("offer", offer.toString());
                 offers.add(offer);
                 Log.d("size", offers.size()+"");

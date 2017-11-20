@@ -9,13 +9,18 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import domain.Offer;
+import domain.UserInfo;
+import domain.UserType;
+import service.GroupService;
 import service.GroupServiceImpl;
 
 public class ViewOffer extends Fragment {
 
+    private GroupService groupService = new GroupServiceImpl();
+
     private Offer offer;
     private Context context;
-    private GroupServiceImpl g = new GroupServiceImpl();
+    private UserInfo userInfo;
     public ViewOffer() {
         // Required empty public constructor
     }
@@ -29,7 +34,7 @@ public class ViewOffer extends Fragment {
         v.findViewById(R.id.join).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                g.addRider(context, offer.getGroup(), offer.getEmail());
+                groupService.addRider(context, offer.getGroup(), offer.getEmail());
             }
         });
 
@@ -43,8 +48,35 @@ public class ViewOffer extends Fragment {
 
     public void setContext(Context context){this.context = context;}
 
+    public void setUserInfo(UserInfo userInfo) {
+        this.userInfo = userInfo;
+    }
+
     public void setTextInfo(View v) {
+        if(userInfo.getUserType() == UserType.ADMIN) {
+            setAdminTextInfo(v);
+        } else {
+            setNonAdminTextInfo(v);
+        }
+    }
+
+    private void setNonAdminTextInfo(View v) {
         TextView info = v.findViewById(R.id.offer);
         info.setText(offer.toString());
+    }
+
+    private void setAdminTextInfo(View v) {
+        TextView info = v.findViewById(R.id.offer);
+        info.setText(adminOffer(offer));
+    }
+
+    private String adminOffer(Offer offer) {
+        return  "id=" + offer.getId() +
+                "\ndestination=" + offer.getDestination() +
+                "\nstart=" + offer.getStart() +
+                "\ncost=$" + offer.getCost() +
+                "\nemail=" + offer.getEmail() +
+                "\ndescription=" + offer.getDescription() +
+                "\ndate=" + offer.getDate();
     }
 }

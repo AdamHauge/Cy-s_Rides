@@ -15,16 +15,25 @@ public class Request extends Ride {
     }
 
     //constructs new Request
+    public Request(int numBags, int id, String email, String destination, LatLng destCoordinates, String start, LatLng startCoordinates, String description, Date date) {
+        super(id, email, destination, destCoordinates, start, startCoordinates, description, date, "REQUEST");
+        this.numBags = numBags;
+    }
+
     public Request(int numBags, String email, String destination, LatLng destCoordinates, String start, LatLng startCoordinates, String description, Date date) {
         super(email, destination, destCoordinates, start, startCoordinates, description, date, "REQUEST");
         this.numBags = numBags;
     }
 
     //constructor for pulling requests from the database
+    public Request(int numBags, int id, String email, String destination, LatLng destCoordinates, String start, LatLng startCoordinates, String description, Date date, int groupID, Context context) {
+        super(id, email, destination, destCoordinates, start, startCoordinates, description, date, groupID, context);
+        this.numBags = numBags;
+    }
+
     public Request(int numBags, String email, String destination, LatLng destCoordinates, String start, LatLng startCoordinates, String description, Date date, int groupID, Context context) {
         super(email, destination, destCoordinates, start, startCoordinates, description, date, groupID, context);
         this.numBags = numBags;
-
     }
 
     @Override

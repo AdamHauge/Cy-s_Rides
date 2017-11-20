@@ -20,7 +20,17 @@ public class Offer extends Ride {
         this.cost = cost;
     }
 
+    public Offer(double cost, int id, String email, String destination, LatLng destCoordinates, String start, LatLng startCoordinates, String description, Date date) {
+        super(id, email, destination, destCoordinates, start, startCoordinates, description, date, "OFFER");
+        this.cost = cost;
+    }
+
     //constructer used to pull offers
+    public Offer(double cost, int id, String email, String destination, LatLng destCoordinates, String start, LatLng startCoordinates, String description, Date date, int groupID, Context context) {
+        super(id, email, destination, destCoordinates, start, startCoordinates, description, date, groupID, context);
+        this.cost = cost;
+    }
+
     public Offer(double cost, String email, String destination, LatLng destCoordinates, String start, LatLng startCoordinates, String description, Date date, int groupID, Context context) {
         super(email, destination, destCoordinates, start, startCoordinates, description, date, groupID, context);
         this.cost = cost;
