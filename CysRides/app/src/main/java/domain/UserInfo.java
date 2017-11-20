@@ -16,13 +16,14 @@ public class UserInfo {
     private float userRating;
     private List<Offer> offers;
     private List<Request> requests;
+    private int numberRatings;
 
     public UserInfo() {
 
     }
 
     public UserInfo(String netID, String password, String confirmationCode, String firstName, String lastName, String venmoName,
-                    String profileDescription, UserType userType, float userRating, List<Offer> offers, List<Request> requests) {
+                    String profileDescription, UserType userType, float userRating, List<Offer> offers, List<Request> requests, int numberRatings) {
         this.netID = netID;
         this.password = password;
         this.confirmationCode = confirmationCode;
@@ -34,6 +35,7 @@ public class UserInfo {
         this.userRating = userRating;
         this.offers = offers;
         this.requests = requests;
+        this.numberRatings = numberRatings;
     }
 
     //TODO fix dummy fields
@@ -49,9 +51,10 @@ public class UserInfo {
         float userRating = 0;
         List<Offer> offers = new ArrayList<>();
         List<Request> requests = new ArrayList<>();
+        int numberRatings = 0;
 
         return new UserInfo(netID, password, confirmationCode, firstName, lastName, venmoName,
-                profileDescription, userType, userRating, offers, requests);
+                profileDescription, userType, userRating, offers, requests, numberRatings);
     }
 
     public String ratingToString(float userRating) {
@@ -166,5 +169,9 @@ public class UserInfo {
     public void setRequests(List<Request> requests) {
         this.requests = requests;
     }
+
+    public int getNumberRatings() { return numberRatings; }
+
+    public void setNumberRatings(int numberRatings) { this.numberRatings = numberRatings; }
 
 }
