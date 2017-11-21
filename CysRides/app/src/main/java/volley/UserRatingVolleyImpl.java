@@ -17,6 +17,7 @@ import service.Callback;
 public class UserRatingVolleyImpl implements UserRatingVolley {
 
     private String addRatingUrl = "http://proj-309-sa-b-5.cs.iastate.edu/addRating.php";
+    private String getRatingUrl = "http://proj-309-sa-b-5.cs.iastate.edu/getRating.php";
     private Context currentContext;
     private Callback callback;
 
@@ -57,4 +58,6 @@ public class UserRatingVolleyImpl implements UserRatingVolley {
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
 
     }
+
+
 }

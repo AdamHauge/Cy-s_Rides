@@ -114,7 +114,7 @@ public class UserVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements 
                 List<domain.Request> requests = new ArrayList<>();
 
                 UserInfo user = new UserInfo(netID, userPassword, confirmationCode, firstName, lastName,
-                        venmo, profileDescription, type, userRating, offers, requests);
+                        venmo, profileDescription, type, userRating, offers, requests, 0);
 
                 users.add(user);
                 Log.d("size", users.size() + "");
