@@ -1,6 +1,9 @@
 package domain;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class UserInfo {
@@ -16,53 +19,11 @@ public class UserInfo {
     private float userRating;
     private List<Offer> offers;
     private List<Request> requests;
-    private int numberRatings;
+    DateFormat df = new SimpleDateFormat("MMMM yyyy");
+    private String dateJoined = df.format(Calendar.getInstance().getTime());
 
     public UserInfo() {
 
-    }
-
-    public UserInfo(String netID, String password, String confirmationCode, String firstName, String lastName, String venmoName,
-                    String profileDescription, UserType userType, float userRating, List<Offer> offers, List<Request> requests, int numberRatings) {
-        this.netID = netID;
-        this.password = password;
-        this.confirmationCode = confirmationCode;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.venmoName = venmoName;
-        this.profileDescription = profileDescription;
-        this.userType = userType;
-        this.userRating = userRating;
-        this.offers = offers;
-        this.requests = requests;
-        this.numberRatings = numberRatings;
-    }
-
-    //TODO fix dummy fields
-    public UserInfo toUserInfo(String userInfoString) {
-        String netID = "";
-        String password = "";
-        String confirmationCode = "";
-        String firstName = "";
-        String lastName = "";
-        String venmoName = "";
-        String profileDescription = "";
-        UserType userType = UserType.PASSENGER;
-        float userRating = 0;
-        List<Offer> offers = new ArrayList<>();
-        List<Request> requests = new ArrayList<>();
-        int numberRatings = 0;
-
-        return new UserInfo(netID, password, confirmationCode, firstName, lastName, venmoName,
-                profileDescription, userType, userRating, offers, requests, numberRatings);
-    }
-
-    public String ratingToString(float userRating) {
-        return Float.toString(userRating);
-    }
-
-    public String confirmationCodeToString(int confirmationCode) {
-        return Integer.toString(confirmationCode);
     }
 
     @Override
@@ -79,7 +40,39 @@ public class UserInfo {
                 ", userRating=" + userRating +
                 ", offers=" + offers +
                 ", requests=" + requests +
+                ", dateJoined='" + dateJoined + '\'' +
                 '}';
+    }
+
+    public UserInfo(String netID, String password, String confirmationCode, String firstName, String lastName, String venmoName,
+                    String profileDescription, UserType userType, float userRating, List<Offer> offers, List<Request> requests) {
+        this.netID = netID;
+        this.password = password;
+        this.confirmationCode = confirmationCode;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.venmoName = venmoName;
+        this.profileDescription = profileDescription;
+        this.userType = userType;
+        this.userRating = userRating;
+        this.offers = offers;
+        this.requests = requests;
+    }
+
+    public String getDateJoined() {
+        return dateJoined;
+    }
+
+    public void setDateJoined(String dateJoined) {
+        this.dateJoined = dateJoined;
+    }
+
+    public String ratingToString(float userRating) {
+        return Float.toString(userRating);
+    }
+
+    public String confirmationCodeToString(int confirmationCode) {
+        return Integer.toString(confirmationCode);
     }
 
     public String getNetID() {
@@ -169,9 +162,5 @@ public class UserInfo {
     public void setRequests(List<Request> requests) {
         this.requests = requests;
     }
-
-    public int getNumberRatings() { return numberRatings; }
-
-    public void setNumberRatings(int numberRatings) { this.numberRatings = numberRatings; }
 
 }

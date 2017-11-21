@@ -139,7 +139,8 @@ public class CreateProfile extends AppCompatActivity {
 
                 if (inputsValid()) {
                     UserInfo user = new UserInfo(netID, password, confirmationCode, firstName, lastName, venmo, profileDescription,
-                            userType, 0, offers, requests, 0);
+                            userType, 0, offers, requests);
+
                     userVolley.createUser(CreateProfile.this, user);
                     finish();
 

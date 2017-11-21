@@ -17,6 +17,8 @@ import android.view.MenuItem;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import domain.UserInfo;
 import service.ActivityService;
 import service.ActivityServiceImpl;
@@ -49,16 +51,18 @@ public class ViewProfile extends AppCompatActivity implements NavigationView.OnN
         TextView lastNameView = (TextView) findViewById(R.id.lastNameView);
         TextView descriptionView = (TextView) findViewById(R.id.descriptionView);
         TextView venmoView = (TextView) findViewById(R.id.venmoView);
-        RatingBar userRatingBar = (RatingBar) findViewById((R.id.userRatingBar));
+        RatingBar userRatingBar = (RatingBar) findViewById(R.id.userRatingBar);
+        TextView dateJoinedView = (TextView) findViewById(R.id.dateJoinedView);
 
         UserInfo user = userIntentService.getUserFromIntent(this.getIntent());
 
         netIDView.setText(user.getNetID().split("@iastate.edu")[0]);
         firstNameView.setText(user.getFirstName());
-        lastNameView.setText(user.getLastName());
+        lastNameView.append(user.getLastName());
         descriptionView.setText(user.getProfileDescription());
         venmoView.append(user.getVenmoName());
         userRatingBar.setRating(user.getUserRating());
+        dateJoinedView.append(user.getDateJoined());
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.my_profile);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
