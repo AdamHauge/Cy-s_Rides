@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         populateMap();
 
         /* check for internet connection */
-        if(navigationService.checkInternetConnection(getApplicationContext())) {
+        if(navigationService.checkInternetConnection(MainActivity.this)) {
             connectionPopUp();
         }
     }
@@ -143,19 +143,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                 Offer offerData;
                 Request requestData;
+                RideFragment rideFragment;
 
                 /* Check if marker is for an offer and open fragment */
                 if(null != (offerData = offerMarkers.get(marker))) {
-                    ViewOffer viewOffer = new ViewOffer();
-                    viewOffer.setData(offerData);
-                    fragmentTransaction.replace(R.id.activity_main, viewOffer);
+                    rideFragment = new ViewOffer();
+                    rideFragment.setData(offerData);
+                    rideFragment.setContext(MainActivity.this);
+                    rideFragment.setUserInfo(userIntentService.getUserFromIntent(getIntent()));
+
+                    fragmentTransaction.add(R.id.activity_main, rideFragment);
                 }
 
                 /* Check if marker is for a request and open fragment */
                 else if(null != (requestData = requestMarkers.get(marker))) {
-                    ViewRequest viewRequest = new ViewRequest();
-                    viewRequest.setData(requestData);
-                    fragmentTransaction.replace(R.id.activity_main, viewRequest);
+                    rideFragment = new ViewRequest();
+                    rideFragment.setData(requestData);
+                    rideFragment.setContext(MainActivity.this);
+                    rideFragment.setUserInfo(userIntentService.getUserFromIntent(getIntent()));
+
+                    fragmentTransaction.replace(R.id.activity_main, rideFragment);
                 }
 
                 /* error */
@@ -346,7 +353,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return true;
         }
         /* check for internet connection before doing anything */
-        else if(navigationService.checkInternetConnection(getApplicationContext())) {
+        else if(navigationService.checkInternetConnection(MainActivity.this)) {
             connectionPopUp();
             return false;
         }
@@ -361,7 +368,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * insert option to connect to wifi
      */
     public void connectionPopUp() {
-        Snackbar snackbar = activityService.setupConnection(this.getApplicationContext(), findViewById(R.id.contacts_activity));
+        Snackbar snackbar = activityService.setupConnection(MainActivity.this, findViewById(R.id.activity_main));
         snackbar.show();
     }
 }

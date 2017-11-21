@@ -72,8 +72,8 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
         navigationService.hideMenuItems(menu, userIntentService.getUserFromIntent(this.getIntent()));
 
         refresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
-        refresh.setColorSchemeColors(ContextCompat.getColor(this.getApplicationContext(),
-                R.color.colorGold), ContextCompat.getColor(this.getApplicationContext(), R.color.colorCardinal));
+        refresh.setColorSchemeColors(ContextCompat.getColor(RideOffers.this,
+                R.color.colorGold), ContextCompat.getColor(RideOffers.this, R.color.colorCardinal));
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -91,7 +91,7 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 /* notify fragment manager to display ride offer information */
-                ViewOffer viewOffer = new ViewOffer();
+                RideFragment viewOffer = new ViewOffer();
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
                 viewOffer.setData(offers.get(position));
@@ -103,7 +103,7 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
             }
         });
 
-        if(navigationService.checkInternetConnection(getApplicationContext())) {
+        if(navigationService.checkInternetConnection(RideOffers.this)) {
             connectionPopUp();
         }
     }
@@ -221,7 +221,7 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
             return true;
         }
         /* check if user needs to connect to wifi */
-        else if(navigationService.checkInternetConnection(getApplicationContext())) {
+        else if(navigationService.checkInternetConnection(RideOffers.this)) {
             connectionPopUp();
             return false;
         }
@@ -236,7 +236,7 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
      * insert option to connect to wifi
      */
     public void connectionPopUp() {
-        Snackbar snackbar = activityService.setupConnection(this.getApplicationContext(), findViewById(R.id.contacts_activity));
+        Snackbar snackbar = activityService.setupConnection(RideOffers.this, findViewById(R.id.contacts_activity));
         snackbar.show();
     }
 }

@@ -118,7 +118,7 @@ public class ViewProfile extends AppCompatActivity implements NavigationView.OnN
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.my_profile);
         drawer.closeDrawer(GravityCompat.START);
         if(R.id.logout == id) {
-            AlertDialog.Builder alert = navigationService.logOutButton(this.getApplicationContext());
+            AlertDialog.Builder alert = navigationService.logOutButton(ViewProfile.this);
             alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     SaveSharedPreference.clearUsernamePassword(ViewProfile.this);
@@ -128,7 +128,7 @@ public class ViewProfile extends AppCompatActivity implements NavigationView.OnN
 
             return true;
         }
-        else if(navigationService.checkInternetConnection(getApplicationContext())) {
+        else if(navigationService.checkInternetConnection(ViewProfile.this)) {
             connectionPopUp();
             return false;
         }
@@ -139,7 +139,7 @@ public class ViewProfile extends AppCompatActivity implements NavigationView.OnN
     }
 
     public void connectionPopUp() {
-        Snackbar snackbar = activityService.setupConnection(this.getApplicationContext(), findViewById(R.id.my_profile));
+        Snackbar snackbar = activityService.setupConnection(ViewProfile.this, findViewById(R.id.my_profile));
         snackbar.show();
     }
 }

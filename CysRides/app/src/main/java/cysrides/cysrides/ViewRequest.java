@@ -1,27 +1,16 @@
 package cysrides.cysrides;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import domain.Offer;
 import domain.Request;
-import domain.UserInfo;
-import domain.UserType;
-import service.GroupService;
-import service.GroupServiceImpl;
 
-public class ViewRequest extends Fragment {
-
-    private GroupService groupService = new GroupServiceImpl();
+public class ViewRequest extends RideFragment {
 
     private Request request;
-    private Context context;
-    private UserInfo userInfo;
 
     public ViewRequest() {
         // Required empty public constructor
@@ -52,39 +41,20 @@ public class ViewRequest extends Fragment {
         return v;
     }
 
-    public void setData(Request request) {
-        this.request = request;
+    @Override
+    protected <T> void setData(T request) {
+        this.request = (Request) request;
     }
 
-    public void setContext(Context context){this.context = context;}
-
-    public void setUserInfo(UserInfo userInfo) {
-        this.userInfo = userInfo;
-    }
-
-    public void setTextInfo(View v) {
-        if(userInfo.getUserType() == UserType.ADMIN) {
-            setAdminTextInfo(v);
-        } else {
-            setNonAdminTextInfo(v);
-        }
-    }
-
-    private void setNonAdminTextInfo(View v) {
+    @Override
+    protected void setNonAdminTextInfo(View v) {
         TextView info = v.findViewById(R.id.request);
         info.setText(request.toString());
     }
 
-    private void setAdminTextInfo(View v) {
+    @Override
+    protected void setAdminTextInfo(View v) {
         TextView info = v.findViewById(R.id.request);
-        info.setText(adminRequest(request));
-    }
-
-    private String adminRequest(Request request ) {
-        return  "id=" + request.getId() +
-                "\nnum bags=" + request.getNumBags() +
-                "\nemail=" + request.getEmail() +
-                "\ndescription=" + request.getDescription() +
-                "\ndate=" + request.getDate();
+        info.setText(request.adminRequest());
     }
 }

@@ -72,8 +72,8 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
         navigationService.hideMenuItems(menu, userIntentService.getUserFromIntent(this.getIntent()));
 
         refresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
-        refresh.setColorSchemeColors(ContextCompat.getColor(this.getApplicationContext(),
-                R.color.colorGold), ContextCompat.getColor(this.getApplicationContext(), R.color.colorCardinal));
+        refresh.setColorSchemeColors(ContextCompat.getColor(BannedUsers.this,
+                R.color.colorGold), ContextCompat.getColor(BannedUsers.this, R.color.colorCardinal));
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -98,7 +98,7 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
             }
         });
 
-        if(navigationService.checkInternetConnection(getApplicationContext())) {
+        if(navigationService.checkInternetConnection(BannedUsers.this)) {
             connectionPopUp();
         }
     }
@@ -192,7 +192,7 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
 
             return true;
         }
-        else if(navigationService.checkInternetConnection(getApplicationContext())) {
+        else if(navigationService.checkInternetConnection(BannedUsers.this)) {
             connectionPopUp();
             return false;
         }
@@ -203,7 +203,7 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
     }
 
     public void connectionPopUp() {
-        Snackbar snackbar = activityService.setupConnection(this.getApplicationContext(), findViewById(R.id.contacts_activity));
+        Snackbar snackbar = activityService.setupConnection(BannedUsers.this, findViewById(R.id.contacts_activity));
         snackbar.show();
     }
 

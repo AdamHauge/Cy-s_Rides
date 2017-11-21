@@ -148,8 +148,12 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
                 String email = jsonOffer.getString("EMAIL");
 
                 String stringDestination = jsonOffer.getString("DESTINATION");
-                String destinationName = getDestinationName(stringDestination);
-                LatLng latitudeLongitude = getLatLngFromDatabase(stringDestination);
+                String destinationName = getLocationName(stringDestination);
+                LatLng destLatLng = getLatLngFromDatabase(stringDestination);
+
+                String stringStart = jsonOffer.getString("START");
+                String startName = getLocationName(stringStart);
+                LatLng startLatLng = getLatLngFromDatabase(stringStart);
 
                 String description = jsonOffer.getString("DESCRIPTION");
                 String stringDate = jsonOffer.getString("DATE");
@@ -163,7 +167,8 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
                     e.printStackTrace();
                 }
 
-                Offer offer = new Offer(cost, id, email, destinationName, latitudeLongitude, null, null, description, date, groupID, this.currentContext);
+                Offer offer = new Offer(cost, id, email, destinationName, destLatLng, startName,
+                        startLatLng, description, date, groupID, this.currentContext);
                 //Log.d("offer", offer.toString());
                 offers.add(offer);
                 Log.d("size", offers.size()+"");
@@ -217,13 +222,13 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
 
 
 
-    private String getDestinationName(String stringDestination) {
-        String[] splitDestination = stringDestination.split(" lat/lng: ");
+    private String getLocationName(String location) {
+        String[] splitDestination = location.split(" lat/lng: ");
         return splitDestination[0];
     }
 
-    private LatLng getLatLngFromDatabase(String stringDestination) {
-        String[] splitDestination = stringDestination.split(" lat/lng: ");
+    private LatLng getLatLngFromDatabase(String location) {
+        String[] splitDestination = location.split(" lat/lng: ");
         String latLong = splitDestination[1];
         latLong = latLong.replace("(","");
         latLong = latLong.replace(")","");

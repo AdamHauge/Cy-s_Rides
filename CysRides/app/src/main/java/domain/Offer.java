@@ -46,6 +46,16 @@ public class Offer extends Ride {
                 "\ndate=" + super.getDate();
     }
 
+    public String adminOffer() {
+        return  "id=" + getId() +
+                "\ndestination=" + getDestination() +
+                "\nstart=" + getStart() +
+                "\ncost=$" + getCost() +
+                "\nemail=" + getEmail() +
+                "\ndescription=" + getDescription() +
+                "\ndate=" + getDate();
+    }
+
     public double getCost() {
         return cost;
     }

@@ -80,7 +80,7 @@ public class BanUser extends AppCompatActivity implements NavigationView.OnNavig
             }
         });
 
-        if(navigationService.checkInternetConnection(getApplicationContext())) {
+        if(navigationService.checkInternetConnection(BanUser.this)) {
             connectionPopUp();
         }
     }
@@ -138,7 +138,7 @@ public class BanUser extends AppCompatActivity implements NavigationView.OnNavig
                     alert.show();
 
                     retValue = true;
-                } else if (navigationService.checkInternetConnection(getApplicationContext())) {
+                } else if (navigationService.checkInternetConnection(BanUser.this)) {
                     connectionPopUp();
                     retValue = false;
                 } else {
@@ -154,7 +154,7 @@ public class BanUser extends AppCompatActivity implements NavigationView.OnNavig
     }
 
     public void connectionPopUp() {
-        Snackbar snackbar = activityService.setupConnection(this.getApplicationContext(), findViewById(R.id.contacts_activity));
+        Snackbar snackbar = activityService.setupConnection(BanUser.this, findViewById(R.id.contacts_activity));
         snackbar.show();
     }
 }

@@ -74,8 +74,8 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
 
         /* initialize page refreshing to take input from user */
         refresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
-        refresh.setColorSchemeColors(ContextCompat.getColor(this.getApplicationContext(), R.color.colorGold),
-                ContextCompat.getColor(this.getApplicationContext(), R.color.colorCardinal));
+        refresh.setColorSchemeColors(ContextCompat.getColor(RideRequests.this, R.color.colorGold),
+                ContextCompat.getColor(RideRequests.this, R.color.colorCardinal));
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -95,7 +95,7 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 /* notify fragment handler to display fragment to user */
-                ViewRequest viewRequest = new ViewRequest();
+                RideFragment viewRequest = new ViewRequest();
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
                 viewRequest.setData(requests.get(position));
@@ -109,7 +109,7 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
         });
 
         /* check for internet connection */
-        if(navigationService.checkInternetConnection(getApplicationContext())) {
+        if(navigationService.checkInternetConnection(RideRequests.this)) {
             connectionPopUp();
         }
     }
@@ -230,7 +230,7 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
 
             return true;
         }
-        else if(navigationService.checkInternetConnection(getApplicationContext())) {
+        else if(navigationService.checkInternetConnection(RideRequests.this)) {
             /* check for wifi connection */
             connectionPopUp();
             /* close drawer */
@@ -247,7 +247,7 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
      * insert option to connect to wifi
      */
     public void connectionPopUp() {
-        Snackbar snackbar = activityService.setupConnection(this.getApplicationContext(), findViewById(R.id.contacts_activity));
+        Snackbar snackbar = activityService.setupConnection(RideRequests.this, findViewById(R.id.contacts_activity));
         snackbar.show();
     }
 }

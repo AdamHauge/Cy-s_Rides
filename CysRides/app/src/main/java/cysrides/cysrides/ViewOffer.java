@@ -1,26 +1,17 @@
 package cysrides.cysrides;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import domain.Offer;
-import domain.UserInfo;
-import domain.UserType;
-import service.GroupService;
-import service.GroupServiceImpl;
 
-public class ViewOffer extends Fragment {
-
-    private GroupService groupService = new GroupServiceImpl();
+public class ViewOffer extends RideFragment {
 
     private Offer offer;
-    private Context context;
-    private UserInfo userInfo;
+
     public ViewOffer() {
         // Required empty public constructor
     }
@@ -42,41 +33,20 @@ public class ViewOffer extends Fragment {
         return v;
     }
 
-    public void setData(Offer offer) {
-        this.offer = offer;
+    @Override
+    protected <T> void setData(T offer) {
+        this.offer = (Offer) offer;
     }
 
-    public void setContext(Context context){this.context = context;}
-
-    public void setUserInfo(UserInfo userInfo) {
-        this.userInfo = userInfo;
-    }
-
-    public void setTextInfo(View v) {
-        if(userInfo.getUserType() == UserType.ADMIN) {
-            setAdminTextInfo(v);
-        } else {
-            setNonAdminTextInfo(v);
-        }
-    }
-
-    private void setNonAdminTextInfo(View v) {
+    @Override
+    protected void setNonAdminTextInfo(View v) {
         TextView info = v.findViewById(R.id.offer);
         info.setText(offer.toString());
     }
 
-    private void setAdminTextInfo(View v) {
+    @Override
+    protected void setAdminTextInfo(View v) {
         TextView info = v.findViewById(R.id.offer);
-        info.setText(adminOffer(offer));
-    }
-
-    private String adminOffer(Offer offer) {
-        return  "id=" + offer.getId() +
-                "\ndestination=" + offer.getDestination() +
-                "\nstart=" + offer.getStart() +
-                "\ncost=$" + offer.getCost() +
-                "\nemail=" + offer.getEmail() +
-                "\ndescription=" + offer.getDescription() +
-                "\ndate=" + offer.getDate();
+        info.setText(offer.adminOffer());
     }
 }

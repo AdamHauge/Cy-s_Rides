@@ -163,52 +163,7 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditText data = (EditText) findViewById(R.id.numBags);
-                boolean noDestination = null == destination;
-                boolean noStart = null == start;
-                boolean noBags = null == data.getText();
-                boolean noDate = 0 == year;
-                boolean allValid = false;
-
-                if (noDestination || noStart|| noBags || noDate) {
-                    Snackbar.make(findViewById(R.id.submit), "All data fields required", Snackbar.LENGTH_LONG).show();
-                }
-                else {
-                    allValid = true;
-
-                    /* check that number of bags is valid */
-                    try {
-                        numBags = Integer.parseInt(data.getText().toString());
-                    } catch (Exception e) {
-                        numBags = 0;
-                        allValid = false;
-                        Snackbar.make(findViewById(R.id.submit), "Number of bags must be a number", Snackbar.LENGTH_LONG).show();
-                    }
-                    /* check that start and end locations are valid */
-                    try {
-                        Geocoder gcd = new Geocoder(CreateRequest.this, Locale.getDefault());
-                        List<Address> destAddress = gcd.getFromLocation(destination.getLatLng().latitude, destination.getLatLng().longitude, 1);
-                        List<Address> startAddress = gcd.getFromLocation(start.getLatLng().latitude, start.getLatLng().longitude, 1);
-
-                        if(!destAddress.get(0).getLocality().equals("Ames") && !startAddress.get(0).getLocality().equals("Ames") &&
-                                !destAddress.get(0).getAdminArea().equals("Iowa") && !startAddress.get(0).getAdminArea().equals("United States")) {
-                            allValid = false;
-                            Snackbar.make(findViewById(R.id.submit), "Ride must start or end in Ames, IA", Snackbar.LENGTH_LONG).show();
-                        }
-
-                        if(!destAddress.get(0).getCountryName().equals("United States") || !startAddress.get(0).getCountryName().equals("United States")) {
-                            allValid = false;
-                            Snackbar.make(findViewById(R.id.submit), "Ride must start and end in United States", Snackbar.LENGTH_LONG).show();
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    data = (EditText) findViewById(R.id.Description);
-                    description = data.getText().toString();
-                }
-
-                if(allValid) {
+                if(checkInput()) {
                     Request r = new Request(numBags, userIntentService.getUserFromIntent(
                             getIntent()).getNetID(), (String) destination.getName(),
                             destination.getLatLng(), (String) start.getName(), start.getLatLng(),
@@ -220,9 +175,57 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
             }
         });
 
-        if(navigationService.checkInternetConnection(getApplicationContext())) {
+        if(navigationService.checkInternetConnection(CreateRequest.this)) {
             connectionPopUp();
         }
+    }
+
+    private boolean checkInput() {
+        EditText data = (EditText) findViewById(R.id.numBags);
+        boolean noDestination = null == destination;
+        boolean noStart = null == start;
+        boolean noBags = null == data.getText();
+        boolean noDate = 0 == year;
+        boolean allValid = false;
+
+        if (noDestination || noStart|| noBags || noDate) {
+            Snackbar.make(findViewById(R.id.submit), "All data fields required", Snackbar.LENGTH_LONG).show();
+        }
+        else {
+            allValid = true;
+
+                    /* check that number of bags is valid */
+            try {
+                numBags = Integer.parseInt(data.getText().toString());
+            } catch (Exception e) {
+                numBags = 0;
+                allValid = false;
+                Snackbar.make(findViewById(R.id.submit), "Number of bags must be a number", Snackbar.LENGTH_LONG).show();
+            }
+                    /* check that start and end locations are valid */
+            try {
+                Geocoder gcd = new Geocoder(CreateRequest.this, Locale.getDefault());
+                List<Address> destAddress = gcd.getFromLocation(destination.getLatLng().latitude, destination.getLatLng().longitude, 1);
+                List<Address> startAddress = gcd.getFromLocation(start.getLatLng().latitude, start.getLatLng().longitude, 1);
+
+                if(!destAddress.get(0).getLocality().equals("Ames") && !startAddress.get(0).getLocality().equals("Ames") &&
+                        !destAddress.get(0).getAdminArea().equals("Iowa") && !startAddress.get(0).getAdminArea().equals("United States")) {
+                    allValid = false;
+                    Snackbar.make(findViewById(R.id.submit), "Ride must start or end in Ames, IA", Snackbar.LENGTH_LONG).show();
+                }
+
+                if(!destAddress.get(0).getCountryName().equals("United States") || !startAddress.get(0).getCountryName().equals("United States")) {
+                    allValid = false;
+                    Snackbar.make(findViewById(R.id.submit), "Ride must start and end in United States", Snackbar.LENGTH_LONG).show();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            data = (EditText) findViewById(R.id.Description);
+            description = data.getText().toString();
+        }
+        return allValid;
     }
 
     @Override
@@ -306,7 +309,7 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
                     DrawerLayout drawer = (DrawerLayout) findViewById(R.id.create_request_activity);
                     drawer.closeDrawer(GravityCompat.START);
 
-                    if (navigationService.checkInternetConnection(getApplicationContext())) {
+                    if (navigationService.checkInternetConnection(CreateRequest.this)) {
                         connectionPopUp();
                         retValue = false;
                     } else {
@@ -322,7 +325,7 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
     }
 
     public void connectionPopUp() {
-        Snackbar snackbar = activityService.setupConnection(this.getApplicationContext(), findViewById(R.id.contacts_activity));
+        Snackbar snackbar = activityService.setupConnection(CreateRequest.this, findViewById(R.id.contacts_activity));
         snackbar.show();
     }
 }

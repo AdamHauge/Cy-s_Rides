@@ -225,7 +225,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
             }
         });
 
-        if(navigationService.checkInternetConnection(getApplicationContext())) {
+        if(navigationService.checkInternetConnection(CreateOffer.this)) {
             connectionPopUp();
         }
     }
@@ -288,7 +288,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
                     DrawerLayout drawer = (DrawerLayout) findViewById(R.id.create_offer_activity);
                     drawer.closeDrawer(GravityCompat.START);
 
-                    if (navigationService.checkInternetConnection(getApplicationContext())) {
+                    if (navigationService.checkInternetConnection(CreateOffer.this)) {
                         connectionPopUp();
                         retValue = false;
                     } else {
@@ -307,7 +307,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
      * insert option to connect to wifi
      */
     public void connectionPopUp() {
-        Snackbar snackbar = activityService.setupConnection(this.getApplicationContext(), findViewById(R.id.contacts_activity));
+        Snackbar snackbar = activityService.setupConnection(CreateOffer.this, findViewById(R.id.contacts_activity));
         snackbar.show();
     }
 }

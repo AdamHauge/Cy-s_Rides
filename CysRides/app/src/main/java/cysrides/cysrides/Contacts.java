@@ -72,7 +72,7 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
             }
         });
 
-        if(navigationService.checkInternetConnection(getApplicationContext())) {
+        if(navigationService.checkInternetConnection(Contacts.this)) {
             connectionPopUp();
         }
     }
@@ -133,7 +133,7 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
 
             return true;
         }
-        else if(navigationService.checkInternetConnection(getApplicationContext())) {
+        else if(navigationService.checkInternetConnection(Contacts.this)) {
             connectionPopUp();
             return false;
         }
@@ -144,7 +144,7 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
     }
 
     public void connectionPopUp() {
-        Snackbar snackbar = activityService.setupConnection(this.getApplicationContext(), findViewById(R.id.contacts_activity));
+        Snackbar snackbar = activityService.setupConnection(Contacts.this, findViewById(R.id.contacts_activity));
         snackbar.show();
     }
 }

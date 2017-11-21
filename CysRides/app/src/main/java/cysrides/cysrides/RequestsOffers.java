@@ -78,8 +78,8 @@ public class RequestsOffers extends AppCompatActivity implements NavigationView.
         navigationService.hideMenuItems(menu, userIntentService.getUserFromIntent(this.getIntent()));
 
         refresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
-        refresh.setColorSchemeColors(ContextCompat.getColor(this.getApplicationContext(),
-                R.color.colorGold), ContextCompat.getColor(this.getApplicationContext(), R.color.colorCardinal));
+        refresh.setColorSchemeColors(ContextCompat.getColor(RequestsOffers.this,
+                R.color.colorGold), ContextCompat.getColor(RequestsOffers.this, R.color.colorCardinal));
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -107,7 +107,7 @@ public class RequestsOffers extends AppCompatActivity implements NavigationView.
 //            }
 //        });
 
-        if(navigationService.checkInternetConnection(getApplicationContext())) {
+        if(navigationService.checkInternetConnection(RequestsOffers.this)) {
             connectionPopUp();
         }
     }
@@ -237,7 +237,7 @@ public class RequestsOffers extends AppCompatActivity implements NavigationView.
 
             return true;
         }
-        else if(navigationService.checkInternetConnection(getApplicationContext())) {
+        else if(navigationService.checkInternetConnection(RequestsOffers.this)) {
             connectionPopUp();
             return false;
         }
@@ -248,7 +248,7 @@ public class RequestsOffers extends AppCompatActivity implements NavigationView.
     }
 
     public void connectionPopUp() {
-        Snackbar snackbar = activityService.setupConnection(this.getApplicationContext(), findViewById(R.id.contacts_activity));
+        Snackbar snackbar = activityService.setupConnection(RequestsOffers.this, findViewById(R.id.contacts_activity));
         snackbar.show();
     }
 }

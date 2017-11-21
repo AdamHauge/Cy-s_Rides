@@ -150,7 +150,7 @@ public class LoginActivity extends AppCompatActivity {
         String subject = "Welcome to Cy's Rides!";
         String body = "Here's your confirmation code: " + generateCode();
 
-        emailVolley.sendEmail(to, from, subject, body, this.getApplicationContext());
+        emailVolley.sendEmail(to, from, subject, body, LoginActivity.this);
     }
 
     /*

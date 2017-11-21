@@ -145,23 +145,27 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
             requests = new ArrayList<>();
             for(int i=0; i < jsonArray.length();i++){
                 Log.d("JSON",jsonArray.toString());
-                JSONObject jsonOffer = jsonArray.getJSONObject(i);
+                JSONObject jsonRequest = jsonArray.getJSONObject(i);
 
-                String stringId = jsonOffer.getString("ID");
+                String stringId = jsonRequest.getString("ID");
                 int id = Integer.parseInt(stringId);
-                String stringCost = jsonOffer.getString("NUM_BAGS");
+                String stringCost = jsonRequest.getString("NUM_BAGS");
                 int numBags = Integer.parseInt(stringCost);
-                String email = jsonOffer.getString("EMAIL");
+                String email = jsonRequest.getString("EMAIL");
 
-                String stringDestination = jsonOffer.getString("DESTINATION");
-                String destinationName = getDestinationName(stringDestination);
-                LatLng latitudeLongitude = getLatLngFromDatabase(stringDestination);
+                String stringDestination = jsonRequest.getString("DESTINATION");
+                String destinationName = getLocationName(stringDestination);
+                LatLng destLatLng = getLatLngFromDatabase(stringDestination);
 
-                String description = jsonOffer.getString("DESCRIPTION");
-                String stringDate = jsonOffer.getString("DATE");
+                String stringStart = jsonRequest.getString("START");
+                String startName = getLocationName(stringStart);
+                LatLng startLatLng = getLatLngFromDatabase(stringStart);
+
+                String description = jsonRequest.getString("DESCRIPTION");
+                String stringDate = jsonRequest.getString("DATE");
                 Date date =  new Date();
 
-                int group_id = jsonOffer.getInt("GROUP_ID");
+                int group_id = jsonRequest.getInt("GROUP_ID");
 
                 try {
                     date = new SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(stringDate);
@@ -169,7 +173,9 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
                     e.printStackTrace();
                 }
 
-                domain.Request request = new domain.Request(numBags, id, email, destinationName, latitudeLongitude, null, null, description, date, group_id, this.currentContext);
+                domain.Request request = new domain.Request(numBags, id, email, destinationName,
+                        destLatLng, startName, startLatLng, description, date, group_id,
+                        this.currentContext);
                 requests.add(request);
                 Log.d("size", requests.size()+"");
             }
@@ -231,14 +237,14 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
 
 
     /* parse destination from string */
-    private String getDestinationName(String stringDestination) {
-        String[] splitDestination = stringDestination.split(" lat/lng: ");
+    private String getLocationName(String location) {
+        String[] splitDestination = location.split(" lat/lng: ");
         return splitDestination[0];
     }
 
     /* parse LatLng from string */
-    private LatLng getLatLngFromDatabase(String stringDestination) {
-        String[] splitDestination = stringDestination.split(" lat/lng: ");
+    private LatLng getLatLngFromDatabase(String location) {
+        String[] splitDestination = location.split(" lat/lng: ");
         String latLong = splitDestination[1];
         latLong = latLong.replace("(","");
         latLong = latLong.replace(")","");

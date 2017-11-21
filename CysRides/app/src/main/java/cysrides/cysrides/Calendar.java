@@ -106,7 +106,7 @@ public class Calendar extends AppCompatActivity implements NavigationView.OnNavi
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_calendar);
         drawer.closeDrawer(GravityCompat.START);
         if(R.id.logout == id) {
-            AlertDialog.Builder alert = navigationService.logOutButton(this.getApplicationContext());
+            AlertDialog.Builder alert = navigationService.logOutButton(Calendar.this);
             alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     SaveSharedPreference.clearUsernamePassword(Calendar.this);
@@ -116,7 +116,7 @@ public class Calendar extends AppCompatActivity implements NavigationView.OnNavi
 
             return true;
         }
-        else if(navigationService.checkInternetConnection(getApplicationContext())) {
+        else if(navigationService.checkInternetConnection(Calendar.this)) {
             connectionPopUp();
             return false;
         }
@@ -127,7 +127,7 @@ public class Calendar extends AppCompatActivity implements NavigationView.OnNavi
     }
 
     public void connectionPopUp() {
-        Snackbar snackbar = activityService.setupConnection(this.getApplicationContext(), findViewById(R.id.activity_calendar));
+        Snackbar snackbar = activityService.setupConnection(Calendar.this, findViewById(R.id.activity_calendar));
         snackbar.show();
     }
 }
