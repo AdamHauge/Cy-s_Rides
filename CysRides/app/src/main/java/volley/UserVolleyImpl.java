@@ -78,6 +78,7 @@ public class UserVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements 
                 params.put("profileDescription", currentUser.getProfileDescription());
                 params.put("userType", currentUser.getUserType().toString());
                 params.put("userRating", currentUser.ratingToString(currentUser.getUserRating()));
+                params.put("dateJoined", currentUser.getDateJoined());
                 return params;
             }
         };
@@ -109,12 +110,15 @@ public class UserVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements 
                 String userType = jsonUser.getString("USER_TYPE");
                 UserType type = UserType.valueOf(userType);
                 float userRating = (float) jsonUser.getDouble("USER_RATING");
+                String dateJoined = jsonUser.getString("DATE_JOINED");
 
                 List<Offer> offers = new ArrayList<>();
                 List<domain.Request> requests = new ArrayList<>();
 
                 UserInfo user = new UserInfo(netID, userPassword, confirmationCode, firstName, lastName,
-                        venmo, profileDescription, type, userRating, offers, requests, 0);
+                        venmo, profileDescription, type, userRating, offers, requests);
+
+                user.setDateJoined(dateJoined);
 
                 users.add(user);
                 Log.d("size", users.size() + "");
