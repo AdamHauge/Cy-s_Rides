@@ -110,13 +110,13 @@
                 android:id="@+id/passengerRadioButton"
                 android:layout_width="112dp"
                 android:layout_height="wrap_content"
-                android:text="@string/passenger" />
+                android:text="Passenger" />
 
             <RadioButton
                 android:id="@+id/driverRadioButton"
                 android:layout_width="92dp"
                 android:layout_height="wrap_content"
-                android:text="@string/driver" />
+                android:text="Driver" />
 
         </RadioGroup>
 

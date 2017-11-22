@@ -1,6 +1,8 @@
 package volley;
 
 import android.content.Context;
+import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -9,17 +11,34 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import domain.Offer;
+import domain.UserInfo;
+import domain.UserType;
 import service.Callback;
 
-public class UserRatingVolleyImpl implements UserRatingVolley {
+public class UserRatingVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements UserRatingVolley {
 
     private String addRatingUrl = "http://proj-309-sa-b-5.cs.iastate.edu/addRating.php";
     private String getRatingUrl = "http://proj-309-sa-b-5.cs.iastate.edu/getRating.php";
     private Context currentContext;
     private Callback callback;
+    private String rating;
+    private String numberRatings;
+    private ArrayList<String> ratings;
 
     public UserRatingVolleyImpl(Callback call){
         callback = call;
@@ -58,6 +77,75 @@ public class UserRatingVolleyImpl implements UserRatingVolley {
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
 
     }
+
+    public void onPostExecute(JSONArray jsonArray) {
+        try{
+            ratings = new ArrayList<>();
+            for(int i = 0; i < jsonArray.length(); i++) {
+                Log.d("JSON", jsonArray.toString());
+                JSONObject jsonRating = jsonArray.getJSONObject(i);
+
+                rating = jsonRating.getString("RATING");
+                numberRatings = jsonRating.getString("NUMBER_RATINGS");
+
+                ratings.add(rating);
+                ratings.add(numberRatings);
+
+                Log.d("size", ratings.size() + "");
+
+            }
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        callback.call(ratings);
+    }
+
+    /*
+    Part of the asynchronous process of grabbing a list of users from the database. Reads the strings from the
+    JSONObjects received from the database and adds them to the JSONArray.
+     */
+    @Override
+    protected JSONArray doInBackground(Void... aVoid) {
+        HttpURLConnection urlConnection = null;
+        StringBuilder result = new StringBuilder();
+
+        try {
+            URL url = new URL(getRatingUrl);
+            urlConnection = (HttpURLConnection) url.openConnection();
+            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                result.append(line);
+            }
+
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                if(null != urlConnection) {
+                    urlConnection.disconnect();
+                }
+            }catch(NullPointerException e) {
+                e.printStackTrace();
+            }
+        }
+
+        Log.d("String", result.toString());
+        JSONArray array = null;
+        try {
+            array = new JSONArray(result.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return array;
+    }
+
 
 
 }

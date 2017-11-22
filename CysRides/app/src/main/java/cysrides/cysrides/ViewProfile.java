@@ -19,15 +19,21 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
+
 import domain.UserInfo;
 import service.ActivityService;
 import service.ActivityServiceImpl;
+import service.Callback;
 import service.NavigationService;
 import service.NavigationServiceImpl;
 import service.UserIntentService;
 import service.UserIntentServiceImpl;
+import volley.UserRatingVolley;
+import volley.UserRatingVolleyImpl;
+import volley.UserVolleyImpl;
 
-public class ViewProfile extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class ViewProfile extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private NavigationService navigationService = new NavigationServiceImpl();
     private UserIntentService userIntentService = new UserIntentServiceImpl();
@@ -121,29 +127,50 @@ public class ViewProfile extends AppCompatActivity implements NavigationView.OnN
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.my_profile);
         drawer.closeDrawer(GravityCompat.START);
-        if(R.id.logout == id) {
-            AlertDialog.Builder alert = navigationService.logOutButton(ViewProfile.this);
+        if (R.id.logout == id) {
+            AlertDialog.Builder alert = navigationService.logOutButton(this.getApplicationContext());
             alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     SaveSharedPreference.clearUsernamePassword(ViewProfile.this);
                     startActivity(i);
-                }});
+                }
+            });
             alert.show();
 
             return true;
-        }
-        else if(navigationService.checkInternetConnection(ViewProfile.this)) {
+        } else if (navigationService.checkInternetConnection(getApplicationContext())) {
             connectionPopUp();
             return false;
-        }
-        else {
+        } else {
             startActivity(i);
             return true;
         }
     }
 
     public void connectionPopUp() {
-        Snackbar snackbar = activityService.setupConnection(ViewProfile.this, findViewById(R.id.my_profile));
+        Snackbar snackbar = activityService.setupConnection(this.getApplicationContext(), findViewById(R.id.my_profile));
         snackbar.show();
     }
+
+    @SuppressWarnings("unchecked")
+    private void getRatings(String netID) {
+        UserRatingVolley volley = new UserRatingVolleyImpl(new Callback() {
+            ArrayList<String> ratings;
+
+            public void call(ArrayList<?> result) {
+                try {
+                    if (result.get(0) instanceof String) {
+                        ratings = (ArrayList<String>) result;
+                    }
+                } catch (Exception e) {
+                    ratings = new ArrayList<>();
+                }
+
+
+            }
+
+        });
+        //volley.execute();
+    }
+
 }

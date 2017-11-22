@@ -11,7 +11,7 @@
 
   $post_netid = mysqli_real_escape_string($conn, $_POST['netID']);
 
-  $sql = "SELECT RATING FROM USER_RATINGS_TABLE WHERE NETID = '".$post_netid."';";
+  $sql = "SELECT * FROM USER_RATINGS_TABLE WHERE NETID = '".$post_netid."';";
 
   $result = $conn->query($sql);
 
