@@ -23,6 +23,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.google.android.gms.location.places.Place;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +36,7 @@ import service.NavigationService;
 import service.NavigationServiceImpl;
 import service.RefreshService;
 import service.RefreshServiceImpl;
+import service.SearchCallback;
 import service.UserIntentService;
 import service.UserIntentServiceImpl;
 import volley.RequestVolleyImpl;
@@ -179,7 +182,7 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.my_profile_button, menu);
+        getMenuInflater().inflate(R.menu.profile_and_search, menu);
         return true;
     }
 
@@ -196,10 +199,27 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.my_profile) {
+        if (R.id.my_profile == id) {
             i = userIntentService.createIntent(RideRequests.this, ViewProfile.class, userIntentService.getUserFromIntent(this.getIntent()));
             i.putExtra("caller", "Ride Requests");
             startActivity(i);
+        }
+
+        else if (R.id.search == id) {
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            RideSearch rideSearch = new RideSearch();
+            rideSearch.setCallback(new SearchCallback() {
+                @Override
+                public void call(Place place) {
+                    onBackPressed();
+
+                    //TODO filter results
+                }
+            });
+
+            fragmentTransaction.replace(R.id.ride_requests_activity, rideSearch);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
         }
 
         return super.onOptionsItemSelected(item);

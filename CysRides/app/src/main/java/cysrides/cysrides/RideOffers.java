@@ -202,6 +202,8 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
                 @Override
                 public void call(Place place) {
                     onBackPressed();
+
+                    //TODO filter results
                 }
             });
 
