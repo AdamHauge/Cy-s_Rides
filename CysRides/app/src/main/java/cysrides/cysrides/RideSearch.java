@@ -1,8 +1,6 @@
 package cysrides.cysrides;
 
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,7 +12,6 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 
@@ -23,7 +20,6 @@ import service.SearchCallback;
 public class RideSearch extends Fragment {
 
     private SearchCallback callback;
-    private Place result;
 
     public RideSearch() {
         // Required empty public constructor
@@ -42,7 +38,7 @@ public class RideSearch extends Fragment {
         placeAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                callback.call(result);
+                callback.call(place);
             }
 
             @Override

@@ -16,11 +16,23 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:id="@+id/search_result"
+            android:background="#9B945F"
+            android:textColor="#524727"
+            android:textSize="20sp"
+            android:clickable="true"
+            android:visibility="gone"
+            />
+
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="?attr/actionBarSize">
+
             <ListView
                 android:id="@+id/ride_offers_list"
                 android:layout_width="wrap_content"
