@@ -40,6 +40,11 @@ public class ViewProfile extends AppCompatActivity implements NavigationView.OnN
     private ActivityService activityService = new ActivityServiceImpl();
 
     private Intent i;
+    UserInfo user;
+
+    TextView testView;
+    RatingBar userRatingBar;
+
 
     /*
     When this activity is created, it initializes all the UI components to the values of the UserInfo
@@ -57,18 +62,21 @@ public class ViewProfile extends AppCompatActivity implements NavigationView.OnN
         TextView lastNameView = (TextView) findViewById(R.id.lastNameView);
         TextView descriptionView = (TextView) findViewById(R.id.descriptionView);
         TextView venmoView = (TextView) findViewById(R.id.venmoView);
-        RatingBar userRatingBar = (RatingBar) findViewById(R.id.userRatingBar);
         TextView dateJoinedView = (TextView) findViewById(R.id.dateJoinedView);
+        userRatingBar = (RatingBar) findViewById(R.id.userRatingBar);
 
-        UserInfo user = userIntentService.getUserFromIntent(this.getIntent());
+        testView = (TextView) findViewById(R.id.testView);
+
+        user = userIntentService.getUserFromIntent(this.getIntent());
 
         netIDView.setText(user.getNetID().split("@iastate.edu")[0]);
         firstNameView.setText(user.getFirstName());
         lastNameView.append(user.getLastName());
         descriptionView.setText(user.getProfileDescription());
         venmoView.append(user.getVenmoName());
-        userRatingBar.setRating(user.getUserRating());
         dateJoinedView.append(user.getDateJoined());
+
+        getRatings(user.getNetID());
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.my_profile);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -127,14 +135,13 @@ public class ViewProfile extends AppCompatActivity implements NavigationView.OnN
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.my_profile);
         drawer.closeDrawer(GravityCompat.START);
-        if (R.id.logout == id) {
-            AlertDialog.Builder alert = navigationService.logOutButton(this.getApplicationContext());
+        if(R.id.logout == id) {
+            AlertDialog.Builder alert = navigationService.logOutButton(ViewProfile.this);
             alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     SaveSharedPreference.clearUsernamePassword(ViewProfile.this);
                     startActivity(i);
-                }
-            });
+                }});
             alert.show();
 
             return true;
@@ -153,24 +160,34 @@ public class ViewProfile extends AppCompatActivity implements NavigationView.OnN
     }
 
     @SuppressWarnings("unchecked")
-    private void getRatings(String netID) {
-        UserRatingVolley volley = new UserRatingVolleyImpl(new Callback() {
+    private void getRatings(final String netID) {
+        UserRatingVolleyImpl volley = new UserRatingVolleyImpl(new Callback() {
             ArrayList<String> ratings;
 
             public void call(ArrayList<?> result) {
                 try {
-                    if (result.get(0) instanceof String) {
+                    if(result.get(0) instanceof String) {
                         ratings = (ArrayList<String>) result;
                     }
-                } catch (Exception e) {
+                } catch(Exception e) {
                     ratings = new ArrayList<>();
                 }
 
+                for(int i = 0; i < ratings.size(); i++){
+                    if(ratings.get(i).equals(netID)) {
+                        if (ratings.get(i + 1) != null && ratings.get(i + 2) != null){
+                            testView.append(ratings.get(i) + " " + ratings.get(i + 1) + " " + ratings.get(i + 2));
+                            user.setUserRating(Float.valueOf(ratings.get(i + 1)));
+                            userRatingBar.setRating(user.getUserRating());
+
+                        }
+                    }
+
+                }
 
             }
-
         });
-        //volley.execute();
+        volley.execute();
     }
 
 }

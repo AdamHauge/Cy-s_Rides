@@ -36,6 +36,7 @@ public class UserRatingVolleyImpl extends AsyncTask<Void, Void, JSONArray> imple
     private String getRatingUrl = "http://proj-309-sa-b-5.cs.iastate.edu/getRating.php";
     private Context currentContext;
     private Callback callback;
+    private String netID;
     private String rating;
     private String numberRatings;
     private ArrayList<String> ratings;
@@ -85,9 +86,11 @@ public class UserRatingVolleyImpl extends AsyncTask<Void, Void, JSONArray> imple
                 Log.d("JSON", jsonArray.toString());
                 JSONObject jsonRating = jsonArray.getJSONObject(i);
 
+                netID = jsonRating.getString("NETID");
                 rating = jsonRating.getString("RATING");
                 numberRatings = jsonRating.getString("NUMBER_RATINGS");
 
+                ratings.add(netID);
                 ratings.add(rating);
                 ratings.add(numberRatings);
 

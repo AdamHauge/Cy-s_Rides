@@ -81,6 +81,14 @@
             android:text="Venmo: "
             android:textAlignment="center" />
 
+        <TextView
+            android:id="@+id/testView"
+            android:layout_width="match_parent"
+            android:layout_height="275dp"
+            android:layout_weight="0.05"
+            android:text="Ratings: "
+            android:textAlignment="center" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -119,6 +127,8 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="false"
         app:menu="@menu/menu"
-        app:itemIconTint="@color/colorGold"/>
+        app:itemIconTint="@color/colorGold">
+
+    </android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>
