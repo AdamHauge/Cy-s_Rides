@@ -5,49 +5,57 @@
     <item
         android:id="@+id/profile"
         android:title="@string/profile"
-        android:icon="@mipmap/ic_launcher_round"
+        android:icon="@drawable/ic_menu_profile"
         app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/calendar_activity"
-        android:title="@string/calendar" />
+        android:title="@string/calendar"
+        android:icon="@drawable/ic_calendar"/>
 
     <item
         android:id="@+id/requests"
         android:title="@string/requests"
-        android:icon="@drawable/ic_search_black_24dp"
+        android:icon="@drawable/ic_menu_offer"
         app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/offers"
-        android:title="@string/offers" />
+        android:title="@string/offers"
+        android:icon="@drawable/ic_search_black_24dp" />
 
     <item
         android:id="@+id/contacts"
-        android:title="@string/contacts" />
+        android:title="@string/contacts"
+        android:icon="@drawable/ic_menu_contacts"/>
 
     <item
         android:id="@+id/createOffer"
-        android:title="@string/create_offer" />
+        android:title="@string/create_offer"
+        android:icon="@drawable/ic_menu_create"/>
 
     <item
         android:id="@+id/createRequest"
-        android:title="@string/create_request" />
+        android:title="@string/create_request"
+        android:icon="@drawable/ic_menu_create"/>
 
     <item
         android:id="@+id/requestsOffers"
-        android:title="View Requests and Offers" />
+        android:title="@string/requests_and_offers" />
 
     <item
         android:id="@+id/banUser"
-        android:title="Ban User" />
+        android:title="@string/ban_user"
+        android:icon="@drawable/ic_menu_ban_user"/>
 
     <item
         android:id="@+id/bannedUsers"
-        android:title="View Banned Users" />
+        android:title="@string/banned_users"
+        android:icon="@drawable/ic_menu_banned_users"/>
 
     <item
         android:id="@+id/logout"
-        android:title="@string/logout" />
+        android:title="@string/logout"
+        android:icon="@drawable/ic_menu_logout"/>
 
 </menu>

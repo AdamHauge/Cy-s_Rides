@@ -13,9 +13,10 @@
     <string name="create_offer">Create Ride Offer</string>
     <string name="title_activity_login">Sign in</string>
 
-    <!-- Strings related to login -->
+    <!-- Strings related to login and registration-->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>
+    <string name="password">Password</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This email address is invalid</string>
@@ -23,6 +24,14 @@
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
+    <string name="register_caps">REGISTER</string>
+    <string name="confirmation_code">Enter your confirmation code below: </string>
+    <string name="go">GO</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="venmo">Venmo</string>
+    <string name="profile_desc">Profile Description</string>
+    <string name="user_type">Select whether you will be a driver or a passenger. Passengers can only request rides, and drivers can request and offer rides.</string>
 
     <!-- Strings related to ride requests and ride offers -->
     <string name="title_activity_ride_requests">Ride Requests</string>
@@ -35,6 +44,7 @@
     <string name="enter">Enter</string>
     <string name="submit">Submit</string>
     <string name="join">Join Ride</string>
+    <string name="requests_and_offers">View Requests and Offers</string>
 
     <!-- Strings related to profile -->
     <string name="large_text">
@@ -60,9 +70,11 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="title_activity_create_profile">CreateProfile</string>
+    <string name="title_activity_create_profile">Create Profile</string>
 
     <!-- Strings related to banning -->
+    <string name="ban_user">Ban User</string>
+    <string name="banned_users">View Banned Users</string>
     <string name="email">Email</string>
     <string name="reason">Reason</string>
 

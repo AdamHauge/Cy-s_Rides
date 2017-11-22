@@ -87,7 +87,7 @@ public class BanUser extends AppCompatActivity implements NavigationView.OnNavig
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.create_offer_activity);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ban_user_activity);
         i = userIntentService.createIntent(BanUser.this, MainActivity.class, userIntentService.getUserFromIntent(this.getIntent()));
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
