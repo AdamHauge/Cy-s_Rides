@@ -218,7 +218,6 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
                 @Override
                 public void call(Place place) {
                     String display = "Rides near\n" + place.getName().toString();
-                    Window window = getWindow();
 
                     onBackPressed();
 
@@ -303,7 +302,9 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
         }
 
         if(destinations.size() == 0) {
-            Snackbar.make(findViewById(R.id.ride_offers_activity), "No rides available", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(R.id.ride_offers_activity),
+                    "No rides available for this location. You can try making a new request.",
+                    Snackbar.LENGTH_SHORT).show();
             return false;
         }
 
