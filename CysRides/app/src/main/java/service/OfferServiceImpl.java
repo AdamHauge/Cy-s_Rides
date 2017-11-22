@@ -22,6 +22,11 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
+    public void deleteOffer(Context context, int id) {
+        offerVolley.deleteOffer(context, id);
+    }
+
+    @Override
     public void giveOfferGroup(Context context, final int offerId, final int groupId){
         offerVolley.giveOfferGroup(context, offerId, groupId);
     }

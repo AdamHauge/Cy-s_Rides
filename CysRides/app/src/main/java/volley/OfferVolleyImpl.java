@@ -34,6 +34,7 @@ import domain.Offer;
 public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements OfferVolley {
 
     private String createOfferUrl = "http://proj-309-sa-b-5.cs.iastate.edu/createOffer.php";
+    private String deleteOfferUrl = "http://proj-309-sa-b-5.cs.iastate.edu/deleteOffer.php";
     private String getOffersUrl = "http://proj-309-sa-b-5.cs.iastate.edu/getOffer.php";
     private String giveOfferGroupUrl = "http://proj-309-sa-b-5.cs.iastate.edu/giveOfferGroup.php";
     private Offer newOffer;
@@ -91,6 +92,35 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
                 params.put("start", startName);
                 params.put("description", newOffer.getDescription());
                 params.put("date", String.format("%s '%s'", "DATE", new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(newOffer.getDate())));
+                return params;
+            }
+        };
+
+        MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
+    }
+
+    @Override
+    public void deleteOffer(final Context context, final int id) {
+        currentContext = context;
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, deleteOfferUrl,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(currentContext, "Error...",Toast.LENGTH_SHORT).show();
+                        error.printStackTrace();
+                    }
+                }){
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("id", id+"");
                 return params;
             }
         };

@@ -34,6 +34,7 @@ import service.Callback;
 public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements RequestVolley {
 
     private String createRequestUrl = "http://proj-309-sa-b-5.cs.iastate.edu/createRequest.php";
+    private String deleteRequestUrl = "http://proj-309-sa-b-5.cs.iastate.edu/createRequest.php";
     private String getRequestsUrl = "http://proj-309-sa-b-5.cs.iastate.edu/getRequest.php";
     private String giveRequestGroupUrl = "http://proj-309-sa-b-5.cs.iastate.edu/giveRequestGroup.php";
 
@@ -93,6 +94,36 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
                 params.put("start", startName);
                 params.put("description", newRequest.getDescription());
                 params.put("date", String.format("%s '%s'", "DATE", new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(newRequest.getDate())));
+                return params;
+            }
+        };
+
+        /* push request to database */
+        MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
+    }
+
+    @Override
+    public void deleteRequest(final Context context, final int id) {
+        currentContext = context;
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, deleteRequestUrl,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(currentContext, "Error...",Toast.LENGTH_SHORT).show();
+                        error.printStackTrace();
+                    }
+                }){
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("id", id+"");
                 return params;
             }
         };
