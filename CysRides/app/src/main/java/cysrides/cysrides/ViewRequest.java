@@ -20,7 +20,7 @@ public class ViewRequest extends RideFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_view_request, container, false);
+        View v = inflater.inflate(R.layout.fragment_view_ride, container, false);
         setTextInfo(v);
         v.findViewById(R.id.join).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,13 +48,13 @@ public class ViewRequest extends RideFragment {
 
     @Override
     protected void setNonAdminTextInfo(View v) {
-        TextView info = v.findViewById(R.id.request);
+        TextView info = v.findViewById(R.id.ride);
         info.setText(request.toString());
     }
 
     @Override
     protected void setAdminTextInfo(View v) {
-        TextView info = v.findViewById(R.id.request);
+        TextView info = v.findViewById(R.id.ride);
         info.setText(request.adminRequest());
     }
 }

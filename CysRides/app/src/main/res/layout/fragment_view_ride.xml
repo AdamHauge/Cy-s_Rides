@@ -1,0 +1,30 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_view_ride"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="cysrides.cysrides.RideFragment"
+    android:orientation="vertical"
+    android:background="#80000000"
+    android:clickable="true">
+
+    <TextView
+        android:id="@+id/ride"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:background="#FFFFFF"/>
+
+    <Button
+        android:id="@+id/JoinAsDriverButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="JOIN AS DRIVER"/>
+
+    <Button
+        android:id="@+id/join"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/join"/>
+
+</LinearLayout>

@@ -8,8 +8,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import domain.Ban;
+import service.FragmentImpl;
 
-public class ViewBannedUser extends Fragment {
+public class ViewBannedUser extends FragmentImpl {
 
     private Ban ban;
     public ViewBannedUser() {

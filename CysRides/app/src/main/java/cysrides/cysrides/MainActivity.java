@@ -42,6 +42,7 @@ import domain.Request;
 import service.ActivityService;
 import service.ActivityServiceImpl;
 import service.Callback;
+import service.DrawerLock;
 import service.NavigationService;
 import service.NavigationServiceImpl;
 import service.UserIntentService;
@@ -49,12 +50,13 @@ import service.UserIntentServiceImpl;
 import volley.OfferVolleyImpl;
 import volley.RequestVolleyImpl;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, DrawerLock {
 
     private UserIntentService userIntentService = new UserIntentServiceImpl();
     private NavigationService navigationService = new NavigationServiceImpl();
     private ActivityService activityService = new ActivityServiceImpl();
 
+    private DrawerLayout drawer;
     private Intent i;
     private boolean backPressed = false;
     private GoogleMap googleMap;
@@ -74,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
 
         /* Initialize side drawer */
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main);
+        drawer = (DrawerLayout) findViewById(R.id.activity_main);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -291,6 +293,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }, 2000);
         }
+    }
+
+    @Override
+    public void lockDrawer(boolean enabled) {
+        int lockMode = enabled ? DrawerLayout.LOCK_MODE_LOCKED_CLOSED : DrawerLayout.LOCK_MODE_UNLOCKED;
+        drawer.setDrawerLockMode(lockMode);
     }
 
     /*

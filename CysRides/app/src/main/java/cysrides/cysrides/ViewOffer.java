@@ -19,7 +19,7 @@ public class ViewOffer extends RideFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_view_offer, container, false);
+        View v = inflater.inflate(R.layout.fragment_view_ride, container, false);
         setTextInfo(v);
         v.findViewById(R.id.join).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -28,6 +28,7 @@ public class ViewOffer extends RideFragment {
             }
         });
 
+        v.findViewById(R.id.JoinAsDriverButton).setVisibility(View.GONE);
 
         return v;
     }
@@ -39,13 +40,13 @@ public class ViewOffer extends RideFragment {
 
     @Override
     protected void setNonAdminTextInfo(View v) {
-        TextView info = v.findViewById(R.id.offer);
+        TextView info = v.findViewById(R.id.ride);
         info.setText(offer.toString());
     }
 
     @Override
     protected void setAdminTextInfo(View v) {
-        TextView info = v.findViewById(R.id.offer);
+        TextView info = v.findViewById(R.id.ride);
         info.setText(offer.adminOffer());
     }
 }

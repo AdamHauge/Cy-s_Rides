@@ -30,6 +30,7 @@ import domain.Ban;
 import service.ActivityService;
 import service.ActivityServiceImpl;
 import service.Callback;
+import service.DrawerLock;
 import service.NavigationService;
 import service.NavigationServiceImpl;
 import service.RefreshService;
@@ -38,7 +39,7 @@ import service.UserIntentService;
 import service.UserIntentServiceImpl;
 import volley.BanVolleyImpl;
 
-public class BannedUsers extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class BannedUsers extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DrawerLock {
 
     private UserIntentService userIntentService = new UserIntentServiceImpl();
     private NavigationService navigationService = new NavigationServiceImpl();
@@ -46,6 +47,7 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
     private ActivityService activityService = new ActivityServiceImpl();
 
     private Intent i;
+    private DrawerLayout drawer;
     private SwipeRefreshLayout refresh;
     private ArrayAdapter<String> adapter;
     private List<Ban> bans = new ArrayList<>();
@@ -59,7 +61,7 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.banned_users_activity);
+        drawer = (DrawerLayout) findViewById(R.id.banned_users_activity);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -147,6 +149,12 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
             i = userIntentService.createIntent(BannedUsers.this, MainActivity.class, userIntentService.getUserFromIntent(this.getIntent()));
             startActivity(i);
         }
+    }
+
+    @Override
+    public void lockDrawer(boolean enabled) {
+        int lockMode = enabled ? DrawerLayout.LOCK_MODE_LOCKED_CLOSED : DrawerLayout.LOCK_MODE_UNLOCKED;
+        drawer.setDrawerLockMode(lockMode);
     }
 
     @Override

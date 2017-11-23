@@ -31,11 +31,11 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 import java.util.List;
 
-import domain.Offer;
 import domain.Request;
 import service.ActivityService;
 import service.ActivityServiceImpl;
 import service.Callback;
+import service.DrawerLock;
 import service.NavigationService;
 import service.NavigationServiceImpl;
 import service.RefreshService;
@@ -45,7 +45,7 @@ import service.UserIntentService;
 import service.UserIntentServiceImpl;
 import volley.RequestVolleyImpl;
 
-public class RideRequests extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class RideRequests extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DrawerLock {
 
     private UserIntentService userIntentService = new UserIntentServiceImpl();
     private NavigationService navigationService = new NavigationServiceImpl();
@@ -53,6 +53,7 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
     private ActivityService activityService = new ActivityServiceImpl();
 
     private Intent i;
+    private DrawerLayout drawer;
     private SwipeRefreshLayout refresh;
     private ArrayAdapter<String> adapter;
     private List<Request> requests = new ArrayList<>();
@@ -68,7 +69,7 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
 
         /* initialize page input/output items */
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_requests_activity);
+        drawer = (DrawerLayout) findViewById(R.id.ride_requests_activity);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -184,6 +185,12 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
             i = userIntentService.createIntent(RideRequests.this, MainActivity.class, userIntentService.getUserFromIntent(this.getIntent()));
             startActivity(i);
         }
+    }
+
+    @Override
+    public void lockDrawer(boolean enabled) {
+        int lockMode = enabled ? DrawerLayout.LOCK_MODE_LOCKED_CLOSED : DrawerLayout.LOCK_MODE_UNLOCKED;
+        drawer.setDrawerLockMode(lockMode);
     }
 
     /*

@@ -6,10 +6,11 @@ import android.view.View;
 
 import domain.UserInfo;
 import domain.UserType;
+import service.FragmentImpl;
 import service.GroupService;
 import service.GroupServiceImpl;
 
-public abstract class RideFragment extends Fragment {
+public abstract class RideFragment extends FragmentImpl {
 
     protected GroupService groupService = new GroupServiceImpl();
     protected Context context;
