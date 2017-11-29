@@ -1,44 +1,56 @@
 package cysrides.cysrides;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import service.ActivityService;
 import service.ActivityServiceImpl;
 import service.NavigationService;
 import service.NavigationServiceImpl;
+import service.OfferService;
+import service.OfferServiceImpl;
+import service.RequestService;
+import service.RequestServiceImpl;
 import service.UserIntentService;
 import service.UserIntentServiceImpl;
 
-public class Calendar extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class AdminActions extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private UserIntentService userIntentService = new UserIntentServiceImpl();
-    private NavigationService navigationService = new NavigationServiceImpl();
     private ActivityService activityService = new ActivityServiceImpl();
 
+    private String id;
     private Intent i;
+    private NavigationService navigationService = new NavigationServiceImpl();
+    private boolean retValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_calendar);
-
+        setContentView(R.layout.activity_admin_actions);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
+        setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_calendar);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.admin_actions_activity);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -49,23 +61,50 @@ public class Calendar extends AppCompatActivity implements NavigationView.OnNavi
 
         Menu menu = navigationView.getMenu();
         navigationService.hideMenuItems(menu, userIntentService.getUserFromIntent(this.getIntent()));
+
+        i = this.getIntent();
+        Button banUser = (Button) findViewById(R.id.ban_user);
+        banUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                i = userIntentService.createIntent(AdminActions.this, BanUser.class, userIntentService.getUserFromIntent(i));
+                startActivity(i);
+            }
+        });
+        Button bannedUsers = (Button) findViewById(R.id.banned_users);
+        bannedUsers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                i = userIntentService.createIntent(AdminActions.this, BannedUsers.class, userIntentService.getUserFromIntent(i));
+                startActivity(i);
+            }
+        });
+        Button deleteRequestsAndOffers = (Button) findViewById(R.id.delete_requests_and_offers);
+        deleteRequestsAndOffers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                i = userIntentService.createIntent(AdminActions.this, DeleteRequestsAndOffers.class, userIntentService.getUserFromIntent(i));
+                startActivity(i);
+            }
+        });
+
+        if(navigationService.checkInternetConnection(AdminActions.this)) {
+            connectionPopUp();
+        }
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_calendar);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.admin_actions_activity);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             finish();
-            i = userIntentService.createIntent(Calendar.this, MainActivity.class, userIntentService.getUserFromIntent(this.getIntent()));
+            i = userIntentService.createIntent(AdminActions.this, MainActivity.class, userIntentService.getUserFromIntent(this.getIntent()));
             startActivity(i);
         }
     }
 
-    /*
-     * method that initializes menu
-     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -82,44 +121,38 @@ public class Calendar extends AppCompatActivity implements NavigationView.OnNavi
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.my_profile) {
-            i = userIntentService.createIntent(Calendar.this, ViewProfile.class, userIntentService.getUserFromIntent(this.getIntent()));
-            i.putExtra("caller", "Calendar");
+            i = userIntentService.createIntent(AdminActions.this, ViewProfile.class, userIntentService.getUserFromIntent(this.getIntent()));
+            i.putExtra("caller", "Contacts");
             startActivity(i);
         } else if(id == R.id.admin_actions) {
-            i = userIntentService.createIntent(Calendar.this, AdminActions.class, userIntentService.getUserFromIntent(this.getIntent()));
+            i = userIntentService.createIntent(AdminActions.this, ViewProfile.class, userIntentService.getUserFromIntent(this.getIntent()));
+            i.putExtra("caller", "Contacts");
             startActivity(i);
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-
-    /*
-         * method to handle user's menu selection
-         *
-         * Param: selected menu item
-         */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        i = navigationService.getNavigationIntent(item, Calendar.this, this.getIntent());
+        i = navigationService.getNavigationIntent(item, AdminActions.this, this.getIntent());
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_calendar);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.admin_actions_activity);
         drawer.closeDrawer(GravityCompat.START);
         if(R.id.logout == id) {
-            AlertDialog.Builder alert = navigationService.logOutButton(Calendar.this);
+            AlertDialog.Builder alert = navigationService.logOutButton(AdminActions.this);
             alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
-                    SaveSharedPreference.clearUsernamePassword(Calendar.this);
                     startActivity(i);
                 }});
             alert.show();
 
             return true;
         }
-        else if(navigationService.checkInternetConnection(Calendar.this)) {
+        else if(navigationService.checkInternetConnection(AdminActions.this)) {
             connectionPopUp();
             return false;
         }
@@ -129,8 +162,9 @@ public class Calendar extends AppCompatActivity implements NavigationView.OnNavi
         }
     }
 
+    //TODO Look at other classes to make sure this is done right
     public void connectionPopUp() {
-        Snackbar snackbar = activityService.setupConnection(Calendar.this, findViewById(R.id.activity_calendar));
+        Snackbar snackbar = activityService.setupConnection(AdminActions.this, findViewById(R.id.admin_actions_activity));
         snackbar.show();
     }
 }

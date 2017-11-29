@@ -258,6 +258,26 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
         return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.my_profile) {
+            i = userIntentService.createIntent(CreateOffer.this, ViewProfile.class, userIntentService.getUserFromIntent(this.getIntent()));
+            i.putExtra("caller", "Ride Offers");
+            startActivity(i);
+        } else if(id == R.id.admin_actions) {
+            i = userIntentService.createIntent(CreateOffer.this, AdminActions.class, userIntentService.getUserFromIntent(this.getIntent()));
+            startActivity(i);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull final MenuItem item) {

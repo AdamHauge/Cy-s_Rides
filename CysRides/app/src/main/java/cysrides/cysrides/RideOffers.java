@@ -240,6 +240,9 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
             fragmentTransaction.replace(R.id.ride_offers_activity, rideSearch);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
+        } else if(id == R.id.admin_actions) {
+            i = userIntentService.createIntent(RideOffers.this, AdminActions.class, userIntentService.getUserFromIntent(this.getIntent()));
+            startActivity(i);
         }
 
         return super.onOptionsItemSelected(item);

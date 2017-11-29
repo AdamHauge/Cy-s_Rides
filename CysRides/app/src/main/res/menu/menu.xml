@@ -43,19 +43,19 @@
         android:id="@+id/requestsOffers"
         android:title="@string/requests_and_offers" />
 
-    <item
-        android:id="@+id/banUser"
-        android:title="@string/ban_user"
-        android:icon="@drawable/ic_menu_ban_user"/>
+    <!--<item-->
+        <!--android:id="@+id/banUser"-->
+        <!--android:title="@string/ban_user"-->
+        <!--android:icon="@drawable/ic_menu_ban_user"/>-->
 
-    <item
-        android:id="@+id/bannedUsers"
-        android:title="@string/banned_users"
-        android:icon="@drawable/ic_menu_banned_users"/>
+    <!--<item-->
+        <!--android:id="@+id/bannedUsers"-->
+        <!--android:title="@string/banned_users"-->
+        <!--android:icon="@drawable/ic_menu_banned_users"/>-->
 
-    <item
-        android:id="@+id/deleteRequestsAndOffers"
-        android:title="Delete Requests and Offers"/>
+    <!--<item-->
+        <!--android:id="@+id/deleteRequestsAndOffers"-->
+        <!--android:title="Delete Requests and Offers"/>-->
 
     <item
         android:id="@+id/logout"

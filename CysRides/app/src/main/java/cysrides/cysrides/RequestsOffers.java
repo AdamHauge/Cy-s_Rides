@@ -212,6 +212,9 @@ public class RequestsOffers extends AppCompatActivity implements NavigationView.
             i = userIntentService.createIntent(RequestsOffers.this, ViewProfile.class, userIntentService.getUserFromIntent(this.getIntent()));
             i.putExtra("caller", "Ride Offers");
             startActivity(i);
+        } else if(id == R.id.admin_actions) {
+            i = userIntentService.createIntent(RequestsOffers.this, AdminActions.class, userIntentService.getUserFromIntent(this.getIntent()));
+            startActivity(i);
         }
 
         return super.onOptionsItemSelected(item);

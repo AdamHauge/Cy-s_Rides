@@ -276,6 +276,17 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
                 }});
             alert.setNegativeButton(android.R.string.no, null);
             alert.show();
+        } else if(id == R.id.admin_actions) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle("Discard Request");
+            alert.setMessage("This will discard your current request. Continue anyway?");
+            alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    i = userIntentService.createIntent(CreateRequest.this, AdminActions.class, userIntentService.getUserFromIntent(i));
+                    startActivity(i);
+                }});
+            alert.setNegativeButton(android.R.string.no, null);
+            alert.show();
         }
         return super.onOptionsItemSelected(item);
     }

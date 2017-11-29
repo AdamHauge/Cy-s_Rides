@@ -68,6 +68,10 @@
             android:label="Ride Requests and Offers"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".AdminActions"
+            android:label="Admin Actions"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".BanUser"
             android:label="Ban User"
             android:theme="@style/AppTheme.NoActionBar" />

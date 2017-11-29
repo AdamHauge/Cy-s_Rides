@@ -108,6 +108,9 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
             i = userIntentService.createIntent(Contacts.this, ViewProfile.class, userIntentService.getUserFromIntent(this.getIntent()));
             i.putExtra("caller", "Contacts");
             startActivity(i);
+        } else if(id == R.id.admin_actions) {
+            i = userIntentService.createIntent(Contacts.this, AdminActions.class, userIntentService.getUserFromIntent(this.getIntent()));
+            startActivity(i);
         }
 
         return super.onOptionsItemSelected(item);

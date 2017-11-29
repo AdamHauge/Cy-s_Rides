@@ -222,9 +222,7 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
             i = userIntentService.createIntent(RideRequests.this, ViewProfile.class, userIntentService.getUserFromIntent(this.getIntent()));
             i.putExtra("caller", "Ride Requests");
             startActivity(i);
-        }
-
-        else if (R.id.search == id) {
+        } else if (R.id.search == id) {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             RideSearch rideSearch = new RideSearch();
             rideSearch.setCallback(new SearchCallback() {
@@ -245,6 +243,9 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
             fragmentTransaction.replace(R.id.ride_requests_activity, rideSearch);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
+        } else if(id == R.id.admin_actions) {
+            i = userIntentService.createIntent(RideRequests.this, AdminActions.class, userIntentService.getUserFromIntent(this.getIntent()));
+            startActivity(i);
         }
 
         return super.onOptionsItemSelected(item);

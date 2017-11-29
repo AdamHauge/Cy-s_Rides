@@ -176,6 +176,9 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
             i = userIntentService.createIntent(BannedUsers.this, ViewProfile.class, userIntentService.getUserFromIntent(this.getIntent()));
             i.putExtra("caller", "Ride Offers");
             startActivity(i);
+        } else if(id == R.id.admin_actions) {
+            i = userIntentService.createIntent(BannedUsers.this, AdminActions.class, userIntentService.getUserFromIntent(this.getIntent()));
+            startActivity(i);
         }
 
         return super.onOptionsItemSelected(item);

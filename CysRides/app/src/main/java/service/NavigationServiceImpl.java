@@ -57,15 +57,6 @@ public class NavigationServiceImpl extends AppCompatActivity implements Navigati
             case R.id.requestsOffers:
                 intent = userIntentService.createIntent(context, RequestsOffers.class, userIntentService.getUserFromIntent(intent));
                 break;
-            case R.id.bannedUsers:
-                intent = userIntentService.createIntent(context, BannedUsers.class, userIntentService.getUserFromIntent(intent));
-                break;
-            case R.id.banUser:
-                intent = userIntentService.createIntent(context, BanUser.class, userIntentService.getUserFromIntent(intent));
-                break;
-            case R.id.deleteRequestsAndOffers:
-                intent = userIntentService.createIntent(context, DeleteRequestsAndOffers.class, userIntentService.getUserFromIntent(intent));
-                break;
             case R.id.logout:
                 intent = userIntentService.createIntent(context, LoginActivity.class, userIntentService.getUserFromIntent(intent));
                 break;
@@ -96,14 +87,10 @@ public class NavigationServiceImpl extends AppCompatActivity implements Navigati
             item.setVisible(false);
             item = menu.findItem(R.id.requests);
             item.setVisible(false);
-            item = menu.findItem(R.id.bannedUsers);
-            item.setVisible(false);
-            item = menu.findItem(R.id.banUser);
+            item = menu.findItem(R.id.admin_actions);
             item.setVisible(false);
         } else if(userInfo.getUserType() == UserType.DRIVER) {
-            item = menu.findItem(R.id.bannedUsers);
-            item.setVisible(false);
-            item = menu.findItem(R.id.banUser);
+            item = menu.findItem(R.id.admin_actions);
             item.setVisible(false);
         }
     }

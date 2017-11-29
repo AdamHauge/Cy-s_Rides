@@ -328,6 +328,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             i = userIntentService.createIntent(MainActivity.this, ViewProfile.class, userIntentService.getUserFromIntent(this.getIntent()));
             i.putExtra("caller", "Main Activity");
             startActivity(i);
+        } else if(id == R.id.admin_actions) {
+            i = userIntentService.createIntent(MainActivity.this, AdminActions.class, userIntentService.getUserFromIntent(this.getIntent()));
+            startActivity(i);
         }
 
         return super.onOptionsItemSelected(item);
