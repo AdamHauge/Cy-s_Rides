@@ -8,6 +8,6 @@
         app:showAsAction="always" />
     <item
         android:id="@+id/admin_actions"
-        android:title="Admin Actions"
+        android:title="A"
         app:showAsAction="always" />
 </menu>
