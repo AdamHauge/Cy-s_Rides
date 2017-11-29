@@ -34,7 +34,7 @@ import service.Callback;
 public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements RequestVolley {
 
     private String createRequestUrl = "http://proj-309-sa-b-5.cs.iastate.edu/createRequest.php";
-    private String deleteRequestUrl = "http://proj-309-sa-b-5.cs.iastate.edu/createRequest.php";
+    private String deleteRequestUrl = "http://proj-309-sa-b-5.cs.iastate.edu/deleteRequest.php";
     private String getRequestsUrl = "http://proj-309-sa-b-5.cs.iastate.edu/getRequest.php";
     private String giveRequestGroupUrl = "http://proj-309-sa-b-5.cs.iastate.edu/giveRequestGroup.php";
 

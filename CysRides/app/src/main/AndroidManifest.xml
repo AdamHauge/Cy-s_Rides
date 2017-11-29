@@ -75,6 +75,11 @@
             android:name=".BannedUsers"
             android:label="Banned Users"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".DeleteRequestsAndOffers"
+            android:label="Delete Requests and Offers"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".DialogConfirmationCode" />
         <activity android:name=".Calendar" />
     </application>

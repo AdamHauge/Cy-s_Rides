@@ -16,6 +16,7 @@ import cysrides.cysrides.Calendar;
 import cysrides.cysrides.Contacts;
 import cysrides.cysrides.CreateOffer;
 import cysrides.cysrides.CreateRequest;
+import cysrides.cysrides.DeleteRequestsAndOffers;
 import cysrides.cysrides.LoginActivity;
 import cysrides.cysrides.R;
 import cysrides.cysrides.RequestsOffers;
@@ -61,6 +62,9 @@ public class NavigationServiceImpl extends AppCompatActivity implements Navigati
                 break;
             case R.id.banUser:
                 intent = userIntentService.createIntent(context, BanUser.class, userIntentService.getUserFromIntent(intent));
+                break;
+            case R.id.deleteRequestsAndOffers:
+                intent = userIntentService.createIntent(context, DeleteRequestsAndOffers.class, userIntentService.getUserFromIntent(intent));
                 break;
             case R.id.logout:
                 intent = userIntentService.createIntent(context, LoginActivity.class, userIntentService.getUserFromIntent(intent));
