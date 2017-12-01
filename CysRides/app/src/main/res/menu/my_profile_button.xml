@@ -4,6 +4,10 @@
     <item
         android:id="@+id/my_profile"
         android:title="@string/profile"
-        android:icon="@mipmap/ic_launcher_round"
+        android:icon="@mipmap/ic_profile"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/admin_actions"
+        android:title="A"
         app:showAsAction="always" />
 </menu>

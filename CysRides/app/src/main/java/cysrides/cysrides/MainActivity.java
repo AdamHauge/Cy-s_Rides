@@ -42,6 +42,7 @@ import domain.Request;
 import service.ActivityService;
 import service.ActivityServiceImpl;
 import service.Callback;
+import service.DrawerLock;
 import service.NavigationService;
 import service.NavigationServiceImpl;
 import service.UserIntentService;
@@ -49,12 +50,13 @@ import service.UserIntentServiceImpl;
 import volley.OfferVolleyImpl;
 import volley.RequestVolleyImpl;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, DrawerLock {
 
     private UserIntentService userIntentService = new UserIntentServiceImpl();
     private NavigationService navigationService = new NavigationServiceImpl();
     private ActivityService activityService = new ActivityServiceImpl();
 
+    private DrawerLayout drawer;
     private Intent i;
     private boolean backPressed = false;
     private GoogleMap googleMap;
@@ -74,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
 
         /* Initialize side drawer */
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main);
+        drawer = (DrawerLayout) findViewById(R.id.activity_main);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -121,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         populateMap();
 
         /* check for internet connection */
-        if(navigationService.checkInternetConnection(getApplicationContext())) {
+        if(navigationService.checkInternetConnection(MainActivity.this)) {
             connectionPopUp();
         }
     }
@@ -143,19 +145,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                 Offer offerData;
                 Request requestData;
+                RideFragment rideFragment;
 
                 /* Check if marker is for an offer and open fragment */
                 if(null != (offerData = offerMarkers.get(marker))) {
-                    ViewOffer viewOffer = new ViewOffer();
-                    viewOffer.setData(offerData);
-                    fragmentTransaction.replace(R.id.activity_main, viewOffer);
+                    rideFragment = new ViewOffer();
+                    rideFragment.setData(offerData);
+                    rideFragment.setContext(MainActivity.this);
+                    rideFragment.setUserInfo(userIntentService.getUserFromIntent(getIntent()));
+
+                    fragmentTransaction.add(R.id.activity_main, rideFragment);
                 }
 
                 /* Check if marker is for a request and open fragment */
                 else if(null != (requestData = requestMarkers.get(marker))) {
-                    ViewRequest viewRequest = new ViewRequest();
-                    viewRequest.setData(requestData);
-                    fragmentTransaction.replace(R.id.activity_main, viewRequest);
+                    rideFragment = new ViewRequest();
+                    rideFragment.setData(requestData);
+                    rideFragment.setContext(MainActivity.this);
+                    rideFragment.setUserInfo(userIntentService.getUserFromIntent(getIntent()));
+
+                    fragmentTransaction.replace(R.id.activity_main, rideFragment);
                 }
 
                 /* error */
@@ -286,6 +295,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    @Override
+    public void lockDrawer(boolean enabled) {
+        int lockMode = enabled ? DrawerLayout.LOCK_MODE_LOCKED_CLOSED : DrawerLayout.LOCK_MODE_UNLOCKED;
+        drawer.setDrawerLockMode(lockMode);
+    }
+
     /*
      * method that initializes menu
      */
@@ -312,6 +327,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.my_profile) {
             i = userIntentService.createIntent(MainActivity.this, ViewProfile.class, userIntentService.getUserFromIntent(this.getIntent()));
             i.putExtra("caller", "Main Activity");
+            startActivity(i);
+        } else if(id == R.id.admin_actions) {
+            i = userIntentService.createIntent(MainActivity.this, AdminActions.class, userIntentService.getUserFromIntent(this.getIntent()));
             startActivity(i);
         }
 
@@ -346,7 +364,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return true;
         }
         /* check for internet connection before doing anything */
-        else if(navigationService.checkInternetConnection(getApplicationContext())) {
+        else if(navigationService.checkInternetConnection(MainActivity.this)) {
             connectionPopUp();
             return false;
         }
@@ -361,7 +379,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * insert option to connect to wifi
      */
     public void connectionPopUp() {
-        Snackbar snackbar = activityService.setupConnection(this.getApplicationContext(), findViewById(R.id.contacts_activity));
+        Snackbar snackbar = activityService.setupConnection(MainActivity.this, findViewById(R.id.activity_main));
         snackbar.show();
     }
 }

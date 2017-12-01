@@ -1,22 +1,16 @@
 package cysrides.cysrides;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import domain.Request;
-import service.GroupServiceImpl;
 
-public class ViewRequest extends Fragment {
+public class ViewRequest extends RideFragment {
 
     private Request request;
-    private GroupServiceImpl g = new GroupServiceImpl();
-    private Context context;
-    private String email;
 
     public ViewRequest() {
         // Required empty public constructor
@@ -26,12 +20,12 @@ public class ViewRequest extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_view_request, container, false);
+        View v = inflater.inflate(R.layout.fragment_view_ride, container, false);
         setTextInfo(v);
         v.findViewById(R.id.join).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                g.addRider(context, request.getGroup(), email);
+                groupService.addRider(context, request.getGroup(), request.getEmail());
 
             }
         });
@@ -39,7 +33,7 @@ public class ViewRequest extends Fragment {
 
            @Override
            public void onClick(View view) {
-                g.addDriver(context, request.getGroup(), email);
+               groupService.addDriver(context, request.getGroup(), request.getEmail());
            }
        }
 
@@ -47,16 +41,20 @@ public class ViewRequest extends Fragment {
         return v;
     }
 
-    public void setData(Request request) {
-        this.request = request;
+    @Override
+    protected <T> void setData(T request) {
+        this.request = (Request) request;
     }
 
-    public void setEmail(String email) { this.email =  email;}
-
-    public void setContext(Context context){this.context = context;}
-
-    public void setTextInfo(View v) {
-        TextView info = v.findViewById(R.id.request);
+    @Override
+    protected void setNonAdminTextInfo(View v) {
+        TextView info = v.findViewById(R.id.ride);
         info.setText(request.toString());
+    }
+
+    @Override
+    protected void setAdminTextInfo(View v) {
+        TextView info = v.findViewById(R.id.ride);
+        info.setText(request.adminRequest());
     }
 }

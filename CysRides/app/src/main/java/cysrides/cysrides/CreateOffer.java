@@ -2,7 +2,6 @@ package cysrides.cysrides;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -25,7 +24,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
@@ -41,8 +39,6 @@ import java.util.Locale;
 import domain.Offer;
 import service.ActivityService;
 import service.ActivityServiceImpl;
-import service.GroupService;
-import service.GroupServiceImpl;
 import service.NavigationService;
 import service.NavigationServiceImpl;
 import service.OfferService;
@@ -64,7 +60,6 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
     private double cost;
     private Intent i;
     private OfferService offerService = new OfferServiceImpl();
-    private GroupService groupService = new GroupServiceImpl();
     private NavigationService navigationService = new NavigationServiceImpl();
     boolean retValue;
 
@@ -230,7 +225,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
             }
         });
 
-        if(navigationService.checkInternetConnection(getApplicationContext())) {
+        if(navigationService.checkInternetConnection(CreateOffer.this)) {
             connectionPopUp();
         }
     }
@@ -263,6 +258,26 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
         return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.my_profile) {
+            i = userIntentService.createIntent(CreateOffer.this, ViewProfile.class, userIntentService.getUserFromIntent(this.getIntent()));
+            i.putExtra("caller", "Ride Offers");
+            startActivity(i);
+        } else if(id == R.id.admin_actions) {
+            i = userIntentService.createIntent(CreateOffer.this, AdminActions.class, userIntentService.getUserFromIntent(this.getIntent()));
+            startActivity(i);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
@@ -288,14 +303,12 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
             alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     // Handle navigation view item clicks here.
-                    int id = item.getItemId();
-
                     i = navigationService.getNavigationIntent(item, CreateOffer.this, i);
 
                     DrawerLayout drawer = (DrawerLayout) findViewById(R.id.create_offer_activity);
                     drawer.closeDrawer(GravityCompat.START);
 
-                    if (navigationService.checkInternetConnection(getApplicationContext())) {
+                    if (navigationService.checkInternetConnection(CreateOffer.this)) {
                         connectionPopUp();
                         retValue = false;
                     } else {
@@ -314,7 +327,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
      * insert option to connect to wifi
      */
     public void connectionPopUp() {
-        Snackbar snackbar = activityService.setupConnection(this.getApplicationContext(), findViewById(R.id.contacts_activity));
+        Snackbar snackbar = activityService.setupConnection(CreateOffer.this, findViewById(R.id.contacts_activity));
         snackbar.show();
     }
 }

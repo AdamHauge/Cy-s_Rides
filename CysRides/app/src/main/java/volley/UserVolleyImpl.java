@@ -37,9 +37,7 @@ public class UserVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements 
     private UserInfo currentUser;
     private Context currentContext;
     private ArrayList<UserInfo> users;
-    private UserInfo user;
     private Callback callback;
-    private String netID;
 
     public UserVolleyImpl(Callback call){
         callback = call;
@@ -80,6 +78,7 @@ public class UserVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements 
                 params.put("profileDescription", currentUser.getProfileDescription());
                 params.put("userType", currentUser.getUserType().toString());
                 params.put("userRating", currentUser.ratingToString(currentUser.getUserRating()));
+                params.put("dateJoined", currentUser.getDateJoined());
                 return params;
             }
         };
@@ -111,12 +110,15 @@ public class UserVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements 
                 String userType = jsonUser.getString("USER_TYPE");
                 UserType type = UserType.valueOf(userType);
                 float userRating = (float) jsonUser.getDouble("USER_RATING");
+                String dateJoined = jsonUser.getString("DATE_JOINED");
 
-                List<Offer> offers = new ArrayList<Offer>();
-                List<domain.Request> requests = new ArrayList<domain.Request>();
+                List<Offer> offers = new ArrayList<>();
+                List<domain.Request> requests = new ArrayList<>();
 
-                user = new UserInfo(netID, userPassword, confirmationCode, firstName, lastName,
+                UserInfo user = new UserInfo(netID, userPassword, confirmationCode, firstName, lastName,
                         venmo, profileDescription, type, userRating, offers, requests);
+
+                user.setDateJoined(dateJoined);
 
                 users.add(user);
                 Log.d("size", users.size() + "");

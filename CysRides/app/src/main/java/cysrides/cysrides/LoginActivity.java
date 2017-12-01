@@ -41,16 +41,24 @@ public class LoginActivity extends AppCompatActivity {
     private ArrayList<UserInfo> users;
     private UserInfo user;
 
-
+    /*
+    Constructor that sets the email and password views.
+     */
     void LoginActivity(){
         AutoCompleteTextView email = mEmailView;
         EditText password = mPasswordView;
     }
 
+    /*
+    Returns the value of the email field.
+     */
     public String getmEmailView() {
         return mEmailView.getText().toString();
     }
 
+    /*
+    Returns the value of the password field.
+     */
     public String getmPasswordView() {
         return mPasswordView.getText().toString();
     }
@@ -86,6 +94,9 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    /*
+    On back pressed, it double checks with the user if he or she would really like to exit the app.
+     */
     @Override
     public void onBackPressed() {
         AlertDialog.Builder alertbox = new AlertDialog.Builder(this);
@@ -100,11 +111,16 @@ public class LoginActivity extends AppCompatActivity {
         alertbox.show();
     }
 
+    /*
+    A valid email contains "@iastate.edu."
+     */
     private boolean isEmailValid(String email) {
         return email.contains("@iastate.edu");
     }
 
-
+    /*
+    A valid password contains a digit and is at least eight characters long.
+     */
     private boolean isPasswordValid(String password) {
         if (password.length() > 8){
             for (int i = 0; i < password.length(); i++) {
@@ -116,21 +132,32 @@ public class LoginActivity extends AppCompatActivity {
         return false;
     }
 
+    /*
+    Generates the random four digit confirmation code for the user.
+     */
     public String generateCode(){
         Random rand = new Random();
 
         return String.format(Locale.US, "%04d", rand.nextInt(10000));
     }
 
+    /*
+    Calls the emailValley send email method that sends the confirmation email to the inputted net-id.
+     */
     public void sendEmail(){
         String to = mEmailView.getText().toString();
         String from = "cysrides@iastate.edu";
         String subject = "Welcome to Cy's Rides!";
         String body = "Here's your confirmation code: " + generateCode();
 
-        emailVolley.sendEmail(to, from, subject, body, this.getApplicationContext());
+        emailVolley.sendEmail(to, from, subject, body, LoginActivity.this);
     }
 
+    /*
+    When the register button is clicked, it checks whether or not the email and password are valid.
+    If both are valid, the user continues onto the CreateProfile activity. If the email or password are
+    incorrect, a toast will appear alerting the user about the problem.
+     */
     public void onRegisterClick(View view){
         if((isEmailValid(mEmailView.getText().toString()) && isPasswordValid(mPasswordView.getText().toString()))) {
             Intent i;
@@ -149,6 +176,12 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    /*
+    Part of the asynchronous login process because this method grabs the list of users from the database.
+    From that list of users, the login service is called to find the specific user we want with the username
+    parameter. Sets the shared preferences of the user so that re-logging in is not necessary. If the login attempt
+    fails, a toast appears saying the entered credentials were not valid.
+     */
     @SuppressWarnings("unchecked")
     private void login(final String username, final String password) {
         UserVolleyImpl volley = new UserVolleyImpl(new Callback() {

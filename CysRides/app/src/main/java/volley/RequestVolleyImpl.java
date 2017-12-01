@@ -34,6 +34,7 @@ import service.Callback;
 public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements RequestVolley {
 
     private String createRequestUrl = "http://proj-309-sa-b-5.cs.iastate.edu/createRequest.php";
+    private String deleteRequestUrl = "http://proj-309-sa-b-5.cs.iastate.edu/deleteRequest.php";
     private String getRequestsUrl = "http://proj-309-sa-b-5.cs.iastate.edu/getRequest.php";
     private String giveRequestGroupUrl = "http://proj-309-sa-b-5.cs.iastate.edu/giveRequestGroup.php";
 
@@ -101,6 +102,36 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
 
+    @Override
+    public void deleteRequest(final Context context, final int id) {
+        currentContext = context;
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, deleteRequestUrl,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(currentContext, "Error...",Toast.LENGTH_SHORT).show();
+                        error.printStackTrace();
+                    }
+                }){
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("id", id+"");
+                return params;
+            }
+        };
+
+        /* push request to database */
+        MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
+    }
+
     /*
      * Method that takes group number that was just created and sets the groupID of the given request to the given group id
      */
@@ -145,22 +176,27 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
             requests = new ArrayList<>();
             for(int i=0; i < jsonArray.length();i++){
                 Log.d("JSON",jsonArray.toString());
-                JSONObject jsonOffer = jsonArray.getJSONObject(i);
+                JSONObject jsonRequest = jsonArray.getJSONObject(i);
 
-                String id = jsonOffer.getString("ID");
-                String stringCost = jsonOffer.getString("NUM_BAGS");
+                String stringId = jsonRequest.getString("ID");
+                int id = Integer.parseInt(stringId);
+                String stringCost = jsonRequest.getString("NUM_BAGS");
                 int numBags = Integer.parseInt(stringCost);
-                String email = jsonOffer.getString("EMAIL");
+                String email = jsonRequest.getString("EMAIL");
 
-                String stringDestination = jsonOffer.getString("DESTINATION");
-                String destinationName = getDestinationName(stringDestination);
-                LatLng latitudeLongitude = getLatLngFromDatabase(stringDestination);
+                String stringDestination = jsonRequest.getString("DESTINATION");
+                String destinationName = getLocationName(stringDestination);
+                LatLng destLatLng = getLatLngFromDatabase(stringDestination);
 
-                String description = jsonOffer.getString("DESCRIPTION");
-                String stringDate = jsonOffer.getString("DATE");
+                String stringStart = jsonRequest.getString("START");
+                String startName = getLocationName(stringStart);
+                LatLng startLatLng = getLatLngFromDatabase(stringStart);
+
+                String description = jsonRequest.getString("DESCRIPTION");
+                String stringDate = jsonRequest.getString("DATE");
                 Date date =  new Date();
 
-                int group_id = jsonOffer.getInt("GROUP_ID");
+                int group_id = jsonRequest.getInt("GROUP_ID");
 
                 try {
                     date = new SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(stringDate);
@@ -168,7 +204,9 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
                     e.printStackTrace();
                 }
 
-                domain.Request request = new domain.Request(numBags, email, destinationName, latitudeLongitude, description, date, group_id, this.currentContext);
+                domain.Request request = new domain.Request(numBags, id, email, destinationName,
+                        destLatLng, startName, startLatLng, description, date, group_id,
+                        this.currentContext);
                 requests.add(request);
                 Log.d("size", requests.size()+"");
             }
@@ -230,14 +268,14 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
 
 
     /* parse destination from string */
-    private String getDestinationName(String stringDestination) {
-        String[] splitDestination = stringDestination.split(" lat/lng: ");
+    private String getLocationName(String location) {
+        String[] splitDestination = location.split(" lat/lng: ");
         return splitDestination[0];
     }
 
     /* parse LatLng from string */
-    private LatLng getLatLngFromDatabase(String stringDestination) {
-        String[] splitDestination = stringDestination.split(" lat/lng: ");
+    private LatLng getLatLngFromDatabase(String location) {
+        String[] splitDestination = location.split(" lat/lng: ");
         String latLong = splitDestination[1];
         latLong = latLong.replace("(","");
         latLong = latLong.replace(")","");

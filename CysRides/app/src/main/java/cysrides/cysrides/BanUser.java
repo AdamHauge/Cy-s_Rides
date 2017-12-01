@@ -24,8 +24,6 @@ import service.ActivityService;
 import service.ActivityServiceImpl;
 import service.NavigationService;
 import service.NavigationServiceImpl;
-import service.OfferService;
-import service.OfferServiceImpl;
 import service.UserIntentService;
 import service.UserIntentServiceImpl;
 import volley.BanVolleyImpl;
@@ -37,7 +35,6 @@ public class BanUser extends AppCompatActivity implements NavigationView.OnNavig
 
     private String email, reason;
     private Intent i;
-    private OfferService offerService = new OfferServiceImpl();
     private BanVolleyImpl banVolley = new BanVolleyImpl();
     private NavigationService navigationService = new NavigationServiceImpl();
     boolean retValue;
@@ -83,14 +80,14 @@ public class BanUser extends AppCompatActivity implements NavigationView.OnNavig
             }
         });
 
-        if(navigationService.checkInternetConnection(getApplicationContext())) {
+        if(navigationService.checkInternetConnection(BanUser.this)) {
             connectionPopUp();
         }
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.create_offer_activity);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ban_user_activity);
         i = userIntentService.createIntent(BanUser.this, MainActivity.class, userIntentService.getUserFromIntent(this.getIntent()));
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -115,11 +112,30 @@ public class BanUser extends AppCompatActivity implements NavigationView.OnNavig
         return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.my_profile) {
+            i = userIntentService.createIntent(BanUser.this, ViewProfile.class, userIntentService.getUserFromIntent(this.getIntent()));
+            i.putExtra("caller", "Ride Offers");
+            startActivity(i);
+        } else if(id == R.id.admin_actions) {
+            i = userIntentService.createIntent(BanUser.this, AdminActions.class, userIntentService.getUserFromIntent(this.getIntent()));
+            startActivity(i);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
         i = this.getIntent();
-        final Context context = this.getApplicationContext();
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Discard Offer");
         alert.setMessage("This will discard your current offer. Continue anyway?");
@@ -130,7 +146,7 @@ public class BanUser extends AppCompatActivity implements NavigationView.OnNavig
 
                 i = navigationService.getNavigationIntent(item, BanUser.this, i);
 
-                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.create_offer_activity);
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ban_user_activity);
                 drawer.closeDrawer(GravityCompat.START);
                 if (R.id.logout == id) {
                     AlertDialog.Builder alert = navigationService.logOutButton(BanUser.this);
@@ -142,7 +158,7 @@ public class BanUser extends AppCompatActivity implements NavigationView.OnNavig
                     alert.show();
 
                     retValue = true;
-                } else if (navigationService.checkInternetConnection(getApplicationContext())) {
+                } else if (navigationService.checkInternetConnection(BanUser.this)) {
                     connectionPopUp();
                     retValue = false;
                 } else {
@@ -158,7 +174,7 @@ public class BanUser extends AppCompatActivity implements NavigationView.OnNavig
     }
 
     public void connectionPopUp() {
-        Snackbar snackbar = activityService.setupConnection(this.getApplicationContext(), findViewById(R.id.contacts_activity));
+        Snackbar snackbar = activityService.setupConnection(BanUser.this, findViewById(R.id.contacts_activity));
         snackbar.show();
     }
 }

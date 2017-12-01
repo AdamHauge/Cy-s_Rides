@@ -6,10 +6,6 @@ import domain.Group;
 import volley.GroupVolley;
 import volley.GroupVolleyImpl;
 
-/**
- * Created by Ryan on 10/18/2017.
- */
-
 public class GroupServiceImpl implements GroupService{
 
     private GroupVolley groupVolley = new GroupVolleyImpl();

@@ -27,16 +27,14 @@ public class SaveSharedPreference {
     /*
      * Method that returns the current user's username and password
      */
-    public static String getUsernamePassword(Context context)
-    {
+    public static String getUsernamePassword(Context context) {
         return getSharedPreferences(context).getString(USERNAME_PASSWORD, "");
     }
 
     /*
      * Method that clears current username and password data
      */
-    public static void clearUsernamePassword(Context context)
-    {
+    public static void clearUsernamePassword(Context context) {
         Editor editor = getSharedPreferences(context).edit();
         editor.clear(); //clear all stored data
         editor.apply();

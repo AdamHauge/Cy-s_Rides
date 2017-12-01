@@ -21,6 +21,11 @@ public class RequestServiceImpl implements RequestService {
         requestVolley.createRequest(context, request, destName, startName);
     }
 
+    @Override
+    public void deleteRequest(Context context, int id) {
+        requestVolley.deleteRequest(context, id);
+    }
+
     //Finds the requests for a specific email
     @Override
     public ArrayList<Request> findRequestsByEmail(ArrayList<Request> requests, UserInfo userInfo) {

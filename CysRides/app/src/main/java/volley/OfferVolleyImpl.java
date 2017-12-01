@@ -34,6 +34,7 @@ import domain.Offer;
 public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements OfferVolley {
 
     private String createOfferUrl = "http://proj-309-sa-b-5.cs.iastate.edu/createOffer.php";
+    private String deleteOfferUrl = "http://proj-309-sa-b-5.cs.iastate.edu/deleteOffer.php";
     private String getOffersUrl = "http://proj-309-sa-b-5.cs.iastate.edu/getOffer.php";
     private String giveOfferGroupUrl = "http://proj-309-sa-b-5.cs.iastate.edu/giveOfferGroup.php";
     private Offer newOffer;
@@ -98,6 +99,35 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
 
+    @Override
+    public void deleteOffer(final Context context, final int id) {
+        currentContext = context;
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, deleteOfferUrl,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(currentContext, "Error...",Toast.LENGTH_SHORT).show();
+                        error.printStackTrace();
+                    }
+                }){
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("id", id+"");
+                return params;
+            }
+        };
+
+        MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
+    }
+
     //gives specified offer the given groupID
     public void giveOfferGroup(Context context, final int offerId, final int groupId){
         currentContext = context;
@@ -141,14 +171,19 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
                 Log.d("JSON",jsonArray.toString());
                 JSONObject jsonOffer = jsonArray.getJSONObject(i);
 
-                String id = jsonOffer.getString("ID");
+                String stringId = jsonOffer.getString("ID");
+                int id = Integer.parseInt(stringId);
                 String stringCost = jsonOffer.getString("COST");
                 double cost = Double.parseDouble(stringCost);
                 String email = jsonOffer.getString("EMAIL");
 
                 String stringDestination = jsonOffer.getString("DESTINATION");
-                String destinationName = getDestinationName(stringDestination);
-                LatLng latitudeLongitude = getLatLngFromDatabase(stringDestination);
+                String destinationName = getLocationName(stringDestination);
+                LatLng destLatLng = getLatLngFromDatabase(stringDestination);
+
+                String stringStart = jsonOffer.getString("START");
+                String startName = getLocationName(stringStart);
+                LatLng startLatLng = getLatLngFromDatabase(stringStart);
 
                 String description = jsonOffer.getString("DESCRIPTION");
                 String stringDate = jsonOffer.getString("DATE");
@@ -162,7 +197,8 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
                     e.printStackTrace();
                 }
 
-                Offer offer = new Offer(cost, email, destinationName, latitudeLongitude, null, null, description, date, groupID, this.currentContext);
+                Offer offer = new Offer(cost, id, email, destinationName, destLatLng, startName,
+                        startLatLng, description, date, groupID, this.currentContext);
                 //Log.d("offer", offer.toString());
                 offers.add(offer);
                 Log.d("size", offers.size()+"");
@@ -216,13 +252,13 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
 
 
 
-    private String getDestinationName(String stringDestination) {
-        String[] splitDestination = stringDestination.split(" lat/lng: ");
+    private String getLocationName(String location) {
+        String[] splitDestination = location.split(" lat/lng: ");
         return splitDestination[0];
     }
 
-    private LatLng getLatLngFromDatabase(String stringDestination) {
-        String[] splitDestination = stringDestination.split(" lat/lng: ");
+    private LatLng getLatLngFromDatabase(String location) {
+        String[] splitDestination = location.split(" lat/lng: ");
         String latLong = splitDestination[1];
         latLong = latLong.replace("(","");
         latLong = latLong.replace(")","");

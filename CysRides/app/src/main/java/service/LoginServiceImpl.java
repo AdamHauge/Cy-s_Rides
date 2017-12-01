@@ -6,12 +6,7 @@ import domain.UserInfo;
 
 public class LoginServiceImpl implements LoginService {
 
-    private UserInfo user;
-    private ArrayList<UserInfo> users;
-    private String username;
     private boolean loginVerifiedFlag;
-    private String dbUsername;
-    private String dbPassword;
 
     public LoginServiceImpl(){
         loginVerifiedFlag = false;

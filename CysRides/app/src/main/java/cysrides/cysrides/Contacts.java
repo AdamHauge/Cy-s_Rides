@@ -22,7 +22,6 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import domain.UserInfo;
 import service.ActivityService;
 import service.ActivityServiceImpl;
 import service.NavigationService;
@@ -36,16 +35,12 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
     private UserIntentService userIntentService = new UserIntentServiceImpl();
     private ActivityService activityService = new ActivityServiceImpl();
 
-    private ListView listView;
     private ArrayList list = new ArrayList();
-    private ArrayAdapter adapter;
     private Intent i;
-    private UserInfo userInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        userInfo = userIntentService.getUserFromIntent(getIntent());
         setContentView(R.layout.activity_contacts);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -62,13 +57,13 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
         Menu menu = navigationView.getMenu();
         navigationService.hideMenuItems(menu, userIntentService.getUserFromIntent(this.getIntent()));
 
+        ListView listView;
         listView = (ListView)findViewById(R.id.contacts_list);
 
         for(int i = 0; i < 20; i++) { //TODO the number needs to match the amount of contacts
             list.add("Item #" + (i + 1)); //TODO this needs to be changed to match the contact names
         }
-
-        adapter = new ArrayAdapter(Contacts.this, android.R.layout.simple_list_item_1, list);
+        ArrayAdapter adapter = new ArrayAdapter(Contacts.this, android.R.layout.simple_list_item_1, list);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -77,7 +72,7 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
             }
         });
 
-        if(navigationService.checkInternetConnection(getApplicationContext())) {
+        if(navigationService.checkInternetConnection(Contacts.this)) {
             connectionPopUp();
         }
     }
@@ -113,6 +108,9 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
             i = userIntentService.createIntent(Contacts.this, ViewProfile.class, userIntentService.getUserFromIntent(this.getIntent()));
             i.putExtra("caller", "Contacts");
             startActivity(i);
+        } else if(id == R.id.admin_actions) {
+            i = userIntentService.createIntent(Contacts.this, AdminActions.class, userIntentService.getUserFromIntent(this.getIntent()));
+            startActivity(i);
         }
 
         return super.onOptionsItemSelected(item);
@@ -138,7 +136,7 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
 
             return true;
         }
-        else if(navigationService.checkInternetConnection(getApplicationContext())) {
+        else if(navigationService.checkInternetConnection(Contacts.this)) {
             connectionPopUp();
             return false;
         }
@@ -149,7 +147,7 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
     }
 
     public void connectionPopUp() {
-        Snackbar snackbar = activityService.setupConnection(this.getApplicationContext(), findViewById(R.id.contacts_activity));
+        Snackbar snackbar = activityService.setupConnection(Contacts.this, findViewById(R.id.contacts_activity));
         snackbar.show();
     }
 }

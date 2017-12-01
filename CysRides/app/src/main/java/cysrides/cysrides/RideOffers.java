@@ -3,6 +3,8 @@ package cysrides.cysrides;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -16,12 +18,18 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
+
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,15 +38,17 @@ import domain.Offer;
 import service.ActivityService;
 import service.ActivityServiceImpl;
 import service.Callback;
+import service.DrawerLock;
 import service.NavigationService;
 import service.NavigationServiceImpl;
 import service.RefreshService;
 import service.RefreshServiceImpl;
+import service.SearchCallback;
 import service.UserIntentService;
 import service.UserIntentServiceImpl;
 import volley.OfferVolleyImpl;
 
-public class RideOffers extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class RideOffers extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DrawerLock {
 
     private UserIntentService userIntentService = new UserIntentServiceImpl();
     private NavigationService navigationService = new NavigationServiceImpl();
@@ -46,11 +56,12 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
     private ActivityService activityService = new ActivityServiceImpl();
 
     private Intent i;
-    private String currentUser;
+    private DrawerLayout drawer;
     private SwipeRefreshLayout refresh;
     private ArrayAdapter<String> adapter;
     private List<Offer> offers = new ArrayList<>();
     private List<String> destinations = new ArrayList<>();
+    private TextView searchResult;
     private FragmentManager fragmentManager = this.getSupportFragmentManager();
 
     @Override
@@ -60,7 +71,7 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_offers_activity);
+        drawer = (DrawerLayout) findViewById(R.id.ride_offers_activity);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -72,38 +83,46 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
         Menu menu = navigationView.getMenu();
         navigationService.hideMenuItems(menu, userIntentService.getUserFromIntent(this.getIntent()));
 
+        searchResult = (TextView) findViewById(R.id.search_result);
+
         refresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
-        refresh.setColorSchemeColors(ContextCompat.getColor(this.getApplicationContext(),
-                R.color.colorGold), ContextCompat.getColor(this.getApplicationContext(), R.color.colorCardinal));
+        refresh.setColorSchemeColors(ContextCompat.getColor(RideOffers.this,
+                R.color.colorGold), ContextCompat.getColor(RideOffers.this, R.color.colorCardinal));
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getOffersList();
+                if (searchResult.getVisibility() != View.VISIBLE) {
+                    getOffersList();
+                }
+                else {
+                    refresh.setRefreshing(false);
+                }
             }
         });
         getOffersList();
-        this.currentUser = userIntentService.getUserFromIntent(this.getIntent()).getNetID();
+
         /* display list of ride offers on screen */
-        ListView listView = (ListView)findViewById(R.id.ride_offers_list);
+        i = this.getIntent();
+        ListView listView = (ListView) findViewById(R.id.ride_offers_list);
         adapter = new ArrayAdapter<>(RideOffers.this, android.R.layout.simple_list_item_1, destinations);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 /* notify fragment manager to display ride offer information */
-                ViewOffer viewOffer = new ViewOffer();
+                RideFragment viewOffer = new ViewOffer();
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
                 viewOffer.setData(offers.get(position));
-                viewOffer.setEmail(currentUser);
                 viewOffer.setContext(RideOffers.this);
+                viewOffer.setUserInfo(userIntentService.getUserFromIntent(i));
                 fragmentTransaction.replace(R.id.ride_offers_activity, viewOffer);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
         });
 
-        if(navigationService.checkInternetConnection(getApplicationContext())) {
+        if (navigationService.checkInternetConnection(RideOffers.this)) {
             connectionPopUp();
         }
     }
@@ -120,7 +139,7 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
                     if (result.get(0) instanceof Offer) {
                         offers = (ArrayList<Offer>) result;
                     }
-                } catch(Exception e) {
+                } catch (Exception e) {
                     offers = new ArrayList<>();
                     e.printStackTrace();
                 }
@@ -128,15 +147,14 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
                 /* display data to user */
                 adapter.clear();
                 destinations.clear();
-                for(int i = 0; i < offers.size(); i++) {
+                for (int i = 0; i < offers.size(); i++) {
                     destinations.add(offers.get(i).getDestination());
                 }
 
                 /* stop refreshing page */
-                if(refresh.isRefreshing()) {
+                if (refresh.isRefreshing()) {
                     refreshService.stopRefreshing(refresh, adapter);
-                }
-                else {
+                } else {
                     adapter.notifyDataSetChanged();
                 }
             }
@@ -155,8 +173,13 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
             drawer.closeDrawer(GravityCompat.START);
         }
         /* close any open fragment */
-        else if(fragmentManager.getBackStackEntryCount() > 0) {
+        else if (fragmentManager.getBackStackEntryCount() > 0) {
             fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        }
+        /* close search results */
+        else if (View.VISIBLE == searchResult.getVisibility()) {
+            searchResult.setVisibility(View.GONE);
+            getOffersList();
         }
         /* return to main activity */
         else {
@@ -166,13 +189,19 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
         }
     }
 
+    @Override
+    public void lockDrawer(boolean enabled) {
+        int lockMode = enabled ? DrawerLayout.LOCK_MODE_LOCKED_CLOSED : DrawerLayout.LOCK_MODE_UNLOCKED;
+        drawer.setDrawerLockMode(lockMode);
+    }
+
     /*
      * Initialize options menu
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.my_profile_button, menu);
+        getMenuInflater().inflate(R.menu.profile_and_search, menu);
         return true;
     }
 
@@ -186,10 +215,33 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-
-        if (id == R.id.my_profile) {
+        if (R.id.my_profile == id) {
             i = userIntentService.createIntent(RideOffers.this, ViewProfile.class, userIntentService.getUserFromIntent(this.getIntent()));
             i.putExtra("caller", "Ride Offers");
+            startActivity(i);
+        } else if (R.id.search == id) {
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            RideSearch rideSearch = new RideSearch();
+            rideSearch.setCallback(new SearchCallback() {
+                @Override
+                public void call(Place place) {
+                    String display = "Rides near\n" + place.getName().toString();
+
+                    onBackPressed();
+
+                    if(filterResults(place)) {
+                        searchResult.setText(display);
+                        searchResult.setVisibility(View.VISIBLE);
+                    }
+
+                }
+            });
+
+            fragmentTransaction.replace(R.id.ride_offers_activity, rideSearch);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+        } else if(id == R.id.admin_actions) {
+            i = userIntentService.createIntent(RideOffers.this, AdminActions.class, userIntentService.getUserFromIntent(this.getIntent()));
             startActivity(i);
         }
 
@@ -209,19 +261,20 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
         /* check if user wants to log out */
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_offers_activity);
         drawer.closeDrawer(GravityCompat.START);
-        if(R.id.logout == id) {
+        if (R.id.logout == id) {
             AlertDialog.Builder alert = navigationService.logOutButton(RideOffers.this);
             alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     SaveSharedPreference.clearUsernamePassword(RideOffers.this);
                     startActivity(i);
-                }});
+                }
+            });
             alert.show();
 
             return true;
         }
         /* check if user needs to connect to wifi */
-        else if(navigationService.checkInternetConnection(getApplicationContext())) {
+        else if (navigationService.checkInternetConnection(RideOffers.this)) {
             connectionPopUp();
             return false;
         }
@@ -236,7 +289,43 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
      * insert option to connect to wifi
      */
     public void connectionPopUp() {
-        Snackbar snackbar = activityService.setupConnection(this.getApplicationContext(), findViewById(R.id.contacts_activity));
+        Snackbar snackbar = activityService.setupConnection(RideOffers.this, findViewById(R.id.contacts_activity));
         snackbar.show();
+    }
+
+
+    public boolean filterResults(Place place) {
+        List<Offer> filtered = new ArrayList<>();
+        List<String> destinations = new ArrayList<>();
+        LatLng compare = place.getLatLng();
+
+        for(int i = 0; i < offers.size(); i++) {
+            float distance[] = new float[1];
+            LatLng current = offers.get(i).getDestCoordinates();
+
+            Location.distanceBetween(compare.latitude, compare.longitude,
+                    current.latitude, current.longitude, distance);
+
+            if(distance[0] <= 1600 * 15) {
+                destinations.add(offers.get(i).getDestination());
+                filtered.add(offers.get(i));
+            }
+        }
+
+        if(destinations.size() == 0) {
+            Snackbar.make(findViewById(R.id.ride_offers_activity),
+                    "No rides available for this location. You can try making a new request.",
+                    Snackbar.LENGTH_SHORT).show();
+            return false;
+        }
+
+        adapter.clear();
+        for(int i = 0; i < destinations.size(); i++) {
+            this.destinations.add(destinations.get(i));
+        }
+        this.offers = filtered;
+        adapter.notifyDataSetChanged();
+
+        return true;
     }
 }

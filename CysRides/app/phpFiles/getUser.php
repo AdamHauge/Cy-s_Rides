@@ -17,15 +17,6 @@
 
         $result = $conn->query($sql);
 
-//        if ($result->num_rows > 0) {
-//            $row = $result->fetch_assoc();
-//            echo $json = json_encode($row);
-//        } else {
-//            echo "0 results";
-//        }
-//
-//        $conn->close();
-
         $jsonArr = array();
 
         if ($result->num_rows > 0) {

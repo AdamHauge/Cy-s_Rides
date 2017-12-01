@@ -12,9 +12,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher_car"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher_car_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <meta-data
@@ -68,6 +68,10 @@
             android:label="Ride Requests and Offers"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".AdminActions"
+            android:label="Admin Actions"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".BanUser"
             android:label="Ban User"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -75,8 +79,13 @@
             android:name=".BannedUsers"
             android:label="Banned Users"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".DeleteRequestsAndOffers"
+            android:label="Delete Requests and Offers"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".DialogConfirmationCode" />
-        <activity android:name=".ViewMyGroups"></activity>
+        <activity android:name=".Calendar" />
     </application>
 
 </manifest>

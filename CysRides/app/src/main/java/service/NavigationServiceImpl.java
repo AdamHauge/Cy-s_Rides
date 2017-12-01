@@ -12,9 +12,11 @@ import android.view.MenuItem;
 
 import cysrides.cysrides.BanUser;
 import cysrides.cysrides.BannedUsers;
+import cysrides.cysrides.Calendar;
 import cysrides.cysrides.Contacts;
 import cysrides.cysrides.CreateOffer;
 import cysrides.cysrides.CreateRequest;
+import cysrides.cysrides.DeleteRequestsAndOffers;
 import cysrides.cysrides.LoginActivity;
 import cysrides.cysrides.R;
 import cysrides.cysrides.RequestsOffers;
@@ -28,15 +30,10 @@ public class NavigationServiceImpl extends AppCompatActivity implements Navigati
 
     private UserIntentService userIntentService = new UserIntentServiceImpl();
 
-    private Intent intent;
-    private Context context;
-
     //Sets the intent when traversing through pages
     @Override
-    public Intent getNavigationIntent(@NonNull MenuItem item, Context c, Intent i) {
+    public Intent getNavigationIntent(@NonNull MenuItem item, Context context, Intent intent) {
         int id = item.getItemId();
-        intent = i;
-        context = c;
         switch(id)
         {
             case R.id.profile:
@@ -60,14 +57,11 @@ public class NavigationServiceImpl extends AppCompatActivity implements Navigati
             case R.id.requestsOffers:
                 intent = userIntentService.createIntent(context, RequestsOffers.class, userIntentService.getUserFromIntent(intent));
                 break;
-            case R.id.bannedUsers:
-                intent = userIntentService.createIntent(context, BannedUsers.class, userIntentService.getUserFromIntent(intent));
-                break;
-            case R.id.banUser:
-                intent = userIntentService.createIntent(context, BanUser.class, userIntentService.getUserFromIntent(intent));
-                break;
             case R.id.logout:
                 intent = userIntentService.createIntent(context, LoginActivity.class, userIntentService.getUserFromIntent(intent));
+                break;
+            case R.id.calendar_activity:
+                intent = userIntentService.createIntent(context, Calendar.class, userIntentService.getUserFromIntent(intent));
                 break;
             default:
                 break;
@@ -93,15 +87,11 @@ public class NavigationServiceImpl extends AppCompatActivity implements Navigati
             item.setVisible(false);
             item = menu.findItem(R.id.requests);
             item.setVisible(false);
-            item = menu.findItem(R.id.bannedUsers);
-            item.setVisible(false);
-            item = menu.findItem(R.id.banUser);
-            item.setVisible(false);
+//            item = menu.findItem(R.id.admin_actions);
+//            item.setVisible(false);
         } else if(userInfo.getUserType() == UserType.DRIVER) {
-            item = menu.findItem(R.id.bannedUsers);
-            item.setVisible(false);
-            item = menu.findItem(R.id.banUser);
-            item.setVisible(false);
+//            item = menu.findItem(R.id.admin_actions);
+//            item.setVisible(false);
         }
     }
 

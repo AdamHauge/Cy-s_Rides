@@ -30,6 +30,7 @@ import domain.Ban;
 import service.ActivityService;
 import service.ActivityServiceImpl;
 import service.Callback;
+import service.DrawerLock;
 import service.NavigationService;
 import service.NavigationServiceImpl;
 import service.RefreshService;
@@ -38,7 +39,7 @@ import service.UserIntentService;
 import service.UserIntentServiceImpl;
 import volley.BanVolleyImpl;
 
-public class BannedUsers extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class BannedUsers extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DrawerLock {
 
     private UserIntentService userIntentService = new UserIntentServiceImpl();
     private NavigationService navigationService = new NavigationServiceImpl();
@@ -46,10 +47,11 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
     private ActivityService activityService = new ActivityServiceImpl();
 
     private Intent i;
+    private DrawerLayout drawer;
     private SwipeRefreshLayout refresh;
     private ArrayAdapter<String> adapter;
     private List<Ban> bans = new ArrayList<>();
-    private ArrayList<String> bansString = new ArrayList();
+    private ArrayList<String> bansString;
     private FragmentManager fragmentManager = this.getSupportFragmentManager();
 
     @Override
@@ -59,7 +61,7 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.banned_users_activity);
+        drawer = (DrawerLayout) findViewById(R.id.banned_users_activity);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -72,8 +74,8 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
         navigationService.hideMenuItems(menu, userIntentService.getUserFromIntent(this.getIntent()));
 
         refresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
-        refresh.setColorSchemeColors(ContextCompat.getColor(this.getApplicationContext(),
-                R.color.colorGold), ContextCompat.getColor(this.getApplicationContext(), R.color.colorCardinal));
+        refresh.setColorSchemeColors(ContextCompat.getColor(BannedUsers.this,
+                R.color.colorGold), ContextCompat.getColor(BannedUsers.this, R.color.colorCardinal));
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -98,13 +100,14 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
             }
         });
 
-        if(navigationService.checkInternetConnection(getApplicationContext())) {
+        if(navigationService.checkInternetConnection(BannedUsers.this)) {
             connectionPopUp();
         }
     }
 
     @SuppressWarnings("unchecked")
     public void getBansList() {
+        bansString = new ArrayList<>();
         BanVolleyImpl volley = new BanVolleyImpl(new Callback() {
             public void call(ArrayList<?> result) {
                 try {
@@ -149,6 +152,12 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
     }
 
     @Override
+    public void lockDrawer(boolean enabled) {
+        int lockMode = enabled ? DrawerLayout.LOCK_MODE_LOCKED_CLOSED : DrawerLayout.LOCK_MODE_UNLOCKED;
+        drawer.setDrawerLockMode(lockMode);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.my_profile_button, menu);
@@ -166,6 +175,9 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
         if (id == R.id.my_profile) {
             i = userIntentService.createIntent(BannedUsers.this, ViewProfile.class, userIntentService.getUserFromIntent(this.getIntent()));
             i.putExtra("caller", "Ride Offers");
+            startActivity(i);
+        } else if(id == R.id.admin_actions) {
+            i = userIntentService.createIntent(BannedUsers.this, AdminActions.class, userIntentService.getUserFromIntent(this.getIntent()));
             startActivity(i);
         }
 
@@ -191,7 +203,7 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
 
             return true;
         }
-        else if(navigationService.checkInternetConnection(getApplicationContext())) {
+        else if(navigationService.checkInternetConnection(BannedUsers.this)) {
             connectionPopUp();
             return false;
         }
@@ -202,7 +214,7 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
     }
 
     public void connectionPopUp() {
-        Snackbar snackbar = activityService.setupConnection(this.getApplicationContext(), findViewById(R.id.contacts_activity));
+        Snackbar snackbar = activityService.setupConnection(BannedUsers.this, findViewById(R.id.contacts_activity));
         snackbar.show();
     }
 

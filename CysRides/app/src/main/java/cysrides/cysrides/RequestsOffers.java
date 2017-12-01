@@ -78,8 +78,8 @@ public class RequestsOffers extends AppCompatActivity implements NavigationView.
         navigationService.hideMenuItems(menu, userIntentService.getUserFromIntent(this.getIntent()));
 
         refresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
-        refresh.setColorSchemeColors(ContextCompat.getColor(this.getApplicationContext(),
-                R.color.colorGold), ContextCompat.getColor(this.getApplicationContext(), R.color.colorCardinal));
+        refresh.setColorSchemeColors(ContextCompat.getColor(RequestsOffers.this,
+                R.color.colorGold), ContextCompat.getColor(RequestsOffers.this, R.color.colorCardinal));
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -107,7 +107,7 @@ public class RequestsOffers extends AppCompatActivity implements NavigationView.
 //            }
 //        });
 
-        if(navigationService.checkInternetConnection(getApplicationContext())) {
+        if(navigationService.checkInternetConnection(RequestsOffers.this)) {
             connectionPopUp();
         }
     }
@@ -126,9 +126,7 @@ public class RequestsOffers extends AppCompatActivity implements NavigationView.
                 }
 
                 ArrayList<Offer> o = new ArrayList<>();
-                for(int i=0 ; i<offers.size() ; i++) {
-                    o.add(offers.get(i));
-                }
+                o.addAll(offers);
                 offers = offerService.findOffersByEmail(o, userIntentService.getUserFromIntent(i));
                 for(int i = 0; i < offers.size(); i++) {
                     destinations.add(offers.get(i).getDestination());
@@ -214,6 +212,9 @@ public class RequestsOffers extends AppCompatActivity implements NavigationView.
             i = userIntentService.createIntent(RequestsOffers.this, ViewProfile.class, userIntentService.getUserFromIntent(this.getIntent()));
             i.putExtra("caller", "Ride Offers");
             startActivity(i);
+        } else if(id == R.id.admin_actions) {
+            i = userIntentService.createIntent(RequestsOffers.this, AdminActions.class, userIntentService.getUserFromIntent(this.getIntent()));
+            startActivity(i);
         }
 
         return super.onOptionsItemSelected(item);
@@ -239,7 +240,7 @@ public class RequestsOffers extends AppCompatActivity implements NavigationView.
 
             return true;
         }
-        else if(navigationService.checkInternetConnection(getApplicationContext())) {
+        else if(navigationService.checkInternetConnection(RequestsOffers.this)) {
             connectionPopUp();
             return false;
         }
@@ -250,7 +251,7 @@ public class RequestsOffers extends AppCompatActivity implements NavigationView.
     }
 
     public void connectionPopUp() {
-        Snackbar snackbar = activityService.setupConnection(this.getApplicationContext(), findViewById(R.id.contacts_activity));
+        Snackbar snackbar = activityService.setupConnection(RequestsOffers.this, findViewById(R.id.contacts_activity));
         snackbar.show();
     }
 }

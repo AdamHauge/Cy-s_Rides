@@ -3,6 +3,7 @@ package cysrides.cysrides;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -22,6 +23,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
+
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,15 +35,17 @@ import domain.Request;
 import service.ActivityService;
 import service.ActivityServiceImpl;
 import service.Callback;
+import service.DrawerLock;
 import service.NavigationService;
 import service.NavigationServiceImpl;
 import service.RefreshService;
 import service.RefreshServiceImpl;
+import service.SearchCallback;
 import service.UserIntentService;
 import service.UserIntentServiceImpl;
 import volley.RequestVolleyImpl;
 
-public class RideRequests extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class RideRequests extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DrawerLock {
 
     private UserIntentService userIntentService = new UserIntentServiceImpl();
     private NavigationService navigationService = new NavigationServiceImpl();
@@ -46,11 +53,12 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
     private ActivityService activityService = new ActivityServiceImpl();
 
     private Intent i;
-    private String currentUser;
+    private DrawerLayout drawer;
     private SwipeRefreshLayout refresh;
     private ArrayAdapter<String> adapter;
     private List<Request> requests = new ArrayList<>();
     private List<String> destinations = new ArrayList<>();
+    private TextView searchResult;
     private FragmentManager fragmentManager = this.getSupportFragmentManager();
 
     @Override
@@ -61,7 +69,7 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
 
         /* initialize page input/output items */
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_requests_activity);
+        drawer = (DrawerLayout) findViewById(R.id.ride_requests_activity);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -73,10 +81,12 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
         Menu menu = navigationView.getMenu();
         navigationService.hideMenuItems(menu, userIntentService.getUserFromIntent(this.getIntent()));
 
+        searchResult = (TextView) findViewById(R.id.search_result);
+
         /* initialize page refreshing to take input from user */
         refresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
-        refresh.setColorSchemeColors(ContextCompat.getColor(this.getApplicationContext(), R.color.colorGold),
-                ContextCompat.getColor(this.getApplicationContext(), R.color.colorCardinal));
+        refresh.setColorSchemeColors(ContextCompat.getColor(RideRequests.this, R.color.colorGold),
+                ContextCompat.getColor(RideRequests.this, R.color.colorCardinal));
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -86,9 +96,9 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
 
         /* notify requests volley to pull from database */
         getRequestsList();
-        this.currentUser = userIntentService.getUserFromIntent(this.getIntent()).getNetID();
 
         /* display list of ride requests on screen */
+        i = this.getIntent();
         ListView listView = (ListView)findViewById(R.id.ride_requests_list);
         adapter = new ArrayAdapter<>(RideRequests.this, android.R.layout.simple_list_item_1, destinations);
         listView.setAdapter(adapter);
@@ -96,12 +106,12 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 /* notify fragment handler to display fragment to user */
-                ViewRequest viewRequest = new ViewRequest();
+                RideFragment viewRequest = new ViewRequest();
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
                 viewRequest.setData(requests.get(position));
-                viewRequest.setEmail(currentUser);
                 viewRequest.setContext(RideRequests.this);
+                viewRequest.setUserInfo(userIntentService.getUserFromIntent(i));
 
                 fragmentTransaction.replace(R.id.ride_requests_activity, viewRequest);
                 fragmentTransaction.addToBackStack(null);
@@ -110,7 +120,7 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
         });
 
         /* check for internet connection */
-        if(navigationService.checkInternetConnection(getApplicationContext())) {
+        if(navigationService.checkInternetConnection(RideRequests.this)) {
             connectionPopUp();
         }
     }
@@ -164,12 +174,23 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
         else if(fragmentManager.getBackStackEntryCount() > 0) {
             fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
+        /* close search results */
+        else if (View.VISIBLE == searchResult.getVisibility()) {
+            searchResult.setVisibility(View.GONE);
+            getRequestsList();
+        }
         else {
             /* return to main activity */
             finish();
             i = userIntentService.createIntent(RideRequests.this, MainActivity.class, userIntentService.getUserFromIntent(this.getIntent()));
             startActivity(i);
         }
+    }
+
+    @Override
+    public void lockDrawer(boolean enabled) {
+        int lockMode = enabled ? DrawerLayout.LOCK_MODE_LOCKED_CLOSED : DrawerLayout.LOCK_MODE_UNLOCKED;
+        drawer.setDrawerLockMode(lockMode);
     }
 
     /*
@@ -180,7 +201,7 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.my_profile_button, menu);
+        getMenuInflater().inflate(R.menu.profile_and_search, menu);
         return true;
     }
 
@@ -197,9 +218,33 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.my_profile) {
+        if (R.id.my_profile == id) {
             i = userIntentService.createIntent(RideRequests.this, ViewProfile.class, userIntentService.getUserFromIntent(this.getIntent()));
             i.putExtra("caller", "Ride Requests");
+            startActivity(i);
+        } else if (R.id.search == id) {
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            RideSearch rideSearch = new RideSearch();
+            rideSearch.setCallback(new SearchCallback() {
+                @Override
+                public void call(Place place) {
+                    onBackPressed();
+                    String display = "Rides near\n" + place.getName().toString();
+
+                    onBackPressed();
+
+                    if(filterResults(place)) {
+                        searchResult.setText(display);
+                        searchResult.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+
+            fragmentTransaction.replace(R.id.ride_requests_activity, rideSearch);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+        } else if(id == R.id.admin_actions) {
+            i = userIntentService.createIntent(RideRequests.this, AdminActions.class, userIntentService.getUserFromIntent(this.getIntent()));
             startActivity(i);
         }
 
@@ -231,7 +276,7 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
 
             return true;
         }
-        else if(navigationService.checkInternetConnection(getApplicationContext())) {
+        else if(navigationService.checkInternetConnection(RideRequests.this)) {
             /* check for wifi connection */
             connectionPopUp();
             /* close drawer */
@@ -248,7 +293,43 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
      * insert option to connect to wifi
      */
     public void connectionPopUp() {
-        Snackbar snackbar = activityService.setupConnection(this.getApplicationContext(), findViewById(R.id.contacts_activity));
+        Snackbar snackbar = activityService.setupConnection(RideRequests.this, findViewById(R.id.contacts_activity));
         snackbar.show();
     }
+
+    public boolean filterResults(Place place) {
+        List<Request> filtered = new ArrayList<>();
+        List<String> destinations = new ArrayList<>();
+        LatLng compare = place.getLatLng();
+
+        for(int i = 0; i < requests.size(); i++) {
+            float distance[] = new float[1];
+            LatLng current = requests.get(i).getDestCoordinates();
+
+            Location.distanceBetween(compare.latitude, compare.longitude,
+                    current.latitude, current.longitude, distance);
+
+            if(distance[0] <= 1600 * 15) {
+                destinations.add(requests.get(i).getDestination());
+                filtered.add(requests.get(i));
+            }
+        }
+
+        if(destinations.size() == 0) {
+            Snackbar.make(findViewById(R.id.ride_requests_activity),
+                    "No rides available for this location. You can try making a new offer.",
+                    Snackbar.LENGTH_SHORT).show();
+            return false;
+        }
+
+        adapter.clear();
+        for(int i = 0; i < destinations.size(); i++) {
+            this.destinations.add(destinations.get(i));
+        }
+        this.requests = filtered;
+        adapter.notifyDataSetChanged();
+
+        return true;
+    }
+
 }

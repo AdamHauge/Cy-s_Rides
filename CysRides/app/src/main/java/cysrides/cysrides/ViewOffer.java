@@ -1,54 +1,52 @@
 package cysrides.cysrides;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import domain.Offer;
-import service.GroupServiceImpl;
 
-public class ViewOffer extends Fragment {
+public class ViewOffer extends RideFragment {
 
     private Offer offer;
-    private Context context;
-    private GroupServiceImpl g = new GroupServiceImpl();
-    private String email;
+
     public ViewOffer() {
         // Required empty public constructor
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_view_offer, container, false);
+        View v = inflater.inflate(R.layout.fragment_view_ride, container, false);
         setTextInfo(v);
         v.findViewById(R.id.join).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                g.addRider(context, offer.getGroup(), email);
-
+                groupService.addRider(context, offer.getGroup(), offer.getEmail());
             }
         });
 
+        v.findViewById(R.id.JoinAsDriverButton).setVisibility(View.GONE);
 
         return v;
     }
 
-    public void setData(Offer offer) {
-        this.offer = offer;
+    @Override
+    protected <T> void setData(T offer) {
+        this.offer = (Offer) offer;
     }
 
-    public void setEmail(String email){ this.email = email; }
-
-    public void setContext(Context context){this.context = context;}
-
-    public void setTextInfo(View v) {
-        TextView info = v.findViewById(R.id.offer);
+    @Override
+    protected void setNonAdminTextInfo(View v) {
+        TextView info = v.findViewById(R.id.ride);
         info.setText(offer.toString());
+    }
+
+    @Override
+    protected void setAdminTextInfo(View v) {
+        TextView info = v.findViewById(R.id.ride);
+        info.setText(offer.adminOffer());
     }
 }

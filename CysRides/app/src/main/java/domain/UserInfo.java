@@ -1,6 +1,9 @@
 package domain;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class UserInfo {
@@ -16,9 +19,29 @@ public class UserInfo {
     private float userRating;
     private List<Offer> offers;
     private List<Request> requests;
+    DateFormat df = new SimpleDateFormat("MMMM yyyy");
+    private String dateJoined = df.format(Calendar.getInstance().getTime());
 
     public UserInfo() {
 
+    }
+
+    @Override
+    public String toString() {
+        return "UserInfo{" +
+                "netID='" + netID + '\'' +
+                ", password='" + password + '\'' +
+                ", confirmationCode='" + confirmationCode + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", venmoName='" + venmoName + '\'' +
+                ", profileDescription='" + profileDescription + '\'' +
+                ", userType=" + userType +
+                ", userRating=" + userRating +
+                ", offers=" + offers +
+                ", requests=" + requests +
+                ", dateJoined='" + dateJoined + '\'' +
+                '}';
     }
 
     public UserInfo(String netID, String password, String confirmationCode, String firstName, String lastName, String venmoName,
@@ -36,23 +59,12 @@ public class UserInfo {
         this.requests = requests;
     }
 
-    //TODO fix dummy fields
-    public UserInfo toUserInfo(String userInfoString) {
-        String netID = "";
-        String password = "";
-        String confirmationCode = "";
-        String firstName = "";
-        String lastName = "";
-        String venmoName = "";
-        String profileDescription = "";
-        UserType userType = UserType.PASSENGER;
-        float userRating = 0;
-        List<Offer> offers = new ArrayList<Offer>();
-        List<Request> requests = new ArrayList<Request>();
+    public String getDateJoined() {
+        return dateJoined;
+    }
 
-        UserInfo userInfo = new UserInfo(netID, password, confirmationCode, firstName, lastName, venmoName,
-                profileDescription, userType, userRating, offers, requests);
-        return userInfo;
+    public void setDateJoined(String dateJoined) {
+        this.dateJoined = dateJoined;
     }
 
     public String ratingToString(float userRating) {
@@ -61,23 +73,6 @@ public class UserInfo {
 
     public String confirmationCodeToString(int confirmationCode) {
         return Integer.toString(confirmationCode);
-    }
-
-    @Override
-    public String toString() {
-        return "UserInfo{" +
-                "netID='" + netID + '\'' +
-                ", password='" + password + '\'' +
-                ", confirmationCode='" + confirmationCode + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", venmoName='" + venmoName + '\'' +
-                ", profileDescription='" + profileDescription + '\'' +
-                ", userType=" + userType +
-                ", userRating=" + userRating +
-                ", offers=" + offers +
-                ", requests=" + requests +
-                '}';
     }
 
     public String getNetID() {

@@ -22,26 +22,22 @@ import domain.Request;
 import domain.UserInfo;
 import domain.UserType;
 import service.Callback;
+import service.EmailSenderService;
+import service.EmailSenderServiceImpl;
 import service.UserIntentService;
 import service.UserIntentServiceImpl;
-import volley.EmailVolley;
-import volley.EmailVolleyImpl;
 import volley.UserVolley;
 import volley.UserVolleyImpl;
 
 public class CreateProfile extends AppCompatActivity {
 
     //UI references fields
-    private TextView netIDView;
-    private TextView passwordView;
     private EditText fNameView;
     private EditText lNameView;
     private EditText venmoView;
     private EditText profileDescriptionView;
     private RadioButton driverRadioButton;
     private RadioButton passengerRadioButton;
-    private RadioGroup radioGroup;
-    private Button createProfileButton;
 
     private static final int RB1_ID = 1000; //first radio button id
     private static final int RB2_ID = 1001; //second radio button id
@@ -58,6 +54,7 @@ public class CreateProfile extends AppCompatActivity {
 
     private Callback call;
     private UserIntentService userIntentService = new UserIntentServiceImpl();
+    private EmailSenderService emailSenderService = new EmailSenderServiceImpl();
     private UserVolley userVolley = new UserVolleyImpl(call);
     private Intent i;
 
@@ -73,16 +70,16 @@ public class CreateProfile extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        netIDView = (TextView) findViewById(R.id.NetID);
-        passwordView = (TextView) findViewById(R.id.Password);
+        TextView netIDView = (TextView) findViewById(R.id.NetID);
+        TextView passwordView = (TextView) findViewById(R.id.Password);
         fNameView = (EditText) findViewById(R.id.First_Name);
         lNameView = (EditText) findViewById(R.id.Last_Name);
         venmoView = (EditText) findViewById(R.id.Venmo);
         profileDescriptionView = (EditText) findViewById(R.id.Description);
-        createProfileButton = (Button) findViewById(R.id.createProfileButton);
+        Button createProfileButton = (Button) findViewById(R.id.createProfileButton);
         driverRadioButton = (RadioButton) findViewById(R.id.driverRadioButton);
         passengerRadioButton = (RadioButton) findViewById(R.id.passengerRadioButton);
-        radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
+        RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
         driverRadioButton.setId(RB1_ID);
         passengerRadioButton.setId(RB2_ID);
 
@@ -113,7 +110,6 @@ public class CreateProfile extends AppCompatActivity {
         createProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Context currentContext = context;
 
                 firstName = fNameView.getText().toString();
                 lastName = lNameView.getText().toString();
@@ -138,20 +134,19 @@ public class CreateProfile extends AppCompatActivity {
                     Toast.makeText(CreateProfile.this, "You did not select a user type", Toast.LENGTH_LONG).show();
                 }
 
-                List<Offer> offers = new ArrayList<Offer>();
-                List<Request> requests = new ArrayList<Request>();
+                List<Offer> offers = new ArrayList<>();
+                List<Request> requests = new ArrayList<>();
 
                 if (inputsValid()) {
                     UserInfo user = new UserInfo(netID, password, confirmationCode, firstName, lastName, venmo, profileDescription,
                             userType, 0, offers, requests);
+
                     userVolley.createUser(CreateProfile.this, user);
                     finish();
 
-                    i = userIntentService.createIntent(currentContext, DialogConfirmationCode.class, user);
+                    i = userIntentService.createIntent(context, DialogConfirmationCode.class, user);
 
-                    EmailVolley emailVolley = new EmailVolleyImpl();
-                    emailVolley.sendEmail(user.getNetID(), "cysrides@iastate.edu", "Welcome to Cy's Rides!",
-                            ("Here's your confimation code: " + user.getConfirmationCode()), currentContext);
+                    emailSenderService.sendEmail(user, context);
 
                     startActivity(i);
                 }
@@ -179,10 +174,7 @@ public class CreateProfile extends AppCompatActivity {
 
     /* A description is valid if it is longer than 10 characters*/
     private boolean isDescriptionValid(String profileDescription) {
-        if (profileDescription.length() > 10) {
-            return true;
-        }
-        return false;
+        return profileDescription.length() > 10;
     }
 
     /* A name is valid if the first and last name are greater than one character and do not contain a digit*/
@@ -206,15 +198,12 @@ public class CreateProfile extends AppCompatActivity {
 
     /* A venmo is valid if it is longer than 2 characters*/
     private boolean isVenmoValid(String venmo){
-        if(venmo.length() > 2){
-            return true;
-        }
-        return false;
+        return venmo.length() > 2;
     }
 
     /* A user type is valid if the driver or the passenger button is selected*/
     private boolean isTypeSelected(){
-        return (driverRadioButton.isSelected() || passengerRadioButton.isChecked());
+        return (driverRadioButton.isChecked() || passengerRadioButton.isChecked());
     }
 
     /* All inputs are valid if the aforementioned methods are true*/

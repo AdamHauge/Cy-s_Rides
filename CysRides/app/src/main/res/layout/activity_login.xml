@@ -42,8 +42,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_email"
                     android:inputType="textEmailAddress"
-                    android:maxLines="1"
-                    android:singleLine="true" />
+                    android:maxLines="1"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -55,13 +54,12 @@
                     android:id="@+id/password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Password"
+                    android:hint="@string/password"
                     android:imeActionId="@+id/login"
                     android:imeActionLabel="@string/action_sign_in_short"
                     android:imeOptions="actionUnspecified"
                     android:inputType="textPassword"
-                    android:maxLines="1"
-                    android:singleLine="true" />
+                    android:maxLines="1" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -71,7 +69,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Sign In"
+                android:text="@string/action_sign_in_short"
+                android:drawableEnd="@drawable/ic_menu_login"
+                android:drawablePadding="-30sp"
                 android:textStyle="bold" />
 
             <Button
@@ -81,8 +81,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:onClick="onRegisterClick"
-                android:text="REGISTER"
-                android:textStyle="bold" />/>
+                android:text="@string/register_caps"
+                android:drawableEnd="@drawable/ic_menu_register"
+                android:drawablePadding="-30sp"
+                android:textStyle="bold" />
 
         </LinearLayout>
     </ScrollView>

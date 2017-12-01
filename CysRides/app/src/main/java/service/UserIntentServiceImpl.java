@@ -24,6 +24,7 @@ public class UserIntentServiceImpl implements UserIntentService {
         intent.putExtra("profileDescription", userInfo.getProfileDescription());
         intent.putExtra("userType", userInfo.getUserType().toString());
         intent.putExtra("userRating", userInfo.getUserRating() + "");
+        intent.putExtra("dateJoined", userInfo.getDateJoined());
         return intent;
     }
 
@@ -42,6 +43,7 @@ public class UserIntentServiceImpl implements UserIntentService {
         userInfo.setProfileDescription(intent.getExtras().getString("profileDescription"));
         userInfo.setUserType(UserType.valueOf(intent.getExtras().getString("userType")));
         userInfo.setUserRating(Float.valueOf(intent.getExtras().getString("userRating")));
+        userInfo.setDateJoined(intent.getExtras().getString("dateJoined"));
         return userInfo;
     }
 }
