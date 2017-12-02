@@ -10,9 +10,12 @@ public class Message {
   private String message;
   private String sender;
   private int groupID;
+  private int id;
   private Date timeSent;
 
-  public Message(String message, String sender, int groupID, Date timeSent){
+
+  public Message(int id, int groupID, String sender, String message, Date timeSent){
+    this.id = id;
     this.message = message;
     this.sender = sender;
     this.groupID = groupID;
@@ -33,6 +36,10 @@ public class Message {
 
   public Date getTimeSent(){
     return timeSent;
+  }
+
+  public int getID(){
+    return id;
   }
 
   public String toString(){
