@@ -23,6 +23,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -207,8 +208,14 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
                 domain.Request request = new domain.Request(numBags, id, email, destinationName,
                         destLatLng, startName, startLatLng, description, date, group_id,
                         this.currentContext);
-                requests.add(request);
-                Log.d("size", requests.size()+"");
+
+                if(request.getDate().compareTo(Calendar.getInstance().getTime()) < 0) {
+                    deleteRequest(currentContext, request.getId());
+                    Log.d("deleted", request.getDate().toString());
+                }
+                else {
+                    requests.add(request);
+                }
             }
         }catch (Exception e){
             e.printStackTrace();

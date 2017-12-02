@@ -23,6 +23,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -199,9 +200,14 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
 
                 Offer offer = new Offer(cost, id, email, destinationName, destLatLng, startName,
                         startLatLng, description, date, groupID, this.currentContext);
-                //Log.d("offer", offer.toString());
-                offers.add(offer);
-                Log.d("size", offers.size()+"");
+
+                if(offer.getDate().compareTo(Calendar.getInstance().getTime()) < 0) {
+                    deleteOffer(currentContext, offer.getId());
+                    Log.d("deleted", offer.getDate().toString());
+                }
+                else {
+                    offers.add(offer);
+                }
             }
         }catch (Exception e){
             e.printStackTrace();
