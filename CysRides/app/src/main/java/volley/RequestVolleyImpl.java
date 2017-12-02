@@ -182,7 +182,7 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
                 int id = Integer.parseInt(stringId);
                 String stringCost = jsonRequest.getString("NUM_BAGS");
                 int numBags = Integer.parseInt(stringCost);
-                String email = jsonRequest.getString("EMAIL");
+                String email = jsonRequest.getString("REQUEST_EMAIL");
 
                 String stringDestination = jsonRequest.getString("DESTINATION");
                 String destinationName = getLocationName(stringDestination);

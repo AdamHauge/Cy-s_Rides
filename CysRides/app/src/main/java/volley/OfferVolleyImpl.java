@@ -175,7 +175,7 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
                 int id = Integer.parseInt(stringId);
                 String stringCost = jsonOffer.getString("COST");
                 double cost = Double.parseDouble(stringCost);
-                String email = jsonOffer.getString("EMAIL");
+                String email = jsonOffer.getString("OFFER_EMAIL");
 
                 String stringDestination = jsonOffer.getString("DESTINATION");
                 String destinationName = getLocationName(stringDestination);
