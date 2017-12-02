@@ -24,7 +24,7 @@ public class ViewOffer extends RideFragment {
         v.findViewById(R.id.join).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                groupService.addRider(context, offer.getGroup(), offer.getEmail());
+                groupService.addRider(context, offer.getGroup(), userInfo.getNetID());
             }
         });
 
