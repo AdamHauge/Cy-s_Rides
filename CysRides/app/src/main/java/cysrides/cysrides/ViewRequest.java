@@ -37,7 +37,7 @@ public class ViewRequest extends RideFragment {
         v.findViewById(R.id.join).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                groupService.addRider(context, request.getGroup(), request.getEmail());
+                groupService.addRider(context, request.getGroup(), userInfo.getNetID());
 
             }
         });
@@ -45,7 +45,7 @@ public class ViewRequest extends RideFragment {
 
            @Override
            public void onClick(View view) {
-               groupService.addDriver(context, request.getGroup(), request.getEmail());
+               groupService.addDriver(context, request.getGroup(), userInfo.getNetID());
            }
        }
 
