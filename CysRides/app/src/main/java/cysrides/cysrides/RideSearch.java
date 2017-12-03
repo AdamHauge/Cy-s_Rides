@@ -56,6 +56,10 @@ public class RideSearch extends Fragment {
         return v;
     }
 
+    /**
+     * Sets callback to return user's search information
+     * @param callback
+     */
     public void setCallback(SearchCallback callback) {
         this.callback = callback;
     }

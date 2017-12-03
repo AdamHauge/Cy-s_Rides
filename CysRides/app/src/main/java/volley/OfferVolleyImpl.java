@@ -23,6 +23,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -33,10 +34,6 @@ import domain.Offer;
 
 public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements OfferVolley {
 
-    private String createOfferUrl = "http://proj-309-sa-b-5.cs.iastate.edu/createOffer.php";
-    private String deleteOfferUrl = "http://proj-309-sa-b-5.cs.iastate.edu/deleteOffer.php";
-    private String getOffersUrl = "http://proj-309-sa-b-5.cs.iastate.edu/getOffer.php";
-    private String giveOfferGroupUrl = "http://proj-309-sa-b-5.cs.iastate.edu/giveOfferGroup.php";
     private Offer newOffer;
     private Context currentContext;
     private ArrayList<Offer> offers;
@@ -44,25 +41,39 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
     private String startName;
     private Callback callback;
     private GroupVolleyImpl groupVolley = new GroupVolleyImpl();
-    public OfferVolleyImpl() { }
+    private Calendar current = Calendar.getInstance();
 
-    /*
-     * constructor that stores the caller data
-     *
-     * Param: Callback data for caller
+    /**
+     * Default constructor initializes current date to be determine if a ride needs to be deleted
      */
-    public OfferVolleyImpl(Callback o) {
-        callback = o;
+    public OfferVolleyImpl() {
+        current.set(Calendar.HOUR_OF_DAY, 0);
+        current.set(Calendar.MINUTE, 0);
+        current.set(Calendar.SECOND, 0);
+        current.set(Calendar.MILLISECOND, 0);
     }
 
+    /**
+     * OfferVolleyImpl constructor
+     * @param currentContext app context
+     * @param o callback to send data to
+     */
     public OfferVolleyImpl(Context currentContext, Callback o) {
+        this();
         this.currentContext = currentContext;
         callback = o;
     }
 
-    //add offer to the database
+    /**
+     * Add offer to the database
+     * @param context of app
+     * @param offer data
+     * @param destination ride destination
+     * @param start ride start location
+     */
     @Override
     public void createOffer(final Context context, final Offer offer, String destination, String start) {
+        String createOfferUrl = "http://proj-309-sa-b-5.cs.iastate.edu/createOffer.php";
         newOffer = offer;
         currentContext = context;
         destinationName = destination;
@@ -99,8 +110,14 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
 
+    /**
+     * Remove offer from database
+     * @param context app context
+     * @param id of ride offer
+     */
     @Override
     public void deleteOffer(final Context context, final int id) {
+        String deleteOfferUrl = "http://proj-309-sa-b-5.cs.iastate.edu/deleteOffer.php";
         currentContext = context;
         StringRequest stringRequest = new StringRequest(Request.Method.POST, deleteOfferUrl,
                 new Response.Listener<String>() {
@@ -128,8 +145,14 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
 
-    //gives specified offer the given groupID
+    /**
+     * gives specified offer the given groupID
+     * @param context of app
+     * @param offerId id of ride offer
+     * @param groupId id of group
+     */
     public void giveOfferGroup(Context context, final int offerId, final int groupId){
+        String giveOfferGroupUrl = "http://proj-309-sa-b-5.cs.iastate.edu/giveOfferGroup.php";
         currentContext = context;
         StringRequest stringRequest = new StringRequest(Request.Method.POST, giveOfferGroupUrl,
                 new Response.Listener<String>() {
@@ -158,10 +181,9 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
 
-    /*
+    /**
      * Method that parses data pulled from database
-     *
-     * Param: JSONArray of ride request data pulled from database
+     * @param jsonArray of ride offer data pulled from database
      */
     @Override
     protected void onPostExecute(JSONArray jsonArray) {
@@ -191,17 +213,24 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
 
                 int groupID = jsonOffer.getInt("GROUP_ID");
 
+                Calendar compare = Calendar.getInstance();
                 try {
                     date = new SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(stringDate);
+                    compare.setTime(date);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
                 Offer offer = new Offer(cost, id, email, destinationName, destLatLng, startName,
                         startLatLng, description, date, groupID, this.currentContext);
-                //Log.d("offer", offer.toString());
-                offers.add(offer);
-                Log.d("size", offers.size()+"");
+
+                /* if the offer is expired, just delete it form the database */
+                if(compare.compareTo(current) < 0) {
+                    deleteOffer(currentContext, offer.getId());
+                }
+                else {
+                    offers.add(offer);
+                }
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -209,8 +238,14 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
         callback.call(offers);
     }
 
+    /**
+     * Gets all offer data from database
+     * @param aVoid nothing
+     * @return JSONArray of all ride offer data
+     */
     @Override
     protected JSONArray doInBackground(Void... aVoid) {
+        String getOffersUrl = "http://proj-309-sa-b-5.cs.iastate.edu/getOffer.php";
         HttpURLConnection urlConnection = null;
         StringBuilder result = new StringBuilder();
 
@@ -250,13 +285,21 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
         return array;
     }
 
-
-
+    /**
+     * Returns the name of a location
+     * @param location puled from database
+     * @return name of the location
+     */
     private String getLocationName(String location) {
         String[] splitDestination = location.split(" lat/lng: ");
         return splitDestination[0];
     }
 
+    /**
+     * Returns the LatLng of a location
+     * @param location pulled from database
+     * @return LatLng of location
+     */
     private LatLng getLatLngFromDatabase(String location) {
         String[] splitDestination = location.split(" lat/lng: ");
         String latLong = splitDestination[1];

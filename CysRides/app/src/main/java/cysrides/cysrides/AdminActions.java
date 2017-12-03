@@ -43,6 +43,10 @@ public class AdminActions extends AppCompatActivity implements NavigationView.On
     private NavigationService navigationService = new NavigationServiceImpl();
     private boolean retValue;
 
+    /**
+     * Initializes page to be displayed
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,6 +97,9 @@ public class AdminActions extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    /**
+     * Method to handle back button press
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.admin_actions_activity);
@@ -105,13 +112,22 @@ public class AdminActions extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    /**
+     * Initializes options menu
+     * @param menu to be built
+     * @return true on success
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.my_profile_button, menu);
         return true;
     }
-
+    /**
+     * Method to handle user's menu item selection
+     * @param item selected
+     * @return true on success
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -133,6 +149,11 @@ public class AdminActions extends AppCompatActivity implements NavigationView.On
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * method to handle user's page navigation selection
+     * @param: item selected
+     * @return true on success
+     */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -163,6 +184,9 @@ public class AdminActions extends AppCompatActivity implements NavigationView.On
     }
 
     //TODO Look at other classes to make sure this is done right
+    /**
+     * insert option to connect to wifi
+     */
     public void connectionPopUp() {
         Snackbar snackbar = activityService.setupConnection(AdminActions.this, findViewById(R.id.admin_actions_activity));
         snackbar.show();

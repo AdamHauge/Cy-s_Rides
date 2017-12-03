@@ -61,6 +61,10 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
     private TextView searchResult;
     private FragmentManager fragmentManager = this.getSupportFragmentManager();
 
+    /**
+     * Initializes page to be displayed
+     * @param savedInstanceState page info
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,7 +129,7 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    /*
+    /**
      * Method that notifies request volley to pull all ride request data from database
      */
     @SuppressWarnings("unchecked")
@@ -159,7 +163,7 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
         volley.execute();
     }
 
-    /*
+    /**
      * Method that handles back press
      */
     @Override
@@ -187,6 +191,10 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    /**
+     * Method that locks side drawer when fragment open
+     * @param enabled - true if drawer is locked
+     */
     @Override
     public void lockDrawer(boolean enabled) {
         int lockMode = enabled ? DrawerLayout.LOCK_MODE_LOCKED_CLOSED : DrawerLayout.LOCK_MODE_UNLOCKED;
@@ -205,10 +213,10 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    /*
-     * Method to handle user's menu item selection
-     *
-     * Param: selected item
+    /**
+     * Initializes options menu
+     * @param menu to be built
+     * @return true on success
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -251,10 +259,10 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
         return super.onOptionsItemSelected(item);
     }
 
-    /*
-     * Method to handle user's menu item selection
-     *
-     * Param: selected item
+    /**
+     * method to handle user's page navigation selection
+     * @param item selected
+     * @return true on success
      */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -289,7 +297,7 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    /*
+    /**
      * insert option to connect to wifi
      */
     public void connectionPopUp() {
@@ -297,6 +305,11 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
         snackbar.show();
     }
 
+    /**
+     * Filters ride offers based on search information
+     * @param place - user's search info
+     * @return true on success
+     */
     public boolean filterResults(Place place) {
         List<Request> filtered = new ArrayList<>();
         List<String> destinations = new ArrayList<>();
@@ -309,12 +322,14 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
             Location.distanceBetween(compare.latitude, compare.longitude,
                     current.latitude, current.longitude, distance);
 
+            /* if distance is less than 15 miles away, add it to filtered destinations list */
             if(distance[0] <= 1600 * 15) {
                 destinations.add(requests.get(i).getDestination());
                 filtered.add(requests.get(i));
             }
         }
 
+        /* if no destinations were found, return false */
         if(destinations.size() == 0) {
             Snackbar.make(findViewById(R.id.ride_requests_activity),
                     "No rides available for this location. You can try making a new offer.",
@@ -322,6 +337,7 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
             return false;
         }
 
+        /* display the filtered results */
         adapter.clear();
         for(int i = 0; i < destinations.size(); i++) {
             this.destinations.add(destinations.get(i));
