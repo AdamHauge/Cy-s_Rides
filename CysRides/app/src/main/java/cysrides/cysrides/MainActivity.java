@@ -68,6 +68,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private HashMap<Marker, Offer> offerMarkers;
     private HashMap<Marker, Request> requestMarkers;
 
+    /**
+     * Initializes page to be displayed
+     * @param savedInstanceState page info
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,10 +132,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    /*
+
+    /**
      * Method to handle Google Map display
      *
-     * Param: GoogleMap to be displayed on screen
+     * @param googleMap to be displayed on screen
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -183,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.googleMap = googleMap;
     }
 
-    /*
+    /**
      * Method used to notify offer volley and requests volley to pull data from database
      */
     @SuppressWarnings("unchecked")
@@ -227,7 +232,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    /*
+    /**
      * Creates Markers that are displayed on Google Map
      */
     public void createMarkers() {
@@ -263,7 +268,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         onMapReady(googleMap);
     }
 
-    /*
+    /**
      * Method that handles back button press
      */
     @Override
@@ -295,14 +300,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    /**
+     * Method that locks side drawer when fragment open
+     * @param enabled - true if drawer is locked
+     */
     @Override
     public void lockDrawer(boolean enabled) {
         int lockMode = enabled ? DrawerLayout.LOCK_MODE_LOCKED_CLOSED : DrawerLayout.LOCK_MODE_UNLOCKED;
         drawer.setDrawerLockMode(lockMode);
     }
 
-    /*
-     * method that initializes menu
+    /**
+     * Initializes options menu
+     * @param menu to be built
+     * @return true on success
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -311,10 +322,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    /*
+    /**
      * Method to handle user's menu item selection
-     *
-     * Param: selected item
+     * @param item selected
+     * @return true on success
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -336,10 +347,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return super.onOptionsItemSelected(item);
     }
 
-    /*
-     * method to handle user's menu selection
-     *
-     * Param: selected menu item
+    /**
+     * method to handle user's page navigation selection
+     * @param item selected
+     * @return true on success
      */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -375,7 +386,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    /*
+    /**
      * insert option to connect to wifi
      */
     public void connectionPopUp() {

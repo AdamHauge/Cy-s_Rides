@@ -34,6 +34,8 @@
     <string name="user_type">Select whether you will be a driver or a passenger. Passengers can only request rides, and drivers can request and offer rides.</string>
 
     <!-- Strings related to ride requests and ride offers -->
+    <string name="ride_offer">Ride Offer</string>
+    <string name="ride_request">Ride Request</string>
     <string name="title_activity_ride_requests">Ride Requests</string>
     <string name="name">Name</string>
     <string name="destination">Destination (city, state)</string>
@@ -44,6 +46,7 @@
     <string name="enter">Enter</string>
     <string name="submit">Submit</string>
     <string name="join">Join Ride</string>
+    <string name="join_driver">Join as Driver</string>
     <string name="requests_and_offers">View Requests and Offers</string>
     <string name="search">Search</string>
 
@@ -80,5 +83,5 @@
     <string name="reason">Reason</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="debug">If you are seeing this then you accessed something you aren\'t supposed to see</string>
 </resources>

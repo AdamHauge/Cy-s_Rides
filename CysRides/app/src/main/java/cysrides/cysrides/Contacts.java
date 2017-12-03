@@ -38,6 +38,10 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
     private ArrayList list = new ArrayList();
     private Intent i;
 
+    /**
+     * Initializes page to be displayed
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +81,9 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
         }
     }
 
+    /**
+     * Method that handles back button press
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.contacts_activity);
@@ -89,6 +96,11 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
         }
     }
 
+    /**
+     * Initializes options menu
+     * @param menu to be built
+     * @return true on success
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -96,6 +108,11 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
         return true;
     }
 
+    /**
+     * Method to handle user's menu item selection
+     * @param item selected
+     * @return true on success
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -116,6 +133,11 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * method to handle user's page navigation selection
+     * @param: item selected
+     * @return true on success
+     */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -146,6 +168,9 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
         }
     }
 
+    /**
+     * insert option to connect to wifi
+     */
     public void connectionPopUp() {
         Snackbar snackbar = activityService.setupConnection(Contacts.this, findViewById(R.id.contacts_activity));
         snackbar.show();

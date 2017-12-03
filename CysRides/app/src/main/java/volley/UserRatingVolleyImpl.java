@@ -86,7 +86,7 @@ public class UserRatingVolleyImpl extends AsyncTask<Void, Void, JSONArray> imple
                 Log.d("JSON", jsonArray.toString());
                 JSONObject jsonRating = jsonArray.getJSONObject(i);
 
-                netID = jsonRating.getString("NETID");
+                netID = jsonRating.getString("RATINGS_NETID");
                 rating = jsonRating.getString("RATING");
                 numberRatings = jsonRating.getString("NUMBER_RATINGS");
 
