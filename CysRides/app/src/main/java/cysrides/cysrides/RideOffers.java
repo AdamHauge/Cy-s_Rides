@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -18,11 +17,9 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -64,6 +61,10 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
     private TextView searchResult;
     private FragmentManager fragmentManager = this.getSupportFragmentManager();
 
+    /**
+     * Initializes page to be displayed
+     * @param savedInstanceState page info
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,7 +128,7 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
         }
     }
 
-    /*
+    /**
      * Method which notifies ride offer volley to pull ride offer data from database
      */
     @SuppressWarnings("unchecked")
@@ -162,7 +163,7 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
         volley.execute();
     }
 
-    /*
+    /**
     * Method that handles back button press
     */
     @Override
@@ -189,14 +190,20 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
         }
     }
 
+    /**
+     * Method that locks side drawer when fragment open
+     * @param enabled - true if drawer is locked
+     */
     @Override
     public void lockDrawer(boolean enabled) {
         int lockMode = enabled ? DrawerLayout.LOCK_MODE_LOCKED_CLOSED : DrawerLayout.LOCK_MODE_UNLOCKED;
         drawer.setDrawerLockMode(lockMode);
     }
 
-    /*
-     * Initialize options menu
+    /**
+     * Initializes options menu
+     * @param menu to be built
+     * @return true on success
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -205,8 +212,10 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
         return true;
     }
 
-    /*
-     * Moves to new page based on user selection
+    /**
+     * Method to handle user's menu item selection
+     * @param item selected
+     * @return true on success
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -248,8 +257,10 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
         return super.onOptionsItemSelected(item);
     }
 
-    /*
-     * Moves to new page based on user selection
+    /**
+     * method to handle user's page navigation selection
+     * @param item selected
+     * @return true on success
      */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -285,7 +296,7 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
         }
     }
 
-    /*
+    /**
      * insert option to connect to wifi
      */
     public void connectionPopUp() {
@@ -293,7 +304,11 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
         snackbar.show();
     }
 
-
+    /**
+     * Filters ride offers based on search information
+     * @param place - user's search info
+     * @return true on success
+     */
     public boolean filterResults(Place place) {
         List<Offer> filtered = new ArrayList<>();
         List<String> destinations = new ArrayList<>();
@@ -306,12 +321,14 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
             Location.distanceBetween(compare.latitude, compare.longitude,
                     current.latitude, current.longitude, distance);
 
+            /* if distance is less than 15 miles away, add it to filtered destinations list */
             if(distance[0] <= 1600 * 15) {
                 destinations.add(offers.get(i).getDestination());
                 filtered.add(offers.get(i));
             }
         }
 
+        /* if no destinations were found, return false */
         if(destinations.size() == 0) {
             Snackbar.make(findViewById(R.id.ride_offers_activity),
                     "No rides available for this location. You can try making a new request.",
@@ -319,6 +336,7 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
             return false;
         }
 
+        /* display the filtered results */
         adapter.clear();
         for(int i = 0; i < destinations.size(); i++) {
             this.destinations.add(destinations.get(i));

@@ -34,11 +34,6 @@ import service.Callback;
 
 public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements RequestVolley {
 
-    private String createRequestUrl = "http://proj-309-sa-b-5.cs.iastate.edu/createRequest.php";
-    private String deleteRequestUrl = "http://proj-309-sa-b-5.cs.iastate.edu/deleteRequest.php";
-    private String getRequestsUrl = "http://proj-309-sa-b-5.cs.iastate.edu/getRequest.php";
-    private String giveRequestGroupUrl = "http://proj-309-sa-b-5.cs.iastate.edu/giveRequestGroup.php";
-
     private domain.Request newRequest;
     private Context currentContext;
     private String destinationName;
@@ -47,24 +42,26 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
     private Callback callback;
     private GroupVolleyImpl groupVolley = new GroupVolleyImpl();
 
-
-    public RequestVolleyImpl() { }
-
-    /*
-     * constructor that stores the caller data
-     *
-     * Param: Callback data for caller
+    /**
+     * constructor that stores caller data
+     * @param c context of app
+     * @param o callback to send data to
      */
     public RequestVolleyImpl(Context c, Callback o) {
         currentContext = c;
         callback = o;
     }
 
-    /*
-     * Method that adds request to the database
+    /**
+     * Add request to the database
+     * @param context of app
+     * @param request data
+     * @param destination ride destination
+     * @param start ride start location
      */
     @Override
     public void createRequest(Context context, domain.Request request, String destination, String start) {
+        String createRequestUrl = "http://proj-309-sa-b-5.cs.iastate.edu/createRequest.php";
         newRequest = request;
         currentContext = context;
         destinationName = destination;
@@ -103,8 +100,14 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
 
+    /**
+     * Remove request from database
+     * @param context app context
+     * @param id of ride request
+     */
     @Override
     public void deleteRequest(final Context context, final int id) {
+        String deleteRequestUrl = "http://proj-309-sa-b-5.cs.iastate.edu/deleteRequest.php";
         currentContext = context;
         StringRequest stringRequest = new StringRequest(Request.Method.POST, deleteRequestUrl,
                 new Response.Listener<String>() {
@@ -133,10 +136,14 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
 
-    /*
-     * Method that takes group number that was just created and sets the groupID of the given request to the given group id
+    /**
+     * gives specified request the given groupID
+     * @param context of app
+     * @param requestId id of ride request
+     * @param groupId id of group
      */
     public void giveRequestGroup(Context context, final int requestId, final int groupId){
+        String giveRequestGroupUrl = "http://proj-309-sa-b-5.cs.iastate.edu/giveRequestGroup.php";
         currentContext = context;
         StringRequest stringRequest = new StringRequest(Request.Method.POST, giveRequestGroupUrl,
                 new Response.Listener<String>() {
@@ -165,10 +172,9 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
 
-    /*
+    /**
      * Method that parses data pulled from database
-     *
-     * Param: JSONArray of ride request data pulled from database
+     * @param jsonArray of ride request data pulled from database
      */
     @Override
     protected void onPostExecute(JSONArray jsonArray) {
@@ -225,11 +231,14 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
         callback.call(requests);
     }
 
-    /*
-     * Method that runs a new thread in the background to pull data from database
+    /**
+     * Gets all request data from database
+     * @param aVoid nothing
+     * @return JSONArray of all ride offer data
      */
     @Override
     protected JSONArray doInBackground(Void... aVoid) {
+        String getRequestsUrl = "http://proj-309-sa-b-5.cs.iastate.edu/getRequest.php";
         HttpURLConnection urlConnection = null;
         StringBuilder result = new StringBuilder();
 
@@ -274,13 +283,21 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
 
 
 
-    /* parse destination from string */
+    /**
+     * Returns the name of a location
+     * @param location puled from database
+     * @return name of the location
+     */
     private String getLocationName(String location) {
         String[] splitDestination = location.split(" lat/lng: ");
         return splitDestination[0];
     }
 
-    /* parse LatLng from string */
+    /**
+     * Returns the LatLng of a location
+     * @param location pulled from database
+     * @return LatLng of location
+     */
     private LatLng getLatLngFromDatabase(String location) {
         String[] splitDestination = location.split(" lat/lng: ");
         String latLong = splitDestination[1];

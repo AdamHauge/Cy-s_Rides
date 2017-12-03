@@ -63,6 +63,10 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
     private NavigationService navigationService = new NavigationServiceImpl();
     boolean retValue;
 
+    /**
+     * Initializes page to be displayed
+     * @param savedInstanceState page info
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -165,52 +169,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditText data = (EditText) findViewById(R.id.Cost);
-                boolean noDestination = null == destination;
-                boolean noStart = null == start;
-                boolean noCost = null == data.getText();
-                boolean noDate = 0 == year;
-                boolean allValid = false;
-
-                /* check that all input data is valid */
-                if (noDestination || noStart || noCost || noDate) {
-                    Snackbar.make(findViewById(R.id.submit), "All data fields required", Snackbar.LENGTH_LONG).show();
-                }
-                else {
-                    allValid = true;
-                    /* check that cost is valid */
-                    try {
-                        cost = Double.parseDouble(data.getText().toString());
-                    } catch (Exception e) {
-                        cost = 0;
-                        allValid = false;
-                        Snackbar.make(findViewById(R.id.submit), "Cost must be a decimal number", Snackbar.LENGTH_LONG).show();
-                    }
-                    /* check that start and end locations are valid */
-                    try {
-                        Geocoder gcd = new Geocoder(CreateOffer.this, Locale.getDefault());
-                        List<Address> destAddress = gcd.getFromLocation(destination.getLatLng().latitude, destination.getLatLng().longitude, 1);
-                        List<Address> startAddress = gcd.getFromLocation(start.getLatLng().latitude, start.getLatLng().longitude, 1);
-
-                        if(!destAddress.get(0).getLocality().equals("Ames") && !startAddress.get(0).getLocality().equals("Ames") &&
-                                !destAddress.get(0).getAdminArea().equals("Iowa") && !startAddress.get(0).getAdminArea().equals("United States")) {
-                            allValid = false;
-                            Snackbar.make(findViewById(R.id.submit), "Ride must start or end in Ames, IA", Snackbar.LENGTH_LONG).show();
-                        }
-
-                        if(!destAddress.get(0).getCountryName().equals("United States") || !startAddress.get(0).getCountryName().equals("United States")) {
-                            allValid = false;
-                            Snackbar.make(findViewById(R.id.submit), "Ride must start and end in United States", Snackbar.LENGTH_LONG).show();
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    data = (EditText) findViewById(R.id.Description);
-                    description = data.getText().toString();
-                }
-
-                if(allValid) {
+                if(checkInput()) {
                     Offer o = new Offer(cost, userIntentService.getUserFromIntent(
                             getIntent()).getNetID(), (String) destination.getName(),
                             destination.getLatLng(), (String) start.getName(), start.getLatLng(),
@@ -230,6 +189,61 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
         }
     }
 
+    /**
+     * Checks user input to determine if valid for submission
+     * @return true if input is valid
+     */
+    private boolean checkInput() {
+        EditText data = (EditText) findViewById(R.id.Cost);
+        boolean noDestination = null == destination;
+        boolean noStart = null == start;
+        boolean noCost = null == data.getText();
+        boolean noDate = 0 == year;
+        boolean allValid = false;
+
+        /* check that all input data is valid */
+        if (noDestination || noStart || noCost || noDate) {
+            Snackbar.make(findViewById(R.id.submit), "All data fields required", Snackbar.LENGTH_LONG).show();
+        }
+        else {
+            allValid = true;
+            /* check that cost is valid */
+            try {
+                cost = Double.parseDouble(data.getText().toString());
+            } catch (Exception e) {
+                cost = 0;
+                allValid = false;
+                Snackbar.make(findViewById(R.id.submit), "Cost must be a decimal number", Snackbar.LENGTH_LONG).show();
+            }
+                    /* check that start and end locations are valid */
+            try {
+                Geocoder gcd = new Geocoder(CreateOffer.this, Locale.getDefault());
+                List<Address> destAddress = gcd.getFromLocation(destination.getLatLng().latitude, destination.getLatLng().longitude, 1);
+                List<Address> startAddress = gcd.getFromLocation(start.getLatLng().latitude, start.getLatLng().longitude, 1);
+
+                if(!destAddress.get(0).getLocality().equals("Ames") && !startAddress.get(0).getLocality().equals("Ames") &&
+                        !destAddress.get(0).getAdminArea().equals("Iowa") && !startAddress.get(0).getAdminArea().equals("United States")) {
+                    allValid = false;
+                    Snackbar.make(findViewById(R.id.submit), "Ride must start or end in Ames, IA", Snackbar.LENGTH_LONG).show();
+                }
+
+                if(!destAddress.get(0).getCountryName().equals("United States") || !startAddress.get(0).getCountryName().equals("United States")) {
+                    allValid = false;
+                    Snackbar.make(findViewById(R.id.submit), "Ride must start and end in United States", Snackbar.LENGTH_LONG).show();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            data = (EditText) findViewById(R.id.Description);
+            description = data.getText().toString();
+        }
+        return allValid;
+    }
+
+    /**
+     * Method that handles back button press
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.create_offer_activity);
@@ -251,6 +265,11 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
         }
     }
 
+    /**
+     * Initializes options menu
+     * @param menu to be built
+     * @return true on success
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -258,6 +277,11 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
         return true;
     }
 
+    /**
+     * Method to handle user's menu item selection
+     * @param item selected
+     * @return true on success
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -278,6 +302,11 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * method to handle user's page navigation selection
+     * @param item selected
+     * @return true on success
+     */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull final MenuItem item) {

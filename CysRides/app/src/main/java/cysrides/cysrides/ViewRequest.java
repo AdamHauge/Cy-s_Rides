@@ -12,10 +12,20 @@ public class ViewRequest extends RideFragment {
 
     private Request request;
 
+    /**
+     * Required empty public constructor
+     */
     public ViewRequest() {
         // Required empty public constructor
     }
 
+    /**
+     * initializes data to be displayed
+     * @param inflater inflates the fragment
+     * @param container fragment view
+     * @param savedInstanceState app info
+     * @return fragment view
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -41,17 +51,30 @@ public class ViewRequest extends RideFragment {
         return v;
     }
 
+    /**
+     * Sets fragment data
+     * @param request data
+     * @param <T> offer
+     */
     @Override
     protected <T> void setData(T request) {
         this.request = (Request) request;
     }
 
+    /**
+     * sets text for non-admins
+     * @param v view to be set
+     */
     @Override
     protected void setNonAdminTextInfo(View v) {
         TextView info = v.findViewById(R.id.ride);
         info.setText(request.toString());
     }
 
+    /**
+     * sets text for admins
+     * @param v view to be set
+     */
     @Override
     protected void setAdminTextInfo(View v) {
         TextView info = v.findViewById(R.id.ride);

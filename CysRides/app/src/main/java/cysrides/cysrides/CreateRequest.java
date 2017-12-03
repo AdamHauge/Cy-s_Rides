@@ -180,6 +180,10 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
         }
     }
 
+    /**
+     * Checks user input to determine if valid for submission
+     * @return true if input is valid
+     */
     private boolean checkInput() {
         EditText data = (EditText) findViewById(R.id.numBags);
         boolean noDestination = null == destination;
@@ -228,6 +232,9 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
         return allValid;
     }
 
+    /**
+     * Method that handles back button press
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.create_request_activity);
@@ -248,6 +255,11 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
         }
     }
 
+    /**
+     * Initializes options menu
+     * @param menu to be built
+     * @return true on success
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -255,6 +267,11 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
         return true;
     }
 
+    /**
+     * Method to handle user's menu item selection
+     * @param item selected
+     * @return true on success
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -291,6 +308,11 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * method to handle user's page navigation selection
+     * @param item selected
+     * @return true on success
+     */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
@@ -335,6 +357,9 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
         return retValue;
     }
 
+    /**
+     * insert option to connect to wifi
+     */
     public void connectionPopUp() {
         Snackbar snackbar = activityService.setupConnection(CreateRequest.this, findViewById(R.id.contacts_activity));
         snackbar.show();
