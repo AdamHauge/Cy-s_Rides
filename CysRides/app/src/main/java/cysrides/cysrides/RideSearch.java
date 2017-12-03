@@ -1,8 +1,6 @@
 package cysrides.cysrides;
 
-
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -16,20 +14,47 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 
+import service.FragmentImpl;
 import service.SearchCallback;
 
-public class RideSearch extends Fragment {
+public class RideSearch extends FragmentImpl {
 
     private SearchCallback callback;
+    private AutocompleteFilter autocompleteFilter;
 
+    /**
+     * Required empty public constructor
+     */
     public RideSearch() {
         // Required empty public constructor
     }
 
+    /**
+     * initializes data to be displayed
+     * @param inflater inflates the fragment
+     * @param container fragment view
+     * @param savedInstanceState app info
+     * @return fragment view
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_ride_search, container, false);
+        setAdminTextInfo(v);
+        return v;
+    }
 
+    /**
+     * Sets callback to return user's search information
+     * @param callback - determines where to send data back to
+     * @param <T> SearchCallback
+     */
+    @Override
+    public <T> void setData(T callback) {
+        this.callback = (SearchCallback) callback;
+    }
+
+    @Override
+    protected void setNonAdminTextInfo(View v) {
         SupportPlaceAutocompleteFragment placeAutoComplete = new SupportPlaceAutocompleteFragment();
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -53,14 +78,10 @@ public class RideSearch extends Fragment {
                 Log.d("Maps", "An error occurred: " + status);
             }
         });
-        return v;
     }
 
-    /**
-     * Sets callback to return user's search information
-     * @param callback
-     */
-    public void setCallback(SearchCallback callback) {
-        this.callback = callback;
+    @Override
+    protected void setAdminTextInfo(View v) {
+        setNonAdminTextInfo(v);
     }
 }

@@ -8,30 +8,59 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import domain.Ban;
+import domain.Offer;
 import service.FragmentImpl;
 
 public class ViewBannedUser extends FragmentImpl {
 
     private Ban ban;
-    public ViewBannedUser() {
 
+    /**
+     * Required empty public constructor
+     */
+    public ViewBannedUser() {
+        // Required empty public constructor
     }
 
+    /**
+     * initializes data to be displayed
+     * @param inflater inflates the fragment
+     * @param container fragment view
+     * @param savedInstanceState app info
+     * @return fragment view
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_view_banned_user, container, false);
-        setTextInfo(v);
+        setAdminTextInfo(v);
 
         return v;
     }
 
-    public void setData(Ban ban) {
-        this.ban = ban;
+    /**
+     * Sets fragment data
+     * @param ban data
+     * @param <T> offer
+     */
+    @Override
+    public <T> void setData(T ban) {
+        this.ban = (Ban) ban;
     }
 
-    public void setTextInfo(View v) {
+    /**
+     * This method doesn't do anything
+     * @param v view to be set
+     */
+    @Override
+    protected void setNonAdminTextInfo(View v) {
+        TextView info = v.findViewById(R.id.ban);
+        info.setText(R.string.debug);
+    }
+
+    @Override
+    protected void setAdminTextInfo(View v) {
         TextView info = v.findViewById(R.id.ban);
         info.setText(ban.toString());
     }

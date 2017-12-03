@@ -37,25 +37,6 @@ public abstract class RideFragment extends FragmentImpl {
     }
 
     /**
-     * Sets the data to be displayed
-     * @param data information to be displayed
-     * @param <T> ride offer or ride request
-     */
-    protected abstract <T> void setData(T data);
-
-    /**
-     * Sets text for non-admins
-     * @param v view to be set
-     */
-    protected abstract void setNonAdminTextInfo(View v);
-
-    /**
-     * Sets text for non-admins
-     * @param v view to be set
-     */
-    protected abstract void setAdminTextInfo(View v);
-
-    /**
      * Sets the context to display fragment on
      * @param context to be displayed on
      */
@@ -83,6 +64,11 @@ public abstract class RideFragment extends FragmentImpl {
         }
     }
 
+    /**
+     * Return the ride date in string form
+     * @param d date to be stringified
+     * @return stringified date
+     */
     protected String getDate(Date d) {
         Calendar date = Calendar.getInstance();
         date.setTime(d);

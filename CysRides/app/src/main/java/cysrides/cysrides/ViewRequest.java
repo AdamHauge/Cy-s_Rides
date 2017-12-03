@@ -59,7 +59,7 @@ public class ViewRequest extends RideFragment {
      * @param <T> offer
      */
     @Override
-    protected <T> void setData(T request) {
+    public <T> void setData(T request) {
         this.request = (Request) request;
     }
 
