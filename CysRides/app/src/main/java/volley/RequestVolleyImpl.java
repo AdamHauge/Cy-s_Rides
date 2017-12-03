@@ -215,6 +215,7 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
                         destLatLng, startName, startLatLng, description, date, group_id,
                         this.currentContext);
 
+                /* if request is expired, just delete it */
                 if(request.getDate().compareTo(Calendar.getInstance().getTime()) < 0) {
                     deleteRequest(currentContext, request.getId());
                     Log.d("deleted", request.getDate().toString());
