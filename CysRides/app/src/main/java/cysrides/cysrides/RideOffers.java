@@ -231,7 +231,7 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
         } else if (R.id.search == id) {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             RideSearch rideSearch = new RideSearch();
-            rideSearch.setCallback(new SearchCallback() {
+            rideSearch.setData(new SearchCallback() {
                 @Override
                 public void call(Place place) {
                     String display = "Rides near\n" + place.getName().toString();

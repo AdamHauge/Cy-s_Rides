@@ -51,7 +51,7 @@ public class ViewOffer extends RideFragment {
      * @param <T> offer
      */
     @Override
-    protected <T> void setData(T offer) {
+    public <T> void setData(T offer) {
         this.offer = (Offer) offer;
     }
 

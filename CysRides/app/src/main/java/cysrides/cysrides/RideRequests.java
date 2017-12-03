@@ -233,7 +233,7 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
         } else if (R.id.search == id) {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             RideSearch rideSearch = new RideSearch();
-            rideSearch.setCallback(new SearchCallback() {
+            rideSearch.setData(new SearchCallback() {
                 @Override
                 public void call(Place place) {
                     onBackPressed();
