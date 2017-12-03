@@ -16,9 +16,10 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 
+import service.FragmentImpl;
 import service.SearchCallback;
 
-public class RideSearch extends Fragment {
+public class RideSearch extends FragmentImpl {
 
     private SearchCallback callback;
 
@@ -58,7 +59,7 @@ public class RideSearch extends Fragment {
 
     /**
      * Sets callback to return user's search information
-     * @param callback
+     * @param callback - determines where to send data back to
      */
     public void setCallback(SearchCallback callback) {
         this.callback = callback;
