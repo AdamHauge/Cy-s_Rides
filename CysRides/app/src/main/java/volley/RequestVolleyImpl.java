@@ -44,7 +44,7 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
     private Calendar current = Calendar.getInstance();
 
     /**
-     * Default constructor
+     * Default constructor initializes current date to be determine if a ride needs to be deleted
      */
     public RequestVolleyImpl() {
         current.set(Calendar.HOUR_OF_DAY, 0);

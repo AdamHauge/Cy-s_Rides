@@ -1,8 +1,11 @@
 package cysrides.cysrides;
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
 import android.view.View;
+import android.widget.TextView;
+
+import java.util.Calendar;
+import java.util.Date;
 
 import domain.UserInfo;
 import domain.UserType;
@@ -16,6 +19,19 @@ public abstract class RideFragment extends FragmentImpl {
     protected Context context;
     protected UserInfo userInfo;
 
+    protected TextView type;
+    protected TextView id;
+    protected TextView destination;
+    protected TextView start;
+    protected TextView cost;
+    protected TextView numBags;
+    protected TextView email;
+    protected TextView description;
+    protected TextView date;
+
+    /**
+     * Required empty public constructor
+     */
     public RideFragment() {
         // Required empty public constructor
     }
@@ -65,5 +81,11 @@ public abstract class RideFragment extends FragmentImpl {
         } else {
             setNonAdminTextInfo(v);
         }
+    }
+
+    protected String getDate(Date d) {
+        Calendar date = Calendar.getInstance();
+        date.setTime(d);
+        return (date.get(Calendar.MONTH) + 1) + "/" + date.get(Calendar.DAY_OF_MONTH) + "/" + date.get(Calendar.YEAR);
     }
 }

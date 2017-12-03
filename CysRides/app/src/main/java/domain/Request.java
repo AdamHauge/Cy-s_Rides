@@ -44,15 +44,6 @@ public class Request extends Ride {
                 "\ndate=" + super.getDate();
     }
 
-    public String adminRequest() {
-        return  "id=" + getId() +
-                "\nnum bags=" + getNumBags() +
-                "\nemail=" + getEmail() +
-                "\ndescription=" + getDescription() +
-                "\ndate=" + getDate();
-    }
-
-
     public int getNumBags() {
         return numBags;
     }

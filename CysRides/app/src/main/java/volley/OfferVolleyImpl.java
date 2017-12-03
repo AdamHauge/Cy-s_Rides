@@ -44,7 +44,7 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
     private Calendar current = Calendar.getInstance();
 
     /**
-     * Default Constructor
+     * Default constructor initializes current date to be determine if a ride needs to be deleted
      */
     public OfferVolleyImpl() {
         current.set(Calendar.HOUR_OF_DAY, 0);

@@ -1,10 +1,12 @@
 package cysrides.cysrides;
 
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+
+import java.util.Locale;
 
 import domain.Request;
 
@@ -67,8 +69,31 @@ public class ViewRequest extends RideFragment {
      */
     @Override
     protected void setNonAdminTextInfo(View v) {
-        TextView info = v.findViewById(R.id.ride);
-        info.setText(request.toString());
+        type = v.findViewById(R.id.ride_type);
+        type.setText(R.string.ride_request);
+        type.setPaintFlags(type.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
+        v.findViewById(R.id.id).setVisibility(View.GONE);
+
+        destination = v.findViewById(R.id.destination);
+        destination.setText(String.format("Destination: %s", request.getDestination()));
+
+        start = v.findViewById(R.id.start);
+        start.setText(String.format("Start: %s", request.getStart()));
+
+        v.findViewById(R.id.cost).setVisibility(View.GONE);
+
+        numBags = v.findViewById(R.id.num_bags);
+        numBags.setText(String.format(Locale.US, "# of Bags: %d", request.getNumBags()));
+
+        email = v.findViewById(R.id.email);
+        email.setText(String.format("User: %s", request.getEmail()));
+
+        description = v.findViewById(R.id.description);
+        description.setText(String.format("Description: %s", request.getDescription()));
+
+        date = v.findViewById(R.id.date);
+        date.setText(String.format("Leave Date: %s", super.getDate(request.getDate())));
     }
 
     /**
@@ -77,7 +102,31 @@ public class ViewRequest extends RideFragment {
      */
     @Override
     protected void setAdminTextInfo(View v) {
-        TextView info = v.findViewById(R.id.ride);
-        info.setText(request.adminRequest());
+        type = v.findViewById(R.id.ride_type);
+        type.setText(R.string.ride_request);
+        type.setPaintFlags(type.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
+        id = v.findViewById(R.id.id);
+        id.setText(String.format(Locale.US, "Ride ID: %d", request.getId()));
+
+        destination = v.findViewById(R.id.destination);
+        destination.setText(String.format("Destination: %s", request.getDestination()));
+
+        start = v.findViewById(R.id.start);
+        start.setText(String.format("Start: %s", request.getStart()));
+
+        v.findViewById(R.id.cost).setVisibility(View.GONE);
+
+        numBags = v.findViewById(R.id.num_bags);
+        numBags.setText(String.format(Locale.US, "# of Bags: %d", request.getNumBags()));
+
+        email = v.findViewById(R.id.email);
+        email.setText(String.format("User: %s", request.getEmail()));
+
+        description = v.findViewById(R.id.description);
+        description.setText(String.format("Description: %s", request.getDescription()));
+
+        date = v.findViewById(R.id.date);
+        date.setText(String.format("Leave Date: %s", super.getDate(request.getDate())));
     }
 }
