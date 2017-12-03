@@ -13,7 +13,15 @@ public class Message {
   private int id;
   private Date timeSent;
 
-  //constructor for pulling messages from the database
+
+    /**
+     * Constructs a Message object. Used to store Messages pulled from the database.
+     * @param id - id of the message in the database
+     * @param groupID - id of the group the message belongs to
+     * @param sender - netID of the sender of the message
+     * @param message - the message
+     * @param timeSent - the time that the message was sent
+     */
   public Message(int id, int groupID, String sender, String message, Date timeSent){
     this.id = id;
     this.message = message;
@@ -21,35 +29,63 @@ public class Message {
     this.groupID = groupID;
     this.timeSent = timeSent;
   }
-  //constructor for creating a message to send to database(doesnt include message id or timeSend
-  //since they will be created in the database
+
+    /**
+     * Constructs a Message object. Used to Store a message before sending it to the datbase
+     * @param groupID - id of the group the message belongs to
+     * @param sender - netID of the sender of the message
+     * @param message - the message
+     */
   public Message(int groupID, String sender, String message){
       this.groupID = groupID;
       this.sender = sender;
       this.message = message;
   }
 
-
+    /**
+     * Get the message from the Message object
+     * @return message
+     */
   public String getMessage(){
     return message;
   }
 
+    /**
+     * Get the sender of the message
+     * @return sender
+     */
   public String getSender(){
     return sender;
   }
 
+    /**
+     * Get the id of the group the message belongs to
+     * @return groupID
+     */
   public int getGroupID(){
     return groupID;
   }
 
+    /**
+     * Get the time that the message was sent
+     * @return timeSent
+     */
   public Date getTimeSent(){
     return timeSent;
   }
 
+    /**
+     * Get the id of the message in the database (only use on messages pulled from the database)
+     * @return id
+     */
   public int getID(){
     return id;
   }
 
+    /**
+     * Get the string representation of the Message object
+     * @return
+     */
   public String toString(){
     return sender + " (" + timeSent + "): " + message;
   }

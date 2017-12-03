@@ -42,13 +42,33 @@ public class MessageVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
    private Callback callback;
    private Context currentContext;
 
-   public MessageVolleyImpl() {  }
+
+    /**
+     * Creates a Message Volley Implementation
+     */
+    public MessageVolleyImpl() {  }
+
+    /**
+     * Creates a Message Volley Implementation with a callback for returning data
+     * @param o - callback for AsyncTask implementation
+     */
    public MessageVolleyImpl(Callback o) {callback = o;}
+
+    /**
+     * Creates a Message Volley Implementation with a callback for returning data and the previous context
+     * @param currentContext
+     * @param o
+     */
    public MessageVolleyImpl(Context currentContext, Callback o){
      this.currentContext = currentContext;
      callback = o;
    }
 
+    /**
+     * Sends a message to the database
+     * @param context - Context to send to singleton
+     * @param message - Message object to be sent to the database
+     */
    @Override
    public void createMessage(final Context context, final Message message){
      this.currentContext = context;
