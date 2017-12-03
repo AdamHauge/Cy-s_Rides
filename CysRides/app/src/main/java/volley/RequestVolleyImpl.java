@@ -41,6 +41,17 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
     private ArrayList<domain.Request> requests;
     private Callback callback;
     private GroupVolleyImpl groupVolley = new GroupVolleyImpl();
+    private Calendar current = Calendar.getInstance();
+
+    /**
+     * Default constructor
+     */
+    public RequestVolleyImpl() {
+        current.set(Calendar.HOUR_OF_DAY, 0);
+        current.set(Calendar.MINUTE, 0);
+        current.set(Calendar.SECOND, 0);
+        current.set(Calendar.MILLISECOND, 0);
+    }
 
     /**
      * constructor that stores caller data
@@ -48,6 +59,7 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
      * @param o callback to send data to
      */
     public RequestVolleyImpl(Context c, Callback o) {
+        this();
         currentContext = c;
         callback = o;
     }
@@ -205,8 +217,10 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
 
                 int group_id = jsonRequest.getInt("GROUP_ID");
 
+                Calendar compare = Calendar.getInstance();
                 try {
                     date = new SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(stringDate);
+                    compare.setTime(date);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -216,9 +230,8 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
                         this.currentContext);
 
                 /* if request is expired, just delete it */
-                if(request.getDate().compareTo(Calendar.getInstance().getTime()) < 0) {
+                if(compare.compareTo(current) < 0) {
                     deleteRequest(currentContext, request.getId());
-                    Log.d("deleted", request.getDate().toString());
                 }
                 else {
                     requests.add(request);

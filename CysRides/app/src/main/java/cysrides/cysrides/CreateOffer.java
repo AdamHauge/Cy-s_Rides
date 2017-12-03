@@ -173,7 +173,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
                     Offer o = new Offer(cost, userIntentService.getUserFromIntent(
                             getIntent()).getNetID(), (String) destination.getName(),
                             destination.getLatLng(), (String) start.getName(), start.getLatLng(),
-                            description, new GregorianCalendar(year, month, day).getTime());
+                            description, new GregorianCalendar(year, month - 1, day).getTime());
 
                     offerService.createOffer(CreateOffer.this, o);
 

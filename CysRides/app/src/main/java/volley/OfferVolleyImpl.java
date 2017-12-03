@@ -41,7 +41,17 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
     private String startName;
     private Callback callback;
     private GroupVolleyImpl groupVolley = new GroupVolleyImpl();
-    public OfferVolleyImpl() { }
+    private Calendar current = Calendar.getInstance();
+
+    /**
+     * Default Constructor
+     */
+    public OfferVolleyImpl() {
+        current.set(Calendar.HOUR_OF_DAY, 0);
+        current.set(Calendar.MINUTE, 0);
+        current.set(Calendar.SECOND, 0);
+        current.set(Calendar.MILLISECOND, 0);
+    }
 
     /**
      * OfferVolleyImpl constructor
@@ -49,6 +59,7 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
      * @param o callback to send data to
      */
     public OfferVolleyImpl(Context currentContext, Callback o) {
+        this();
         this.currentContext = currentContext;
         callback = o;
     }
@@ -202,8 +213,10 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
 
                 int groupID = jsonOffer.getInt("GROUP_ID");
 
+                Calendar compare = Calendar.getInstance();
                 try {
                     date = new SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(stringDate);
+                    compare.setTime(date);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -212,9 +225,8 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
                         startLatLng, description, date, groupID, this.currentContext);
 
                 /* if the offer is expired, just delete it form the database */
-                if(offer.getDate().compareTo(Calendar.getInstance().getTime()) < 0) {
+                if(compare.compareTo(current) < 0) {
                     deleteOffer(currentContext, offer.getId());
-                    Log.d("deleted", offer.getDate().toString());
                 }
                 else {
                     offers.add(offer);

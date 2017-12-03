@@ -167,10 +167,11 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
                     Request r = new Request(numBags, userIntentService.getUserFromIntent(
                             getIntent()).getNetID(), (String) destination.getName(),
                             destination.getLatLng(), (String) start.getName(), start.getLatLng(),
-                            description, new GregorianCalendar(year, month, day).getTime());
+                            description, new GregorianCalendar(year, month - 1, day).getTime());
                     requestService.createRequest(CreateRequest.this, r);
                     finish();
                     startActivity(getIntent());
+                    Log.d("Date", Long.toString(r.getDate().getTime()));
                 }
             }
         });
