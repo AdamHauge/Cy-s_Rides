@@ -42,7 +42,9 @@ public class Group {
 
     }
 
-
+    public boolean inGroup(String netID) {
+        return groupMembers.contains(netID);
+    }
 
     public ArrayList<String> getGroupMembers(){
         return groupMembers;

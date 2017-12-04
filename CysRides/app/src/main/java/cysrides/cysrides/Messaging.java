@@ -23,6 +23,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import domain.Message;
 import domain.UserInfo;
@@ -45,7 +47,8 @@ public class Messaging extends AppCompatActivity implements NavigationView.OnNav
     private ArrayList<String> display = new ArrayList<>();
     private ArrayAdapter<String> adapter;
     private Intent i;
-    private UserInfo user = userIntentService.getUserFromIntent(this.getIntent());
+    private UserInfo user;
+    private int groupID = 0;
 
     /**
      * Initializes page to be displayed
@@ -70,6 +73,10 @@ public class Messaging extends AppCompatActivity implements NavigationView.OnNav
         Menu menu = navigationView.getMenu();
         navigationService.hideMenuItems(menu, userIntentService.getUserFromIntent(this.getIntent()));
 
+        user = userIntentService.getUserFromIntent(this.getIntent());
+
+        groupID = this.getIntent().getIntExtra("groupID", 0);
+
         ListView listView;
         listView = (ListView)findViewById(R.id.messages_list);
 
@@ -81,10 +88,22 @@ public class Messaging extends AppCompatActivity implements NavigationView.OnNav
             @Override
             public void onClick(View view) {
                 sendMessage();
+                getMessages();
             }
         });
 
         getMessages();
+
+        Timer timer = new Timer ();
+        TimerTask task = new TimerTask () {
+            @Override
+            public void run () {
+                getMessages();
+            }
+        };
+
+        /* schedule the task to run starting now and then every hour... */
+        timer.schedule(task, 0, 5000);   // refresh every 5 seconds
 
         if(navigationService.checkInternetConnection(Messaging.this)) {
             connectionPopUp();
@@ -99,7 +118,9 @@ public class Messaging extends AppCompatActivity implements NavigationView.OnNav
         String text = message.getText().toString() + "\nfrom " + user.getFirstName();
 
         MessageVolleyImpl messageVolley = new MessageVolleyImpl();
-        messageVolley.createMessage(Messaging.this, new Message(0, user.getNetID(), text));
+        messageVolley.createMessage(Messaging.this, new Message(groupID, user.getNetID(), text));
+
+        message.setText("");
     }
 
     /**
@@ -110,8 +131,13 @@ public class Messaging extends AppCompatActivity implements NavigationView.OnNav
         MessageVolleyImpl volley = new MessageVolleyImpl(new Callback() {
             @Override
             public void call(ArrayList<?> result) {
-                if(result.get(0) instanceof Message) {
-                    messages = (ArrayList<Message>)result;
+                try {
+                    if (result.get(0) instanceof Message) {
+                        messages = (ArrayList<Message>) result;
+                    }
+                }
+                catch(Exception e) {
+                    messages = new ArrayList<>();
                 }
 
                 adapter.clear();
@@ -124,7 +150,7 @@ public class Messaging extends AppCompatActivity implements NavigationView.OnNav
                 adapter.notifyDataSetChanged();
             }
         });
-        volley.execute(111);
+        volley.execute(groupID);
     }
 
     /**
