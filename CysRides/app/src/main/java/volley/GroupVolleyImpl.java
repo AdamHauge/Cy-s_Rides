@@ -267,7 +267,7 @@ public class GroupVolleyImpl extends AsyncTask<String, Void, JSONArray> implemen
 
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
-    public void getMyGroups(Context context, final String netID) {
+    public void getGroupsandRides(Context context) {
         currentContext = context;
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getMyGroupsUrl,
@@ -288,8 +288,6 @@ public class GroupVolleyImpl extends AsyncTask<String, Void, JSONArray> implemen
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("netID", netID);
-
                 return params;
             }
         };
