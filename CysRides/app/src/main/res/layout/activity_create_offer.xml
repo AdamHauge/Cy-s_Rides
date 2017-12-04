@@ -62,7 +62,7 @@
                 android:layout_marginTop="10dp"
                 android:focusable="false"
                 android:inputType="time"
-                android:hint="Leave time" />
+                android:hint="@string/leave_time" />
 
             <EditText android:id="@+id/Description"
                 android:layout_height="wrap_content"

@@ -210,14 +210,14 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
                 LatLng startLatLng = getLatLngFromDatabase(stringStart);
 
                 String description = jsonOffer.getString("DESCRIPTION");
-                String stringDate = jsonOffer.getString("DATE");
+                String stringDate = jsonOffer.getString("DATETIME");
                 Date date =  new Date();
 
                 int groupID = jsonOffer.getInt("GROUP_ID");
 
                 Calendar compare = Calendar.getInstance();
                 try {
-                    date = new SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(stringDate);
+                    date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US).parse(stringDate);
                     compare.setTime(date);
                 } catch (Exception e) {
                     e.printStackTrace();
