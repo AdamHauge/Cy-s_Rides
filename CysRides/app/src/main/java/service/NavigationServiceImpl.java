@@ -10,13 +10,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import cysrides.cysrides.BanUser;
-import cysrides.cysrides.BannedUsers;
-import cysrides.cysrides.Calendar;
+import cysrides.cysrides.CalendarActivity;
 import cysrides.cysrides.Contacts;
 import cysrides.cysrides.CreateOffer;
 import cysrides.cysrides.CreateRequest;
-import cysrides.cysrides.DeleteRequestsAndOffers;
 import cysrides.cysrides.Groups;
 import cysrides.cysrides.LoginActivity;
 import cysrides.cysrides.Messaging;
@@ -63,7 +60,7 @@ public class NavigationServiceImpl extends AppCompatActivity implements Navigati
                 intent = userIntentService.createIntent(context, LoginActivity.class, userIntentService.getUserFromIntent(intent));
                 break;
             case R.id.calendar_activity:
-                intent = userIntentService.createIntent(context, Calendar.class, userIntentService.getUserFromIntent(intent));
+                intent = userIntentService.createIntent(context, CalendarActivity.class, userIntentService.getUserFromIntent(intent));
                 break;
             case R.id.groups:
                 intent = userIntentService.createIntent(context, Groups.class, userIntentService.getUserFromIntent(intent));
