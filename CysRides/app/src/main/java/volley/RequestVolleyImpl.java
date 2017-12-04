@@ -103,7 +103,7 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
                 params.put("destination", destinationName);
                 params.put("start", startName);
                 params.put("description", newRequest.getDescription());
-                params.put("date", String.format("%s '%s'", "DATE", new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(newRequest.getDate())));
+                params.put("datetime", String.format("'%s'", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US).format(newRequest.getDate())));
                 return params;
             }
         };
@@ -212,14 +212,14 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
                 LatLng startLatLng = getLatLngFromDatabase(stringStart);
 
                 String description = jsonRequest.getString("DESCRIPTION");
-                String stringDate = jsonRequest.getString("DATE");
+                String stringDate = jsonRequest.getString("DATETIME");
                 Date date =  new Date();
 
                 int group_id = jsonRequest.getInt("GROUP_ID");
 
                 Calendar compare = Calendar.getInstance();
                 try {
-                    date = new SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(stringDate);
+                    date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US).parse(stringDate);
                     compare.setTime(date);
                 } catch (Exception e) {
                     e.printStackTrace();

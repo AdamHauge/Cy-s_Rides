@@ -2,6 +2,7 @@ package cysrides.cysrides;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -24,6 +25,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TimePicker;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
@@ -52,16 +54,17 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
     private ActivityService activityService = new ActivityServiceImpl();
 
     private DatePickerDialog.OnDateSetListener dateSetListener;
+    private TimePickerDialog.OnTimeSetListener timeSetListener;
     private Place destination;
     private Place start;
-    private int year, month, day;
+    private int year, month, day, hour, minute, seconds;
     private boolean dateChanged = false;
     private String description;
     private int numBags;
     private Intent i;
     private RequestService requestService = new RequestServiceImpl();
     private NavigationService navigationService = new NavigationServiceImpl();
-    private boolean retValue;
+    private boolean retValue, timeChanged = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,15 +162,65 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
             }
         };
 
+        EditText displayTime = (EditText) findViewById(R.id.LeaveTime);
+        displayTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar cal = Calendar.getInstance();
+
+                hour = cal.get(Calendar.HOUR_OF_DAY);
+                minute = cal.get(Calendar.MINUTE);
+
+                TimePickerDialog timePickerDialog = new TimePickerDialog(CreateRequest.this, android.R.style.Theme_Holo_Dialog_NoActionBar_MinWidth,
+                        timeSetListener, hour, minute, false);
+
+
+                timePickerDialog.setCancelable(false);
+
+                timePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == DialogInterface.BUTTON_NEGATIVE) {
+                            if(!dateChanged) {
+                                minute = 0;
+                                hour = 0;
+                            }
+                        }
+                    }
+                });
+                if(null != timePickerDialog.getWindow()) {
+                    timePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                }
+                timePickerDialog.show();
+            }
+        });
+
+        timeSetListener = new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int h, int m) {
+                hour = h;
+                minute = m;
+                seconds = 0;
+                Log.d("CreateOffer", "onTimeSet date: " + String.format("%02d", hour) + ":" + String.format("%02d", minute) + ":" + String.format("%02d", seconds));
+                String time = String.format("%02d", hour) + ":" + String.format("%02d", minute) + ":" + String.format("%02d", seconds);
+                EditText editText = (EditText)findViewById(R.id.LeaveTime);
+                editText.setText(time);
+                timeChanged = true;
+            }
+        };
+
         Button submit = (Button) findViewById(R.id.submit);
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(checkInput()) {
+
+                    GregorianCalendar gc = new GregorianCalendar();
+                    gc.set(year, (month - 1), day, hour, minute, seconds);
+
                     Request r = new Request(numBags, userIntentService.getUserFromIntent(
                             getIntent()).getNetID(), (String) destination.getName(),
                             destination.getLatLng(), (String) start.getName(), start.getLatLng(),
-                            description, new GregorianCalendar(year, month - 1, day).getTime());
+                            description, gc.getTime());
                     requestService.createRequest(CreateRequest.this, r);
                     finish();
                     startActivity(getIntent());

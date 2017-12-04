@@ -5,7 +5,7 @@ $email = $_POST["email"];
 $destination = $_POST["destination"];
 $start = $_POST["start"];
 $description = $_POST["description"];
-$date = $_POST["date"];
+$datetime = $_POST["datetime"];
 
 $host="mysql.cs.iastate.edu";
 $port=3306;
@@ -16,7 +16,7 @@ $dbname = 'db309sab5';
 
 $con = new mysqli($host, $username, $password, $dbname, $port, $socket) or die('Could not connect to database server'.mysqli_connect_error);
 
-$sql = "INSERT INTO REQUEST_TABLE (NUM_BAGS, EMAIL, DESTINATION, START, DESCRIPTION, DATE) VALUES ('".$numBags."','".$email."','".$destination."','".$start."','".$description."',".$date.");";
+$sql = "INSERT INTO REQUEST_TABLE (NUM_BAGS, REQUEST_EMAIL, DESTINATION, START, DESCRIPTION, DATETIME) VALUES ('".$numBags."','".$email."','".$destination."','".$start."','".$description."',".$datetime.");";
 
 if(mysqli_query($con,$sql)) {
   $sql = "SELECT ID from REQUEST_TABLE ORDER BY ID DESC LIMIT 1;";

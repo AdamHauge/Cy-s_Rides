@@ -72,6 +72,7 @@ public abstract class RideFragment extends FragmentImpl {
     protected String getDate(Date d) {
         Calendar date = Calendar.getInstance();
         date.setTime(d);
-        return (date.get(Calendar.MONTH) + 1) + "/" + date.get(Calendar.DAY_OF_MONTH) + "/" + date.get(Calendar.YEAR);
+        return (date.get(Calendar.MONTH) + 1) + "/" + date.get(Calendar.DAY_OF_MONTH) + "/" + date.get(Calendar.YEAR) + " " +
+                String.format("%02d", date.get(Calendar.HOUR)) + ":" + String.format("%02d", date.get(Calendar.MINUTE));
     }
 }
