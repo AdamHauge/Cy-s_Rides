@@ -119,7 +119,7 @@ public class UserVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements 
                 UserInfo user = new UserInfo(netID, userPassword, confirmationCode, firstName, lastName,
                         venmo, profileDescription, type, userRating, offers, requests);
 
-                if(banReason != null) {
+                if(!banReason.equals("null")) {
                     user.setIsBanned(true);
                     user.setBanReason(banReason);
                 }
