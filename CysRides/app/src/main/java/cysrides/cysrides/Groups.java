@@ -32,7 +32,7 @@ import service.NavigationService;
 import service.NavigationServiceImpl;
 import service.UserIntentService;
 import service.UserIntentServiceImpl;
-import volley.OfferVolleyImpl;
+import volley.GroupVolleyImpl;
 
 public class Groups extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -81,6 +81,8 @@ public class Groups extends AppCompatActivity implements NavigationView.OnNaviga
             }
         });
 
+        getGroupsList();
+
         if(navigationService.checkInternetConnection(Groups.this)) {
             connectionPopUp();
         }
@@ -92,7 +94,7 @@ public class Groups extends AppCompatActivity implements NavigationView.OnNaviga
     @SuppressWarnings("unchecked")
     public void getGroupsList() {
         /* notify offer volley to pull data */
-        OfferVolleyImpl volley = new OfferVolleyImpl(Groups.this, new Callback() {
+        GroupVolleyImpl volley = new GroupVolleyImpl(Groups.this, new Callback() {
             public void call(ArrayList<?> result) {
                 try {
                     if (result.get(0) instanceof Group) {

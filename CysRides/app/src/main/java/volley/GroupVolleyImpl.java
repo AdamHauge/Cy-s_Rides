@@ -318,6 +318,7 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
      @Override
      protected void onPostExecute(JSONArray jsonArray){
        try{
+           Log.d("Groups", jsonArray.toString());
          gors = new ArrayList<>();
          for(int i=0; i < jsonArray.length(); i++){
            JSONObject jsonGOR = jsonArray.getJSONObject(i);
@@ -339,8 +340,8 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
            members.add(jsonGOR.getString("RIDER_7"));
            String stringOfferID = jsonGOR.getString("OFFER_ID");
            int offerID = Integer.parseInt(stringOfferID);
-           String stringRequstID = jsonGOR.getString("REQUEST_ID");
-           int requestID = Integer.parseInt(stringRequstID);
+           String stringRequestID = jsonGOR.getString("REQUEST_ID");
+           int requestID = Integer.parseInt(stringRequestID);
 
            group = new Group(groupID, members, offerID, requestID);
 

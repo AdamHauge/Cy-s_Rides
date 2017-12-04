@@ -84,6 +84,8 @@ public class Messaging extends AppCompatActivity implements NavigationView.OnNav
             }
         });
 
+        getMessages();
+
         if(navigationService.checkInternetConnection(Messaging.this)) {
             connectionPopUp();
         }
@@ -122,7 +124,7 @@ public class Messaging extends AppCompatActivity implements NavigationView.OnNav
                 adapter.notifyDataSetChanged();
             }
         });
-        volley.execute();
+        volley.execute(111);
     }
 
     /**
