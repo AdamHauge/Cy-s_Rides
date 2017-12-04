@@ -92,7 +92,7 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
                         Toast.makeText(currentContext, "Error...",Toast.LENGTH_SHORT).show();
                         error.printStackTrace();
                     }
-                }){
+                }) {
 
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {

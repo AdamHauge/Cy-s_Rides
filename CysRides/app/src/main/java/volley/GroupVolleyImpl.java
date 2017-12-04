@@ -318,6 +318,7 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
      @Override
      protected void onPostExecute(JSONArray jsonArray){
        try{
+           Log.d("Groups", jsonArray.toString());
          gors = new ArrayList<>();
          for(int i=0; i < jsonArray.length(); i++){
            JSONObject jsonGOR = jsonArray.getJSONObject(i);

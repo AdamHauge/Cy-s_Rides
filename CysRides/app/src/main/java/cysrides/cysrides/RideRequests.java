@@ -214,8 +214,8 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
     }
 
     /**
-     * Initializes options menu
-     * @param menu to be built
+     * Handles selected item
+     * @param item selected
      * @return true on success
      */
     @Override

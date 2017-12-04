@@ -30,6 +30,10 @@
         android:icon="@drawable/ic_menu_contacts"/>
 
     <item
+        android:id="@+id/groups"
+        android:title="@string/groups"/>
+
+    <item
         android:id="@+id/createOffer"
         android:title="@string/create_offer"
         android:icon="@drawable/ic_menu_create"/>
@@ -43,23 +47,15 @@
         android:id="@+id/requestsOffers"
         android:title="@string/requests_and_offers" />
 
-    <!--<item-->
-        <!--android:id="@+id/banUser"-->
-        <!--android:title="@string/ban_user"-->
-        <!--android:icon="@drawable/ic_menu_ban_user"/>-->
-
-    <!--<item-->
-        <!--android:id="@+id/bannedUsers"-->
-        <!--android:title="@string/banned_users"-->
-        <!--android:icon="@drawable/ic_menu_banned_users"/>-->
-
-    <!--<item-->
-        <!--android:id="@+id/deleteRequestsAndOffers"-->
-        <!--android:title="Delete Requests and Offers"/>-->
-
     <item
         android:id="@+id/logout"
         android:title="@string/logout"
         android:icon="@drawable/ic_menu_logout"/>
+
+    <!--Make sure this is the last item-->
+    <item
+        android:id="@+id/messaging"
+        android:title="@string/debug"
+        android:visible="false"/>
 
 </menu>
