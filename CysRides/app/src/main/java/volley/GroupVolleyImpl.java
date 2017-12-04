@@ -342,17 +342,17 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
            int requestID = 0;
            int offerID= 0;
            group = null;
-           if(stringOfferID.equals("null")) {
+           if(!stringOfferID.equals("null")) {
                offerID = Integer.parseInt(stringOfferID);
                group = new Group(groupID, members, offerID, 0);
            }
            String stringRequstID = jsonGOR.getString("REQUEST_ID");
-           if(stringRequstID.equals("null")) {
+           if(!stringRequstID.equals("null")) {
                requestID = Integer.parseInt(stringRequstID);
                group = new Group(groupID, members, 0, requestID);
            }
 
-           if(!jsonGOR.getString("COST").equals("null")){
+           if(offerID != 1){
 //             String stringCost = jsonGOR.getString("COST");
 //             double cost = Double.parseDouble(stringCost);
              String email = jsonGOR.getString("OFFER_EMAIL");

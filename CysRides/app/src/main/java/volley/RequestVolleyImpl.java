@@ -203,19 +203,19 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
                 int numBags = Integer.parseInt(stringCost);
                 String email = jsonRequest.getString("REQUEST_EMAIL");
 
-                String stringDestination = jsonRequest.getString("DESTINATION");
+                String stringDestination = jsonRequest.getString("REQUEST_DESTINATION");
                 String destinationName = getLocationName(stringDestination);
                 LatLng destLatLng = getLatLngFromDatabase(stringDestination);
 
-                String stringStart = jsonRequest.getString("START");
+                String stringStart = jsonRequest.getString("REQUEST_START");
                 String startName = getLocationName(stringStart);
                 LatLng startLatLng = getLatLngFromDatabase(stringStart);
 
-                String description = jsonRequest.getString("DESCRIPTION");
-                String stringDate = jsonRequest.getString("DATETIME");
+                String description = jsonRequest.getString("REQUEST_DESCRIPTION");
+                String stringDate = jsonRequest.getString("REQUEST_DATETIME");
                 Date date =  new Date();
 
-                int group_id = jsonRequest.getInt("GROUP_ID");
+                int group_id = jsonRequest.getInt("REQUEST_GROUP_ID");
 
                 Calendar compare = Calendar.getInstance();
                 try {

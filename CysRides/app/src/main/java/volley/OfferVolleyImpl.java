@@ -201,19 +201,19 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
                 double cost = Double.parseDouble(stringCost);
                 String email = jsonOffer.getString("OFFER_EMAIL");
 
-                String stringDestination = jsonOffer.getString("DESTINATION");
+                String stringDestination = jsonOffer.getString("OFFER_DESTINATION");
                 String destinationName = getLocationName(stringDestination);
                 LatLng destLatLng = getLatLngFromDatabase(stringDestination);
 
-                String stringStart = jsonOffer.getString("START");
+                String stringStart = jsonOffer.getString("OFFER_START");
                 String startName = getLocationName(stringStart);
                 LatLng startLatLng = getLatLngFromDatabase(stringStart);
 
-                String description = jsonOffer.getString("DESCRIPTION");
-                String stringDate = jsonOffer.getString("DATETIME");
+                String description = jsonOffer.getString("OFFER_DESCRIPTION");
+                String stringDate = jsonOffer.getString("OFFER_DATETIME");
                 Date date =  new Date();
 
-                int groupID = jsonOffer.getInt("GROUP_ID");
+                int groupID = jsonOffer.getInt("OFFER_GROUP_ID");
 
                 Calendar compare = Calendar.getInstance();
                 try {
