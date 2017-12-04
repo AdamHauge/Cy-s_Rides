@@ -16,7 +16,7 @@ $dbname = 'db309sab5';
 
 $con = new mysqli($host, $username, $password, $dbname, $port, $socket) or die('Could not connect to database server'.mysqli_connect_error);
 
-$sql = "INSERT INTO REQUEST_TABLE (NUM_BAGS, REQUEST_EMAIL, DESTINATION, START, DESCRIPTION, DATETIME) VALUES ('".$numBags."','".$email."','".$destination."','".$start."','".$description."',".$datetime.");";
+$sql = "INSERT INTO REQUEST_TABLE (NUM_BAGS, REQUEST_EMAIL, REQUEST_DESTINATION, REQUEST_START, REQUEST_DESCRIPTION, REQUEST_DATETIME) VALUES ('".$numBags."','".$email."','".$destination."','".$start."','".$description."',".$datetime.");";
 
 if(mysqli_query($con,$sql)) {
   $sql = "SELECT ID from REQUEST_TABLE ORDER BY ID DESC LIMIT 1;";
