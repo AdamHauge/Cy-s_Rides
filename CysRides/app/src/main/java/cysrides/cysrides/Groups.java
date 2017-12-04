@@ -23,6 +23,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import domain.GOR;
 import domain.Group;
 import domain.Offer;
 import service.ActivityService;
@@ -41,7 +42,7 @@ public class Groups extends AppCompatActivity implements NavigationView.OnNaviga
     private ActivityService activityService = new ActivityServiceImpl();
 
     private List<String> display = new ArrayList<>();
-    private List<Group> groups = new ArrayList<>();
+    private List<GOR> gors = new ArrayList<>();
     private ArrayAdapter<String> adapter;
     private Intent i;
 
@@ -97,19 +98,19 @@ public class Groups extends AppCompatActivity implements NavigationView.OnNaviga
         GroupVolleyImpl volley = new GroupVolleyImpl(Groups.this, new Callback() {
             public void call(ArrayList<?> result) {
                 try {
-                    if (result.get(0) instanceof Group) {
-                        groups = (ArrayList<Group>) result;
+                    if (result.get(0) instanceof GOR) {
+                        gors = (ArrayList<GOR>) result;
                     }
                 } catch (Exception e) {
-                    groups = new ArrayList<>();
+                    gors = new ArrayList<>();
                     e.printStackTrace();
                 }
 
                 /* display data to user */
                 adapter.clear();
                 display.clear();
-                for (int i = 0; i < groups.size(); i++) {
-                    display.add(groups.get(i).getDriver());
+                for (int i = 0; i < gors.size(); i++) {
+                    display.add(gors.get(i).getGroup().getDriver());
                 }
 
                 adapter.notifyDataSetChanged();
