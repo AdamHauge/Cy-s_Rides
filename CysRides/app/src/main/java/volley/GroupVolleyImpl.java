@@ -15,6 +15,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,14 +29,13 @@ import service.Callback;
 import domain.Group;
 import service.OfferService;
 
-public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements GroupVolley {
+public class GroupVolleyImpl extends AsyncTask<String, Void, JSONArray> implements GroupVolley {
 
     private String createGroupUrl =     "http://proj-309-sa-b-5.cs.iastate.edu/createGroup_TEST.php";
     private String addRiderUrl =        "http://proj-309-sa-b-5.cs.iastate.edu/addRider_TEST.php";
     private String getGroupUrl =        "http://proj-309-sa-b-5.cs.iastate.edu/getGroup.php";
     private String addDriverUrl =       "http://proj-309-sa-b-5.cs.iastate.edu/addDriver_TEST.php";
     private String getMyGroupsUrl =     "http://proj-309-sa-b-5.cs.iastate.edu/getMyGroups.php";
-    private String getGroupsTripInfoUrl = "http://proj-309-sa-b-5.cs.iastate.edu/getGroupsTripInfo.php";
     private Group group;
     private Context currentContext;
     private Callback callback;
@@ -292,38 +297,13 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
 
-    public void getGroupsTripInfo(Context context, final String groupString) {
-        currentContext = context;
-
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getGroupsTripInfoUrl,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(currentContext, "Error...",Toast.LENGTH_SHORT).show();
-                        error.printStackTrace();
-                    }
-
-                }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("groupsString", groupString);
-
-                return params;
-            }
-        };
-
-        MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
-    }
-
-    @Override
-    protected JSONArray doInBackground(Void... voids) {
+     @Override
+     protected JSONArray doInBackground(String... groupString) {
         return null;
-    }
-}
+     }
+
+     @Override
+     protected void onPostExecute(JSONArray jsonArray){
+
+     }
+ }
