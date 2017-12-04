@@ -16,7 +16,7 @@ $dbname = 'db309sab5';
 
 $con = new mysqli($host, $username, $password, $dbname, $port, $socket) or die('Could not connect to database server'.mysqli_connect_error);
 
-$sql = "insert into OFFER_TABLE (COST, OFFER_EMAIL, DESTINATION, START, DESCRIPTION, DATETIME) values('".$cost."','".$email."','".$destination."','".$start."','".$description."',".$datetime.");";
+$sql = "insert into OFFER_TABLE (COST, OFFER_EMAIL, OFFER_DESTINATION, OFFER_START, OFFER_DESCRIPTION, OFFER_DATETIME) values('".$cost."','".$email."','".$destination."','".$start."','".$description."',".$datetime.");";
 
 if(mysqli_query($con,$sql)) {
     $sql = "SELECT ID from OFFER_TABLE ORDER BY ID DESC LIMIT 1;";

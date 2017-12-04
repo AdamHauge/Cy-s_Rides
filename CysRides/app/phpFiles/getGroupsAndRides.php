@@ -10,13 +10,13 @@ $dbname = 'db309sab5';
 $con = new mysqli($host, $username, $password, $dbname, $port, $socket) or die('Could not connect to database server'.mysqli_connect_error);
 
 $sql = "SELECT gt.*,
-        ot.OFFER_EMAIL, ot.DESTINATION, ot.START, ot.DATETIME,
-        rt.REQUEST_EMAIL, rt.DESTINATION, rt.START, rt.DATETIME
+        ot.OFFER_EMAIL, ot.OFFER_DESTINATION, ot.OFFER_START, ot.OFFER_DATETIME,
+        rt.REQUEST_EMAIL, rt.REQUEST_DESTINATION, rt.REQUEST_START, rt.REQUEST_DATETIME
         FROM GROUP_TABLE gt
         LEFT JOIN OFFER_TABLE ot
-          ON ot.GROUP_ID = gt.ID
+          ON ot.OFFER_GROUP_ID = gt.ID
         LEFT JOIN REQUEST_TABLE rt
-          ON rt.GROUP_ID = gt.ID;";
+          ON rt.REQUEST_GROUP_ID = gt.ID;";
 
 
 // $sql = "SELECT GROUP_TABLE.*,

@@ -12,7 +12,7 @@
 
   $con = new mysqli($host, $username, $password, $dbname, $port, $socket) or die('Could not connect to database server'.mysqli_connect_error);
 
-  $sql = "UPDATE REQUEST_TABLE SET GROUP_ID = " .$group_id. " WHERE ID = ".$request_id.";";
+  $sql = "UPDATE REQUEST_TABLE SET REQUEST_GROUP_ID = " .$group_id. " WHERE ID = ".$request_id.";";
 
   if(mysqli_query($con,$sql)) {
       echo "Data insertion success...";
