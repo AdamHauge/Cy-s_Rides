@@ -352,9 +352,6 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
                group = new Group(groupID, members, 0, requestID);
            }
 
-           if(!jsonGOR.getString("COST").equals("null")){
-             String stringCost = jsonGOR.getString("COST");
-             double cost = Double.parseDouble(stringCost);
              String email = jsonGOR.getString("OFFER_EMAIL");
              String stringDestination = jsonGOR.getString("DESTINATION");
              String destinationName = getLocationName(stringDestination);
@@ -370,27 +367,15 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
              } catch (Exception e) {
                  e.printStackTrace();
              }
+
+           if(!jsonGOR.getString("COST").equals("null")){
+             String stringCost = jsonGOR.getString("COST");
+             double cost = Double.parseDouble(stringCost);
              offer = new Offer(cost, offerID, email, destinationName, destLatLng, startName, startLatLng, description, date);
              request = null;
            }else{
              String stringNumBags = jsonGOR.getString("NUM_BAGS");
              int numBags = Integer.parseInt(stringNumBags);
-             String email = jsonGOR.getString("REQUEST_EMAIL");
-             String stringDestination = jsonGOR.getString("DESTINATION");
-             String destinationName = getLocationName(stringDestination);
-             LatLng destLatLng = getLatLngFromDatabase(stringDestination);
-             String stringStart = jsonGOR.getString("START");
-             String startName = getLocationName(stringStart);
-             LatLng startLatLng = getLatLngFromDatabase(stringStart);
-             String description = jsonGOR.getString("DESCRIPTION");
-             String stringDate = jsonGOR.getString("DATE");
-             Date date =  new Date();
-             int group_id = jsonGOR.getInt("GROUP_ID");
-             try {
-                 date = new SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(stringDate);
-             } catch (Exception e) {
-                 e.printStackTrace();
-             }
              request = new domain.Request(numBags, requestID, email, destinationName, destLatLng, startName, startLatLng, description, date);
              offer = null;
            }
