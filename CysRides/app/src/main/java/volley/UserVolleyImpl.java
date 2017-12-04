@@ -111,12 +111,18 @@ public class UserVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements 
                 UserType type = UserType.valueOf(userType);
                 float userRating = (float) jsonUser.getDouble("USER_RATING");
                 String dateJoined = jsonUser.getString("DATE_JOINED");
+                String banReason = jsonUser.getString("REASON");
 
                 List<Offer> offers = new ArrayList<>();
                 List<domain.Request> requests = new ArrayList<>();
 
                 UserInfo user = new UserInfo(netID, userPassword, confirmationCode, firstName, lastName,
                         venmo, profileDescription, type, userRating, offers, requests);
+
+                if(!banReason.equals("null")) {
+                    user.setIsBanned(true);
+                    user.setBanReason(banReason);
+                }
 
                 user.setDateJoined(dateJoined);
 

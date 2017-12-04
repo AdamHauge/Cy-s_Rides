@@ -72,7 +72,7 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
      * @param start ride start location
      */
     @Override
-    public void createOffer(final Context context, final Offer offer, String destination, String start) {
+    public void createOffer(final Context context, final Offer offer, final String destination, String start) {
         String createOfferUrl = "http://proj-309-sa-b-5.cs.iastate.edu/createOffer.php";
         newOffer = offer;
         currentContext = context;
@@ -101,7 +101,9 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
                 params.put("email", newOffer.getEmail());
                 params.put("destination", destinationName);
                 params.put("start", startName);
-                params.put("description", newOffer.getDescription());
+                String description = newOffer.getDescription();
+                description = description.replace("'", "\\'");
+                params.put("description", description);
                 params.put("date", String.format("%s '%s'", "DATE", new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(newOffer.getDate())));
                 return params;
             }

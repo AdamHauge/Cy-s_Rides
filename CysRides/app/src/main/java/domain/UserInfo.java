@@ -21,6 +21,8 @@ public class UserInfo {
     private List<Request> requests;
     DateFormat df = new SimpleDateFormat("MMMM yyyy");
     private String dateJoined = df.format(Calendar.getInstance().getTime());
+    private boolean isBanned;
+    private String banReason;
 
     public UserInfo() {
 
@@ -57,6 +59,8 @@ public class UserInfo {
         this.userRating = userRating;
         this.offers = offers;
         this.requests = requests;
+        isBanned = false;
+        banReason = null;
     }
 
     public String getDateJoined() {
@@ -161,6 +165,22 @@ public class UserInfo {
 
     public void setRequests(List<Request> requests) {
         this.requests = requests;
+    }
+
+    public boolean getIsBanned() {
+        return isBanned;
+    }
+
+    public void setIsBanned(boolean isBanned) {
+        this.isBanned = isBanned;
+    }
+
+    public String getBanReason() {
+        return banReason;
+    }
+
+    public void setBanReason(String banReason) {
+        this.banReason = banReason;
     }
 
 }
