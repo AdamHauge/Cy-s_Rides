@@ -360,10 +360,10 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
              String startName = getLocationName(stringStart);
              LatLng startLatLng = getLatLngFromDatabase(stringStart);
              String description = jsonGOR.getString("DESCRIPTION");
-             String stringDate = jsonGOR.getString("DATE");
+             String stringDate = jsonGOR.getString("DATETIME");
              Date date =  new Date();
              try {
-                 date = new SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(stringDate);
+                 date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US).parse(stringDate);
              } catch (Exception e) {
                  e.printStackTrace();
              }
