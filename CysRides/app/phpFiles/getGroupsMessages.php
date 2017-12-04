@@ -1,6 +1,6 @@
 <?php
 
-$GROUP_ID = $_POST["GROUP_ID"];
+$GROUP_ID = $_GET["GROUP_ID"];
 
 $host="mysql.cs.iastate.edu";
 $port=3306;

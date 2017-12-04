@@ -34,7 +34,7 @@ import domain.Message;
  * Created by Ryan on 12/1/2017.
  */
 
-public class MessageVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements MessageVolley {
+public class MessageVolleyImpl extends AsyncTask<Integer, Void, JSONArray> implements MessageVolley {
 
    private String createMessageUrl = "http://proj-309-sa-b-5.cs.iastate.edu/sendMessage.php";
    private String getMessagesUrl = "http://proj-309-sa-b-5.cs.iastate.edu/getGroupsMessages.php";
@@ -101,12 +101,12 @@ public class MessageVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
    }
 
     @Override
-    protected JSONArray doInBackground(Void... voids) {
+    protected JSONArray doInBackground(Integer... groupID) {
       HttpURLConnection urlConnection = null;
       StringBuilder result = new StringBuilder();
 
       try {
-          URL url = new URL(getMessagesUrl);
+          URL url = new URL(getMessagesUrl + "?GROUP_ID=" + groupID);
           urlConnection = (HttpURLConnection) url.openConnection();
           InputStream in = new BufferedInputStream(urlConnection.getInputStream());
 
