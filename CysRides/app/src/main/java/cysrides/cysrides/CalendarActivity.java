@@ -85,9 +85,9 @@ public class CalendarActivity extends AppCompatActivity implements NavigationVie
                 .setData(CalendarContract.Events.CONTENT_URI)
                 .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.getTimeInMillis())
                 .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime.getTimeInMillis())
-                .putExtra(CalendarContract.Events.TITLE, "Yoga")
-                .putExtra(CalendarContract.Events.DESCRIPTION, "Group class")
-                .putExtra(CalendarContract.Events.EVENT_LOCATION, "The gym")
+                .putExtra(CalendarContract.Events.TITLE, "Cy's Rides")
+                .putExtra(CalendarContract.Events.DESCRIPTION, "Ride")
+                .putExtra(CalendarContract.Events.EVENT_LOCATION, "State Gym")
                 .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY)
                 .putExtra(CalendarContract.Events.CALENDAR_COLOR_KEY, "@color/colorGold");
         startActivity(intent);
