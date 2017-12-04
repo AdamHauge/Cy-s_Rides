@@ -198,9 +198,13 @@ public class LoginActivity extends AppCompatActivity {
 
                 UserInfo userInfo = loginService.getUserInfo(users, username, password);
                 if(userInfo != null) {
-                    SaveSharedPreference.setUsernamePassword(LoginActivity.this, userInfo.getNetID() + ":" + userInfo.getPassword());
-                    Intent i = userIntentService.createIntent(LoginActivity.this, MainActivity.class, userInfo);
-                    startActivity(i);
+                    if(userInfo.getIsBanned()) {
+                        Toast.makeText(getApplicationContext(), "You have been banned. Reason: "+userInfo.getBanReason(), Toast.LENGTH_LONG).show();
+                    } else {
+                        SaveSharedPreference.setUsernamePassword(LoginActivity.this, userInfo.getNetID() + ":" + userInfo.getPassword());
+                        Intent i = userIntentService.createIntent(LoginActivity.this, MainActivity.class, userInfo);
+                        startActivity(i);
+                    }
                 } else {
                     /* For testing purposes, in case a user gets deleted from database, clear saved data and restart log in */
                     if(0 != SaveSharedPreference.getUsernamePassword(LoginActivity.this).length()) {
