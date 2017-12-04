@@ -104,7 +104,7 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
                 String description = newOffer.getDescription();
                 description = description.replace("'", "\\'");
                 params.put("description", description);
-                params.put("date", String.format("%s '%s'", "DATE", new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(newOffer.getDate())));
+                params.put("datetime", String.format("'%s'", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US).format(newOffer.getDate())));
                 return params;
             }
         };
