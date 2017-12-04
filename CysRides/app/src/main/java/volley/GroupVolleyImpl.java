@@ -342,41 +342,55 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
            int requestID = 0;
            int offerID= 0;
            group = null;
-           if(stringOfferID.equals("null")) {
+           if(!stringOfferID.equals("null")) {
                offerID = Integer.parseInt(stringOfferID);
                group = new Group(groupID, members, offerID, 0);
            }
            String stringRequstID = jsonGOR.getString("REQUEST_ID");
-           if(stringRequstID.equals("null")) {
+           if(!stringRequstID.equals("null")) {
                requestID = Integer.parseInt(stringRequstID);
                group = new Group(groupID, members, 0, requestID);
            }
 
+           if(offerID != 1){
+//             String stringCost = jsonGOR.getString("COST");
+//             double cost = Double.parseDouble(stringCost);
              String email = jsonGOR.getString("OFFER_EMAIL");
-             String stringDestination = jsonGOR.getString("DESTINATION");
+             String stringDestination = jsonGOR.getString("OFFER_DESTINATION");
              String destinationName = getLocationName(stringDestination);
              LatLng destLatLng = getLatLngFromDatabase(stringDestination);
-             String stringStart = jsonGOR.getString("START");
+             String stringStart = jsonGOR.getString("OFFER_START");
              String startName = getLocationName(stringStart);
              LatLng startLatLng = getLatLngFromDatabase(stringStart);
-             String description = jsonGOR.getString("DESCRIPTION");
-             String stringDate = jsonGOR.getString("DATETIME");
+//             String description = jsonGOR.getString("OFFER_DESCRIPTION");
+             String stringDate = jsonGOR.getString("OFFER_DATETIME");
              Date date =  new Date();
              try {
-                 date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US).parse(stringDate);
+                 date = new SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(stringDate);
              } catch (Exception e) {
                  e.printStackTrace();
              }
-
-           if(!jsonGOR.getString("COST").equals("null")){
-             String stringCost = jsonGOR.getString("COST");
-             double cost = Double.parseDouble(stringCost);
-             offer = new Offer(cost, offerID, email, destinationName, destLatLng, startName, startLatLng, description, date);
+             offer = new Offer(0, offerID, email, destinationName, destLatLng, startName, startLatLng, null, date);
              request = null;
            }else{
-             String stringNumBags = jsonGOR.getString("NUM_BAGS");
-             int numBags = Integer.parseInt(stringNumBags);
-             request = new domain.Request(numBags, requestID, email, destinationName, destLatLng, startName, startLatLng, description, date);
+//             String stringNumBags = jsonGOR.getString("NUM_BAGS");
+//             int numBags = Integer.parseInt(stringNumBags);
+             String email = jsonGOR.getString("REQUEST_EMAIL");
+             String stringDestination = jsonGOR.getString("REQUEST_DESTINATION");
+             String destinationName = getLocationName(stringDestination);
+             LatLng destLatLng = getLatLngFromDatabase(stringDestination);
+             String stringStart = jsonGOR.getString("REQUEST_START");
+             String startName = getLocationName(stringStart);
+             LatLng startLatLng = getLatLngFromDatabase(stringStart);
+//             String description = jsonGOR.getString("DESCRIPTION");
+             String stringDate = jsonGOR.getString("REQUEST_DATETIME");
+             Date date =  new Date();
+             try {
+                 date = new SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(stringDate);
+             } catch (Exception e) {
+                 e.printStackTrace();
+             }
+             request = new domain.Request(0, requestID, email, destinationName, destLatLng, startName, startLatLng, null, date);
              offer = null;
            }
 
