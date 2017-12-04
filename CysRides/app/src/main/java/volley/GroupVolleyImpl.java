@@ -6,10 +6,10 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,25 +21,32 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
+import domain.GOR;
+import domain.Offer;
 import service.Callback;
 import domain.Group;
+import domain.Request;
 import service.OfferService;
 
-public class GroupVolleyImpl extends AsyncTask<String, Void, JSONArray> implements GroupVolley {
+public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements GroupVolley {
 
     private String createGroupUrl =     "http://proj-309-sa-b-5.cs.iastate.edu/createGroup_TEST.php";
     private String addRiderUrl =        "http://proj-309-sa-b-5.cs.iastate.edu/addRider_TEST.php";
     private String getGroupUrl =        "http://proj-309-sa-b-5.cs.iastate.edu/getGroup.php";
     private String addDriverUrl =       "http://proj-309-sa-b-5.cs.iastate.edu/addDriver_TEST.php";
-    private String getMyGroupsUrl =     "http://proj-309-sa-b-5.cs.iastate.edu/getMyGroups.php";
+    private String getGroupsAndRidesUrl =     "http://proj-309-sa-b-5.cs.iastate.edu/getGroupsAndRides.php";
     private Group group;
     private Context currentContext;
     private Callback callback;
     private OfferVolleyImpl ovi;
+    private ArrayList<GOR> gors;
 
     private RequestVolleyImpl rvi;
     private int groupNum;
@@ -59,7 +66,7 @@ public class GroupVolleyImpl extends AsyncTask<String, Void, JSONArray> implemen
             this.rvi = new RequestVolleyImpl();
         }
         currentContext = context;
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, createGroupUrl,
+        StringRequest stringRequest = new StringRequest(com.android.volley.Request.Method.POST, createGroupUrl,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -107,7 +114,7 @@ public class GroupVolleyImpl extends AsyncTask<String, Void, JSONArray> implemen
     @Override
     public void getGroup(final Context currentContext, final int groupNum) {
         this.currentContext = currentContext;
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getGroupUrl,
+        StringRequest stringRequest = new StringRequest(com.android.volley.Request.Method.POST, getGroupUrl,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -192,7 +199,7 @@ public class GroupVolleyImpl extends AsyncTask<String, Void, JSONArray> implemen
             return;
         }
         final int size = tempsize;
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, addRiderUrl,
+        StringRequest stringRequest = new StringRequest(com.android.volley.Request.Method.POST, addRiderUrl,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -231,7 +238,7 @@ public class GroupVolleyImpl extends AsyncTask<String, Void, JSONArray> implemen
     public void addDriver(Context context, final Group g, final String netID) {
         currentContext = context;
         this.group = g;
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, addDriverUrl,
+        StringRequest stringRequest = new StringRequest(com.android.volley.Request.Method.POST, addDriverUrl,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -267,41 +274,151 @@ public class GroupVolleyImpl extends AsyncTask<String, Void, JSONArray> implemen
 
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
-    public void getGroupsandRides(Context context) {
-        currentContext = context;
-
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getMyGroupsUrl,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(currentContext, "Error...",Toast.LENGTH_SHORT).show();
-                        error.printStackTrace();
-                    }
-
-                }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                return params;
-            }
-        };
-
-        MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
-    }
 
      @Override
-     protected JSONArray doInBackground(String... groupString) {
-        return null;
-     }
+     protected JSONArray doInBackground(Void... voids) {
+       HttpURLConnection urlConnection = null;
+       StringBuilder result = new StringBuilder();
+
+       try {
+           URL url = new URL(getGroupsAndRidesUrl);
+           urlConnection = (HttpURLConnection) url.openConnection();
+           InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+
+           BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+           String line;
+           while ((line = reader.readLine()) != null) {
+               result.append(line);
+           }
+
+       }catch(Exception e) {
+           e.printStackTrace();
+       }
+       finally {
+           try {
+               if(null != urlConnection) {
+                   urlConnection.disconnect();
+               }
+           }catch(NullPointerException e) {
+               e.printStackTrace();
+           }
+       }
+
+       Log.d("String", result.toString());
+       JSONArray array = null;
+       try {
+           array = new JSONArray(result.toString());
+       } catch (Exception e) {
+           e.printStackTrace();
+       }
+
+       return array;     }
 
      @Override
      protected void onPostExecute(JSONArray jsonArray){
+       try{
+         gors = new ArrayList<>();
+         for(int i=0; i < jsonArray.length(); i++){
+           JSONObject jsonGOR = jsonArray.getJSONObject(i);
+           Group group;
+           Offer offer;
+           domain.Request request;
+           ArrayList<String> members = new ArrayList<>();
 
+
+           String stringGroupID = jsonGOR.getString("ID");
+           int groupID = Integer.parseInt(stringGroupID);
+           members.add(jsonGOR.getString("DRIVER"));
+           members.add(jsonGOR.getString("RIDER_1"));
+           members.add(jsonGOR.getString("RIDER_2"));
+           members.add(jsonGOR.getString("RIDER_3"));
+           members.add(jsonGOR.getString("RIDER_4"));
+           members.add(jsonGOR.getString("RIDER_5"));
+           members.add(jsonGOR.getString("RIDER_6"));
+           members.add(jsonGOR.getString("RIDER_7"));
+           String stringOfferID = jsonGOR.getString("OFFER_ID");
+           int offerID = Integer.parseInt(stringOfferID);
+           String stringRequstID = jsonGOR.getString("REQUEST_ID");
+           int requestID = Integer.parseInt(stringRequstID);
+
+           group = new Group(groupID, members, offerID, requestID);
+
+           if(!jsonGOR.getString("COST").equals("null")){
+             String stringCost = jsonGOR.getString("COST");
+             double cost = Double.parseDouble(stringCost);
+             String email = jsonGOR.getString("OFFER_EMAIL");
+             String stringDestination = jsonGOR.getString("DESTINATION");
+             String destinationName = getLocationName(stringDestination);
+             LatLng destLatLng = getLatLngFromDatabase(stringDestination);
+             String stringStart = jsonGOR.getString("START");
+             String startName = getLocationName(stringStart);
+             LatLng startLatLng = getLatLngFromDatabase(stringStart);
+             String description = jsonGOR.getString("DESCRIPTION");
+             String stringDate = jsonGOR.getString("DATE");
+             Date date =  new Date();
+             try {
+                 date = new SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(stringDate);
+             } catch (Exception e) {
+                 e.printStackTrace();
+             }
+             offer = new Offer(cost, offerID, email, destinationName, destLatLng, startName, startLatLng, description, date);
+             request = null;
+           }else{
+             String stringNumBags = jsonGOR.getString("NUM_BAGS");
+             int numBags = Integer.parseInt(stringNumBags);
+             String email = jsonGOR.getString("REQUEST_EMAIL");
+             String stringDestination = jsonGOR.getString("DESTINATION");
+             String destinationName = getLocationName(stringDestination);
+             LatLng destLatLng = getLatLngFromDatabase(stringDestination);
+             String stringStart = jsonGOR.getString("START");
+             String startName = getLocationName(stringStart);
+             LatLng startLatLng = getLatLngFromDatabase(stringStart);
+             String description = jsonGOR.getString("DESCRIPTION");
+             String stringDate = jsonGOR.getString("DATE");
+             Date date =  new Date();
+             int group_id = jsonGOR.getInt("GROUP_ID");
+             try {
+                 date = new SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(stringDate);
+             } catch (Exception e) {
+                 e.printStackTrace();
+             }
+             request = new domain.Request(numBags, requestID, email, destinationName, destLatLng, startName, startLatLng, description, date);
+             offer = null;
+           }
+
+           gors.add(new GOR(group, offer, request));
+         }
+
+       }catch (Exception e){
+           e.printStackTrace();
+       }
+       callback.call(gors);
+     }
+
+     /**
+      * Returns the name of a location
+      * @param location puled from database
+      * @return name of the location
+      */
+     private String getLocationName(String location) {
+         String[] splitDestination = location.split(" lat/lng: ");
+         return splitDestination[0];
+     }
+
+     /**
+      * Returns the LatLng of a location
+      * @param location pulled from database
+      * @return LatLng of location
+      */
+     private LatLng getLatLngFromDatabase(String location) {
+         String[] splitDestination = location.split(" lat/lng: ");
+         String latLong = splitDestination[1];
+         latLong = latLong.replace("(","");
+         latLong = latLong.replace(")","");
+         String[] splitLatLong = latLong.split(",");
+         double latitude = Double.parseDouble(splitLatLong[0]);
+         double longitude = Double.parseDouble(splitLatLong[1]);
+         return new LatLng(latitude, longitude);
      }
  }
