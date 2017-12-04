@@ -7,6 +7,7 @@
     <string name="logout">Logout</string>
     <string name="profile">My Profile</string>
     <string name="contacts">My Contacts</string>
+    <string name="groups">My Groups</string>
     <string name="requests">Ride Requests</string>
     <string name="offers">Ride Offers</string>
     <string name="create_request">Create Ride Request</string>
@@ -45,6 +46,7 @@
     <string name="leave_date">Leave Date (mm/dd/yyyy)</string>
     <string name="enter">Enter</string>
     <string name="submit">Submit</string>
+    <string name="send">Send</string>
     <string name="join">Join Ride</string>
     <string name="join_driver">Join as Driver</string>
     <string name="requests_and_offers">View Requests and Offers</string>

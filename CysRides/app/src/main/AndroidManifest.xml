@@ -92,7 +92,15 @@
             android:label="Banned Users"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
-
+        <activity
+            android:name=".Groups"
+            android:label="My Groups"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".Messaging"
+            android:label="Group Messages"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".DeleteRequestsAndOffers"
             android:label="Delete Requests and Offers"
