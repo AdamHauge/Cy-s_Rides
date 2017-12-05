@@ -77,6 +77,7 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        /* create page elements */
         drawer = (DrawerLayout) findViewById(R.id.ride_offers_activity);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -91,6 +92,7 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
 
         searchResult = (TextView) findViewById(R.id.search_result);
 
+        /* refresh the offers list on pull down */
         refresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
         refresh.setColorSchemeColors(ContextCompat.getColor(RideOffers.this,
                 R.color.colorGold), ContextCompat.getColor(RideOffers.this, R.color.colorCardinal));
