@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 import domain.Offer;
@@ -128,7 +129,7 @@ public class CreateProfile extends AppCompatActivity {
                 }
 
                 Random rand = new Random();
-                confirmationCode = String.format("%04d", rand.nextInt(10000));
+                confirmationCode = String.format(Locale.US, "%04d", rand.nextInt(10000));
 
                 if (!isTypeSelected()) {
                     Toast.makeText(CreateProfile.this, "You did not select a user type", Toast.LENGTH_LONG).show();
