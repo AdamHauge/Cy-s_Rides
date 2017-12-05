@@ -34,13 +34,15 @@ import domain.Offer;
 
 public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements OfferVolley {
 
+    private GroupVolleyImpl groupVolley = new GroupVolleyImpl();
+    private ExpiredGroupVolley expiredGroupVolley = new ExpiredGroupVolleyImpl();
+
     private Offer newOffer;
     private Context currentContext;
     private ArrayList<Offer> offers;
     private String destinationName;
     private String startName;
     private Callback callback;
-    private GroupVolleyImpl groupVolley = new GroupVolleyImpl();
     private Calendar current = Calendar.getInstance();
 
     /**
@@ -226,9 +228,9 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
                 Offer offer = new Offer(cost, id, email, destinationName, destLatLng, startName,
                         startLatLng, description, date, groupID, this.currentContext);
 
-                /* if the offer is expired, just delete it form the database */
+                /* if the offer is expired, just delete it from the database */
                 if(compare.compareTo(current) < 0) {
-                    deleteOffer(currentContext, offer.getId());
+                    expiredGroupVolley.createExpiredGroupByRideId(groupID, true, id, currentContext);
                 }
                 else {
                     offers.add(offer);

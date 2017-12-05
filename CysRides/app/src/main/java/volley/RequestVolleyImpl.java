@@ -34,13 +34,15 @@ import service.Callback;
 
 public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements RequestVolley {
 
+    private GroupVolleyImpl groupVolley = new GroupVolleyImpl();
+    private ExpiredGroupVolley expiredGroupVolley = new ExpiredGroupVolleyImpl();
+
     private domain.Request newRequest;
     private Context currentContext;
     private String destinationName;
     private String startName;
     private ArrayList<domain.Request> requests;
     private Callback callback;
-    private GroupVolleyImpl groupVolley = new GroupVolleyImpl();
     private Calendar current = Calendar.getInstance();
 
     /**
@@ -231,7 +233,7 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
 
                 /* if request is expired, just delete it */
                 if(compare.compareTo(current) < 0) {
-                    deleteRequest(currentContext, request.getId());
+                    expiredGroupVolley.createExpiredGroupByRideId(group_id, false, id, currentContext);
                 }
                 else {
                     requests.add(request);

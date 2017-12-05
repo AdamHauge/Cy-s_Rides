@@ -10,6 +10,10 @@ public class Group {
     private int requestID;
     private String type;
 
+    public Group() {
+
+    }
+
     //Group that is created in offer
     public Group(String user, String type){
 
@@ -48,6 +52,10 @@ public class Group {
 
     public ArrayList<String> getGroupMembers(){
         return groupMembers;
+    }
+
+    public void setGroupMembers(ArrayList<String> groupMembers) {
+        this.groupMembers = groupMembers;
     }
 
     public String getType(){return type;}
