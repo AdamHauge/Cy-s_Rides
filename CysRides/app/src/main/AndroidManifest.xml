@@ -117,8 +117,10 @@
             android:exported="true"
             android:process=":remote" />
 
-        <activity android:name=".RateGroups">
-
+        <activity android:name=".GroupRating">
+            android:label="Group Rating"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
         </activity>
     </application>
 
