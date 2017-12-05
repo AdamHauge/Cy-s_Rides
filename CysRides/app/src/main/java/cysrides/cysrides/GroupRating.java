@@ -104,7 +104,7 @@ public class GroupRating extends AppCompatActivity implements NavigationView.OnN
 
         /* display list of ride offers on screen */
         i = this.getIntent();
-        ListView listView = (ListView) findViewById(R.id.ride_offers_list);
+        ListView listView = (ListView) findViewById(R.id.group_list);
         adapter = new ArrayAdapter<>(GroupRating.this, android.R.layout.simple_list_item_1, destinations);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
