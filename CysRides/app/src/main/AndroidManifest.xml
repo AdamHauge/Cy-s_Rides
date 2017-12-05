@@ -110,11 +110,16 @@
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".DialogConfirmationCode" />
         <activity android:name=".CalendarActivity" />
+
         <receiver
             android:name=".AlarmReceiver"
             android:enabled="true"
             android:exported="true"
             android:process=":remote" />
+
+        <activity android:name=".RateGroups">
+
+        </activity>
     </application>
 
 </manifest>
