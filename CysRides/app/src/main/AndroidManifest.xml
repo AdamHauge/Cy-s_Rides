@@ -42,11 +42,6 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".Contacts"
-            android:label="@string/contacts"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
             android:name=".RideRequests"
             android:label="@string/title_activity_ride_requests"
             android:theme="@style/AppTheme.NoActionBar"
