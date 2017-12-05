@@ -76,7 +76,7 @@ public class CalendarActivity extends AppCompatActivity implements NavigationVie
 
         beginTime = Calendar.getInstance();
         //beginTime.set(2017, 12 - 1, 5, 10, 30);
-        
+
         endTime = Calendar.getInstance();
         endTime.set(2017, 12 - 1, 5, 11, 30);
 
