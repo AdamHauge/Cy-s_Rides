@@ -92,11 +92,15 @@ public class NavigationServiceImpl extends AppCompatActivity implements Navigati
             item.setVisible(false);
             item = menu.findItem(R.id.requests);
             item.setVisible(false);
-//            item = menu.findItem(R.id.admin_actions);
-//            item.setVisible(false);
-        } else if(userInfo.getUserType() == UserType.DRIVER) {
-//            item = menu.findItem(R.id.admin_actions);
-//            item.setVisible(false);
+        }
+    }
+
+    @Override
+    public void hideAdminButton(Menu menu, UserInfo userInfo) {
+        MenuItem item;
+        if(userInfo.getUserType() != UserType.ADMIN) {
+            item = menu.findItem(R.id.admin_actions);
+            item.setVisible(false);
         }
     }
 
