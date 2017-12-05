@@ -1,8 +1,11 @@
 package cysrides.cysrides;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -66,6 +69,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
     private OfferService offerService = new OfferServiceImpl();
     private NavigationService navigationService = new NavigationServiceImpl();
     boolean retValue;
+    private final static int RQS_1 = 1;
 
     /**
      * Initializes page to be displayed
@@ -232,6 +236,8 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
 
                     offerService.createOffer(CreateOffer.this, o);
 
+                    setAlarm(gc, false);
+
                     /* Refresh the page */
                     finish();
                     startActivity(getIntent());
@@ -242,6 +248,15 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
         if(navigationService.checkInternetConnection(CreateOffer.this)) {
             connectionPopUp();
         }
+    }
+
+    private void setAlarm(Calendar targetCal, boolean repeat){
+
+        Intent intent = new Intent(CreateOffer.this, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getBaseContext(), RQS_1, intent, 0);
+        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, targetCal.getTimeInMillis(), pendingIntent);
+
     }
 
     /**

@@ -1,6 +1,9 @@
 package cysrides.cysrides;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
@@ -29,7 +32,9 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import domain.Offer;
 import service.ActivityService;
@@ -346,4 +351,5 @@ public class RideOffers extends AppCompatActivity implements NavigationView.OnNa
 
         return true;
     }
+
 }
