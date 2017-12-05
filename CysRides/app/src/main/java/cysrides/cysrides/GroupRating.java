@@ -22,6 +22,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -69,6 +71,9 @@ public class GroupRating extends AppCompatActivity implements NavigationView.OnN
     private TextView searchResult;
     private FragmentManager fragmentManager = this.getSupportFragmentManager();
 
+
+    private UserInfo user;
+
     /**
      * Initializes page to be displayed
      * @param savedInstanceState page info
@@ -91,6 +96,9 @@ public class GroupRating extends AppCompatActivity implements NavigationView.OnN
 
         Menu menu = navigationView.getMenu();
         navigationService.hideMenuItems(menu, userIntentService.getUserFromIntent(this.getIntent()));
+
+        user = userIntentService.getUserFromIntent(this.getIntent());
+
 
 //        searchResult = (TextView) findViewById(R.id.search_result);
 
@@ -115,21 +123,15 @@ public class GroupRating extends AppCompatActivity implements NavigationView.OnN
         ListView listView = (ListView) findViewById(R.id.group_list);
         adapter = new ArrayAdapter<>(GroupRating.this, android.R.layout.simple_list_item_1, groupMembers);
         listView.setAdapter(adapter);
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-//                /* notify fragment manager to display ride offer information */
-//                RideFragment viewOffer = new ViewOffer();
-//                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-//
-//                viewOffer.setData(groups.get(position));
-//                viewOffer.setContext(GroupRating.this);
-//                viewOffer.setUserInfo(userIntentService.getUserFromIntent(i));
-//                fragmentTransaction.replace(R.id.group_rating_activity, viewOffer);
-//                fragmentTransaction.addToBackStack(null);
-//                fragmentTransaction.commit();
-//            }
-//        });
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                Intent newIntent;
+                newIntent = userIntentService.createIntent(GroupRating.this, RateRider.class, user);
+                newIntent.putExtra("Rider name", groupMembers.get(position));
+                startActivity(i);
+            }
+        });
 
         if (navigationService.checkInternetConnection(GroupRating.this)) {
             connectionPopUp();
