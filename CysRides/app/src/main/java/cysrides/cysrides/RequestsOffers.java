@@ -156,7 +156,7 @@ public class RequestsOffers extends AppCompatActivity implements NavigationView.
                 }
 
                 ArrayList<Request> r = new ArrayList<>();
-                for(int i=0 ; i<offers.size() ; i++) {
+                for(int i=0 ; i<requests.size() ; i++) {
                     r.add(requests.get(i));
                 }
                 requests = requestService.findRequestsByEmail(r, userIntentService.getUserFromIntent(i));
