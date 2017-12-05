@@ -1,8 +1,11 @@
 package cysrides.cysrides;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -65,6 +68,7 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
     private RequestService requestService = new RequestServiceImpl();
     private NavigationService navigationService = new NavigationServiceImpl();
     private boolean retValue, timeChanged = false;
+    private final static int RQS_1 = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -222,6 +226,9 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
                             destination.getLatLng(), (String) start.getName(), start.getLatLng(),
                             description, gc.getTime());
                     requestService.createRequest(CreateRequest.this, r);
+
+                    setAlarm(gc, false);
+
                     finish();
                     startActivity(getIntent());
                     Log.d("Date", Long.toString(r.getDate().getTime()));
@@ -232,6 +239,15 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
         if(navigationService.checkInternetConnection(CreateRequest.this)) {
             connectionPopUp();
         }
+    }
+
+    private void setAlarm(Calendar targetCal, boolean repeat){
+
+        Intent intent = new Intent(CreateRequest.this, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getBaseContext(), RQS_1, intent, 0);
+        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, targetCal.getTimeInMillis(), pendingIntent);
+
     }
 
     /**
