@@ -205,7 +205,7 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
                 minute = m;
                 seconds = 0;
                 Log.d("CreateOffer", "onTimeSet date: " + String.format("%02d", hour) + ":" + String.format("%02d", minute) + ":" + String.format("%02d", seconds));
-                String time = String.format("%02d", hour) + ":" + String.format("%02d", minute) + ":" + String.format("%02d", seconds);
+                String time = String.format(Locale.US, "%02d", hour) + ":" + String.format(Locale.US, "%02d", minute) + ":" + String.format(Locale.US, "%02d", seconds);
                 EditText editText = (EditText)findViewById(R.id.LeaveTime);
                 editText.setText(time);
             }
@@ -289,12 +289,14 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
                 List<Address> destAddress = gcd.getFromLocation(destination.getLatLng().latitude, destination.getLatLng().longitude, 1);
                 List<Address> startAddress = gcd.getFromLocation(start.getLatLng().latitude, start.getLatLng().longitude, 1);
 
+                /* start or end locations must be in Ames, IA */
                 if(!destAddress.get(0).getLocality().equals("Ames") && !startAddress.get(0).getLocality().equals("Ames") &&
                         !destAddress.get(0).getAdminArea().equals("Iowa") && !startAddress.get(0).getAdminArea().equals("United States")) {
                     allValid = false;
                     Snackbar.make(findViewById(R.id.submit), "Ride must start or end in Ames, IA", Snackbar.LENGTH_LONG).show();
                 }
 
+                /* start and end locations must be in United States */
                 if(!destAddress.get(0).getCountryName().equals("United States") || !startAddress.get(0).getCountryName().equals("United States")) {
                     allValid = false;
                     Snackbar.make(findViewById(R.id.submit), "Ride must start and end in United States", Snackbar.LENGTH_LONG).show();

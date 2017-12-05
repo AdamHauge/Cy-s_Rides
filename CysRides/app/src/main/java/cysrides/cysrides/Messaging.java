@@ -92,6 +92,7 @@ public class Messaging extends AppCompatActivity implements NavigationView.OnNav
 
         getMessages();
 
+        /* Make a timer to constantly check for new messages */
         Timer timer = new Timer ();
         TimerTask task = new TimerTask () {
             @Override
@@ -115,9 +116,11 @@ public class Messaging extends AppCompatActivity implements NavigationView.OnNav
         EditText message = (EditText)findViewById(R.id.message);
         String text = message.getText().toString() + "\nfrom " + user.getFirstName();
 
+        /* Send the message */
         MessageVolleyImpl messageVolley = new MessageVolleyImpl();
         messageVolley.createMessage(Messaging.this, new Message(groupID, user.getNetID(), text));
 
+        /* reset text window */
         message.setText("");
     }
 
@@ -138,6 +141,7 @@ public class Messaging extends AppCompatActivity implements NavigationView.OnNav
                     messages = new ArrayList<>();
                 }
 
+                /* display results to user */
                 adapter.clear();
                 display.clear();
 

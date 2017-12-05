@@ -18,7 +18,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +56,7 @@ public class Groups extends AppCompatActivity implements NavigationView.OnNaviga
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        /* set up page elements */
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.groups_activity);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -77,11 +77,9 @@ public class Groups extends AppCompatActivity implements NavigationView.OnNaviga
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                onNavigationItemSelected(navigationView.getMenu().getItem(navigationView.getMenu().size() - 1));
-//                groups.get(position).getGroup().getId();
-                Intent intent = Groups.this.getIntent();
+                /* go to group messaging page */
                 i = navigationService.getNavigationIntent(navigationView.getMenu().getItem(navigationView.getMenu().size() - 1),
-                        Groups.this, intent);
+                        Groups.this, Groups.this.getIntent());
                 i.putExtra("groupID", groups.get(position).getGroup().getId());
                 startActivity(i);
             }
@@ -197,7 +195,6 @@ public class Groups extends AppCompatActivity implements NavigationView.OnNaviga
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        Intent intent = this.getIntent();
         i = navigationService.getNavigationIntent(item, Groups.this, this.getIntent());
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.groups_activity);

@@ -40,7 +40,7 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
 
     /**
      * Initializes page to be displayed
-     * @param savedInstanceState
+     * @param savedInstanceState - app info
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,7 +136,7 @@ public class Contacts extends AppCompatActivity implements NavigationView.OnNavi
 
     /**
      * method to handle user's page navigation selection
-     * @param: item selected
+     * @param item selected
      * @return true on success
      */
     @SuppressWarnings("StatementWithEmptyBody")
