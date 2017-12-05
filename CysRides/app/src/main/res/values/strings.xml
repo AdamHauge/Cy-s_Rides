@@ -52,6 +52,7 @@
     <string name="join_driver">Join as Driver</string>
     <string name="requests_and_offers">View Requests and Offers</string>
     <string name="search">Search</string>
+    <string name="message">Enter message</string>
 
     <!-- Strings related to profile -->
     <string name="large_text">

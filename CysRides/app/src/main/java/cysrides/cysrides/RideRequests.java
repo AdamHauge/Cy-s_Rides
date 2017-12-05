@@ -210,6 +210,7 @@ public class RideRequests extends AppCompatActivity implements NavigationView.On
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.profile_and_search, menu);
+        navigationService.hideAdminButton(menu, userIntentService.getUserFromIntent(this.getIntent()));
         return true;
     }
 

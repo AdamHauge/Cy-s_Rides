@@ -1,8 +1,11 @@
 package cysrides.cysrides;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -64,7 +67,8 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
     private Intent i;
     private RequestService requestService = new RequestServiceImpl();
     private NavigationService navigationService = new NavigationServiceImpl();
-    private boolean retValue, timeChanged = false;
+    private boolean retValue;
+    private final static int RQS_1 = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -204,7 +208,6 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
                 String time = String.format("%02d", hour) + ":" + String.format("%02d", minute) + ":" + String.format("%02d", seconds);
                 EditText editText = (EditText)findViewById(R.id.LeaveTime);
                 editText.setText(time);
-                timeChanged = true;
             }
         };
 
@@ -222,6 +225,17 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
                             destination.getLatLng(), (String) start.getName(), start.getLatLng(),
                             description, gc.getTime());
                     requestService.createRequest(CreateRequest.this, r);
+
+                    setAlarm(gc, false);
+
+                    gc.set(year, (month - 1), day, (hour - 1), minute, seconds);
+
+                    Calendar now = Calendar.getInstance();
+
+                    if(gc.getTime().after(now.getTime())){
+                        setAlarm(gc, false);
+                    }
+
                     finish();
                     startActivity(getIntent());
                     Log.d("Date", Long.toString(r.getDate().getTime()));
@@ -232,6 +246,15 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
         if(navigationService.checkInternetConnection(CreateRequest.this)) {
             connectionPopUp();
         }
+    }
+
+    private void setAlarm(Calendar targetCal, boolean repeat){
+
+        Intent intent = new Intent(CreateRequest.this, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getBaseContext(), RQS_1, intent, 0);
+        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, targetCal.getTimeInMillis(), pendingIntent);
+
     }
 
     /**
@@ -318,6 +341,7 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.my_profile_button, menu);
+        navigationService.hideAdminButton(menu, userIntentService.getUserFromIntent(this.getIntent()));
         return true;
     }
 

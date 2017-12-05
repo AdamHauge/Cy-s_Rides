@@ -85,9 +85,9 @@ public class CalendarActivity extends AppCompatActivity implements NavigationVie
                 .setData(CalendarContract.Events.CONTENT_URI)
                 .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.getTimeInMillis())
                 .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime.getTimeInMillis())
-                .putExtra(CalendarContract.Events.TITLE, "Yoga")
-                .putExtra(CalendarContract.Events.DESCRIPTION, "Group class")
-                .putExtra(CalendarContract.Events.EVENT_LOCATION, "The gym")
+                .putExtra(CalendarContract.Events.TITLE, "Cy's Rides")
+                .putExtra(CalendarContract.Events.DESCRIPTION, "Ride")
+                .putExtra(CalendarContract.Events.EVENT_LOCATION, "State Gym")
                 .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY)
                 .putExtra(CalendarContract.Events.CALENDAR_COLOR_KEY, "@color/colorGold");
         startActivity(intent);
@@ -112,6 +112,7 @@ public class CalendarActivity extends AppCompatActivity implements NavigationVie
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.my_profile_button, menu);
+        navigationService.hideAdminButton(menu, userIntentService.getUserFromIntent(this.getIntent()));
         return true;
     }
 

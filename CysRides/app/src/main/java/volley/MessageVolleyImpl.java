@@ -106,7 +106,7 @@ public class MessageVolleyImpl extends AsyncTask<Integer, Void, JSONArray> imple
       StringBuilder result = new StringBuilder();
 
       try {
-          URL url = new URL(getMessagesUrl + "?GROUP_ID=" + groupID);
+          URL url = new URL(getMessagesUrl + "?GROUP_ID=" + Integer.toString(groupID[0]));
           urlConnection = (HttpURLConnection) url.openConnection();
           InputStream in = new BufferedInputStream(urlConnection.getInputStream());
 

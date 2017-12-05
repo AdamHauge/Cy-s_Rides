@@ -24,8 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import domain.GOR;
-import domain.Group;
-import domain.Offer;
+import domain.UserInfo;
 import service.ActivityService;
 import service.ActivityServiceImpl;
 import service.Callback;
@@ -42,13 +41,14 @@ public class Groups extends AppCompatActivity implements NavigationView.OnNaviga
     private ActivityService activityService = new ActivityServiceImpl();
 
     private List<String> display = new ArrayList<>();
+    private List<GOR> groups = new ArrayList<>();
     private List<GOR> gors = new ArrayList<>();
     private ArrayAdapter<String> adapter;
     private Intent i;
 
     /**
      * Initializes page to be displayed
-     * @param savedInstanceState
+     * @param savedInstanceState - Page info
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,8 +77,13 @@ public class Groups extends AppCompatActivity implements NavigationView.OnNaviga
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getApplicationContext(), display.get(position), Toast.LENGTH_SHORT).show();
-                onNavigationItemSelected(navigationView.getMenu().getItem(navigationView.getMenu().size() - 1));
+//                onNavigationItemSelected(navigationView.getMenu().getItem(navigationView.getMenu().size() - 1));
+//                groups.get(position).getGroup().getId();
+                Intent intent = Groups.this.getIntent();
+                i = navigationService.getNavigationIntent(navigationView.getMenu().getItem(navigationView.getMenu().size() - 1),
+                        Groups.this, intent);
+                i.putExtra("groupID", groups.get(position).getGroup().getId());
+                startActivity(i);
             }
         });
 
@@ -94,7 +99,7 @@ public class Groups extends AppCompatActivity implements NavigationView.OnNaviga
      */
     @SuppressWarnings("unchecked")
     public void getGroupsList() {
-        /* notify offer volley to pull data */
+        /* notify group volley to pull data */
         GroupVolleyImpl volley = new GroupVolleyImpl(Groups.this, new Callback() {
             public void call(ArrayList<?> result) {
                 try {
@@ -107,10 +112,20 @@ public class Groups extends AppCompatActivity implements NavigationView.OnNaviga
                 }
 
                 /* display data to user */
+                UserInfo user = userIntentService.getUserFromIntent(Groups.this.getIntent());
                 adapter.clear();
                 display.clear();
                 for (int i = 0; i < gors.size(); i++) {
-                    display.add(gors.get(i).getGroup().getDriver());
+                    if(gors.get(i).getGroup().inGroup(user.getNetID())) {
+                        try {
+                            display.add(gors.get(i).getOffer().getDestination() + " " + gors.get(i).getOffer().getDate());
+                            groups.add(gors.get(i));
+                        }
+                        catch(Exception e) {
+                            display.add(gors.get(i).getRequest().getDestination()  + " " + gors.get(i).getRequest().getDate());
+                            groups.add(gors.get(i));
+                        }
+                    }
                 }
 
                 adapter.notifyDataSetChanged();
@@ -143,6 +158,7 @@ public class Groups extends AppCompatActivity implements NavigationView.OnNaviga
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.my_profile_button, menu);
+        navigationService.hideAdminButton(menu, userIntentService.getUserFromIntent(this.getIntent()));
         return true;
     }
 
@@ -181,6 +197,7 @@ public class Groups extends AppCompatActivity implements NavigationView.OnNaviga
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        Intent intent = this.getIntent();
         i = navigationService.getNavigationIntent(item, Groups.this, this.getIntent());
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.groups_activity);

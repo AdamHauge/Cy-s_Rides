@@ -156,7 +156,7 @@ public class RequestsOffers extends AppCompatActivity implements NavigationView.
                 }
 
                 ArrayList<Request> r = new ArrayList<>();
-                for(int i=0 ; i<offers.size() ; i++) {
+                for(int i=0 ; i<requests.size() ; i++) {
                     r.add(requests.get(i));
                 }
                 requests = requestService.findRequestsByEmail(r, userIntentService.getUserFromIntent(i));
@@ -197,6 +197,7 @@ public class RequestsOffers extends AppCompatActivity implements NavigationView.
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.my_profile_button, menu);
+        navigationService.hideAdminButton(menu, userIntentService.getUserFromIntent(this.getIntent()));
         return true;
     }
 

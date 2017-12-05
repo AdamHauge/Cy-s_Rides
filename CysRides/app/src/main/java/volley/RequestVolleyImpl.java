@@ -47,10 +47,10 @@ public class RequestVolleyImpl extends AsyncTask<Void, Void, JSONArray> implemen
      * Default constructor initializes current date to be determine if a ride needs to be deleted
      */
     public RequestVolleyImpl() {
-        current.set(Calendar.HOUR_OF_DAY, 0);
-        current.set(Calendar.MINUTE, 0);
-        current.set(Calendar.SECOND, 0);
-        current.set(Calendar.MILLISECOND, 0);
+//        current.set(Calendar.HOUR_OF_DAY, 0);
+//        current.set(Calendar.MINUTE, 0);
+//        current.set(Calendar.SECOND, 0);
+//        current.set(Calendar.MILLISECOND, 0);
     }
 
     /**
