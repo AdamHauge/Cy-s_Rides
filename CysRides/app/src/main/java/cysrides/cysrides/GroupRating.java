@@ -129,7 +129,7 @@ public class GroupRating extends AppCompatActivity implements NavigationView.OnN
                 Intent newIntent;
                 newIntent = userIntentService.createIntent(GroupRating.this, RateRider.class, user);
                 newIntent.putExtra("Rider name", groupMembers.get(position));
-                startActivity(i);
+                startActivity(newIntent);
             }
         });
 

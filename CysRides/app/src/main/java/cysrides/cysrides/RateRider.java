@@ -47,7 +47,7 @@ public class RateRider extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                rating = Float.parseFloat(resultView.getText().toString());
+                //rating = Float.parseFloat(resultView.getText().toString());
 
                 user = userIntentService.getUserFromIntent(getIntent());
 
@@ -58,4 +58,6 @@ public class RateRider extends AppCompatActivity {
             }
         });
     }
+
+
 }
