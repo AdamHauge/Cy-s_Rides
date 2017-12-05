@@ -2,6 +2,7 @@ package cysrides.cysrides;
 
 import android.content.Context;
 import android.content.Intent;
+import android.provider.Telephony;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -10,12 +11,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 import domain.UserInfo;
+import service.Callback;
 import service.UserIntentService;
 import service.UserIntentServiceImpl;
 import service.UserRatingService;
 import service.UserRatingServiceImpl;
 import volley.UserRatingVolley;
+import volley.UserRatingVolleyImpl;
+import volley.UserVolleyImpl;
 
 public class RateRider extends AppCompatActivity {
 
@@ -30,6 +36,9 @@ public class RateRider extends AppCompatActivity {
 
     private float rating;
     private UserInfo user;
+    private int numRatings;
+    private float userRating;
+    private String username1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +47,7 @@ public class RateRider extends AppCompatActivity {
 
         riderName = (this.getIntent().getExtras().getString("Rider name"));
 
-        resultView =  (EditText) findViewById(R.id.resultText);
+        resultView = (EditText) findViewById(R.id.ratingResultTextView);
         goButton = (Button) findViewById(R.id.goButton);
         rateRiderTextView = (TextView) findViewById(R.id.rateRiderTextView);
 
@@ -47,11 +56,11 @@ public class RateRider extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                //rating = Float.parseFloat(resultView.getText().toString());
+                userRating = Float.parseFloat(resultView.getText().toString());
+
+                getUser(riderName);
 
                 user = userIntentService.getUserFromIntent(getIntent());
-
-                //userRatingService.updateRating(this, , rating, , );
 
                 Intent i = userIntentService.createIntent(RateRider.this, LoginActivity.class, user);
                 startActivity(i);
@@ -59,5 +68,63 @@ public class RateRider extends AppCompatActivity {
         });
     }
 
+    @SuppressWarnings("unchecked")
+    private void getUser(final String username) {
+        username1 = username;
+        UserVolleyImpl volley = new UserVolleyImpl(new Callback() {
+            ArrayList<UserInfo> users;
+
+            public void call(ArrayList<?> result) {
+                try {
+                    if(result.get(0) instanceof UserInfo) {
+                        users = (ArrayList<UserInfo>) result;
+                    }
+                } catch(Exception e) {
+                    users = new ArrayList<>();
+                }
+                for(int i = 0; i < users.size(); i++){
+                    if(users.get(i).getNetID().equals(username1)){
+                        user = users.get(i);
+                    }
+                }
+
+                getRatings();
+            }
+        });
+        volley.execute();
+    }
+
+    @SuppressWarnings("unchecked")
+    private void getRatings() {
+        UserRatingVolleyImpl volley = new UserRatingVolleyImpl(new Callback() {
+            ArrayList<String> ratings;
+
+            public void call(ArrayList<?> result) {
+                try {
+                    if(result.get(0) instanceof String) {
+                        ratings = (ArrayList<String>) result;
+                    }
+                } catch(Exception e) {
+                    ratings = new ArrayList<>();
+                }
+
+                for(int i = 0; i < ratings.size(); i++){
+                    if(ratings.get(i).equals(username1)) {
+                        if (ratings.get(i + 1) != null && ratings.get(i + 2) != null){
+                            user.setUserRating(Float.valueOf(ratings.get(i + 1)));
+                            rating = Float.valueOf(ratings.get(i + 1));
+                            numRatings = Integer.valueOf(ratings.get(i + 2));
+
+                        }
+                    }
+
+                }
+                userRatingService.updateRating(RateRider.this, rating, userRating, numRatings, user);
+
+
+            }
+        });
+        volley.execute();
+    }
 
 }

@@ -163,7 +163,7 @@ public class GroupRating extends AppCompatActivity implements NavigationView.OnN
                 tempGroupMembers = userRatingService.getMembersFromGroups(yourGroups);
 
                 for(int i = 0; i < tempGroupMembers.size(); i++){
-                    if(tempGroupMembers.get(i) != userInfo.getNetID()){
+                    if(!tempGroupMembers.get(i).equals(userInfo.getNetID())){
                         groupMembers.add(tempGroupMembers.get(i));
                     }
                 }

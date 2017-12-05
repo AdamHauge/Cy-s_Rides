@@ -14,7 +14,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
-        android:id="@+id/resultTextView"
+        android:id="@+id/ratingResultTextView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:hint=""
