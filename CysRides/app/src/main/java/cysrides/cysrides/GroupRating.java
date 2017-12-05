@@ -65,6 +65,7 @@ public class GroupRating extends AppCompatActivity implements NavigationView.OnN
     private ArrayAdapter<String> adapter;
     private ArrayList<Group> groups = new ArrayList<>();
     private List<String> groupMembers = new ArrayList<>();
+    private List<String> tempGroupMembers = new ArrayList<>();
     private TextView searchResult;
     private FragmentManager fragmentManager = this.getSupportFragmentManager();
 
@@ -109,7 +110,7 @@ public class GroupRating extends AppCompatActivity implements NavigationView.OnN
 //        });
         getGroupsList();
 
-        /* display list of ride offers on screen */
+        /* display list of groups on screen */
         i = this.getIntent();
         ListView listView = (ListView) findViewById(R.id.group_list);
         adapter = new ArrayAdapter<>(GroupRating.this, android.R.layout.simple_list_item_1, groupMembers);
@@ -157,7 +158,15 @@ public class GroupRating extends AppCompatActivity implements NavigationView.OnN
                 adapter.clear();
                 groupMembers.clear();
                 ArrayList<Group> yourGroups = userRatingService.getGroupsByUser(userInfo, groups);
-                groupMembers = userRatingService.getMembersFromGroups(yourGroups);
+                tempGroupMembers = userRatingService.getMembersFromGroups(yourGroups);
+
+                for(int i = 0; i < tempGroupMembers.size(); i++){
+                    if(tempGroupMembers.get(i) != userInfo.getNetID()){
+                        groupMembers.add(tempGroupMembers.get(i));
+                    }
+                }
+
+                //adapter.notifyDataSetChanged();
 
                 /* stop refreshing page */
                 if (refresh.isRefreshing()) {
