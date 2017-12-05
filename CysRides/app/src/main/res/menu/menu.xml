@@ -50,7 +50,7 @@
         android:icon="@drawable/ic_menu_offer"/>
 
     <item
-        android:id="@+id/rate_groups_activity"
+        android:id="@+id/group_rating_activity"
         android:title="Rate Groups"
         android:icon="@drawable/ic_menu_share"/>
 
