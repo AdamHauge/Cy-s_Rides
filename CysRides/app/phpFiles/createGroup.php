@@ -1,8 +1,7 @@
 <?php
 
-  $user = $_POST["user"];
+  $driver = $_POST["driver"];
   $id = $_POST["id"];
-  
 
 
   $host="mysql.cs.iastate.edu";

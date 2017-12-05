@@ -28,7 +28,7 @@
         //inserts user fields into the USER_TABLE
         $sql = "INSERT INTO USER_TABLE (NETID, PASSWORD, CONFIRMATION_CODE, FIRST_NAME, LAST_NAME, VENMO, PROFILE_DESCRIPTION, USER_TYPE, USER_RATING, DATE_JOINED) VALUES ('".$netID."','".$userPassword."','".$confirmationCode."','".$firstName."','".$lastName."','".$venmo."','".$profileDescription."','".$userType."',".$userRating.", '".$dateJoined."');";
 
-        $sql1 = "INSERT INTO USER_RATINGS_TABLE (NETID) VALUES ('".$netID."');";
+        $sql1 = "INSERT INTO USER_RATINGS_TABLE (RATINGS_NETID) VALUES ('".$netID."');";
 
         if(mysqli_query($conn,$sql)) {
             echo "Data insertion success for user...";

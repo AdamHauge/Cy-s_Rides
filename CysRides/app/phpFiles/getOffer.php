@@ -25,3 +25,4 @@
     echo $json = json_encode($jsonArr);
     $conn->close();
 ?>
+

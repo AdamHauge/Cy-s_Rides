@@ -13,9 +13,22 @@
 
         $sql = "SELECT * FROM USER_TABLE WHERE NETID='".$post_netid."'";
 
-        $sql = 'SELECT * FROM USER_TABLE';
+        $sql = //'SELECT * FROM USER_TABLE';
+        "SELECT ut.*, but.REASON
+          FROM USER_TABLE ut
+          LEFT JOIN BANNED_USERS_TABLE but
+            ON but.EMAIL = ut.NETID";
 
         $result = $conn->query($sql);
+
+//        if ($result->num_rows > 0) {
+//            $row = $result->fetch_assoc();
+//            echo $json = json_encode($row);
+//        } else {
+//            echo "0 results";
+//        }
+//
+//        $conn->close();
 
         $jsonArr = array();
 

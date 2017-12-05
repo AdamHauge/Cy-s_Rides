@@ -1,7 +1,5 @@
 <?php
 
-    $id = $_POST["id"];
-
     $host="mysql.cs.iastate.edu";
     $port=3306;
     $socket="";
@@ -11,12 +9,16 @@
 
     $conn = new mysqli($host, $username, $password, $dbname, $port, $socket) or die('Could not connect to database server'.mysqli_connect_error);
 
-    $sql = "DELETE FROM OFFER_TABLE WHERE ID=".$id.";";
-    if(mysqli_query($con,$sql)) {
-        echo "Data insertion success...";
+    $post_id = mysqli_real_escape_string($conn, $_POST['id']);
+
+    $sql = "DELETE FROM OFFER_TABLE WHERE ID='".$post_id."';";    
+
+    if(mysqli_query($conn,$sql)) {
+        echo "Data deletion success...";
     } else {
-        echo "Error while insertion... ".$sql." ".mysqli_error($con);
+        echo "Error while deletion... ".$sql." ".mysqli_error($conn);
     }
 
-    $conn->close();
+    mysqli_close($conn);
 ?>
+

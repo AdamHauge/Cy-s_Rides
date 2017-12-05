@@ -14,15 +14,16 @@
     $jsonArr = array();
 
     if ($result->num_rows > 0) {
-        // output data of each row
+    // output data of each row
         while($row = $result->fetch_assoc()) {
             array_push($jsonArr, $row);
         }
     } else {
         echo "0 results";
     }
-
+      
     echo $json = json_encode($jsonArr);
+
     $conn->close();
 ?>
 

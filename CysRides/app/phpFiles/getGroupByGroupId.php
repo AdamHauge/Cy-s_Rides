@@ -11,7 +11,7 @@
 
     $post_id = mysqli_real_escape_string($conn, $_POST['id']);
 
-    $sql = "SELECT * FROM GROUP_TABLE WHERE REQUEST_ID='".$post_id."';";
+    $sql = "SELECT * FROM GROUP_TABLE WHERE ID='".$post_id."';";
     $result = $conn->query($sql);
     $jsonArr = array();
 
