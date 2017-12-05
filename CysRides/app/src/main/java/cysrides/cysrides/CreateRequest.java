@@ -67,7 +67,7 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
     private Intent i;
     private RequestService requestService = new RequestServiceImpl();
     private NavigationService navigationService = new NavigationServiceImpl();
-    private boolean retValue, timeChanged = false;
+    private boolean retValue;
     private final static int RQS_1 = 1;
 
     @Override
@@ -208,7 +208,6 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
                 String time = String.format("%02d", hour) + ":" + String.format("%02d", minute) + ":" + String.format("%02d", seconds);
                 EditText editText = (EditText)findViewById(R.id.LeaveTime);
                 editText.setText(time);
-                timeChanged = true;
             }
         };
 
@@ -228,6 +227,14 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
                     requestService.createRequest(CreateRequest.this, r);
 
                     setAlarm(gc, false);
+
+                    gc.set(year, (month - 1), day, (hour - 1), minute, seconds);
+
+                    Calendar now = Calendar.getInstance();
+
+                    if(gc.getTime().after(now.getTime())){
+                        setAlarm(gc, false);
+                    }
 
                     finish();
                     startActivity(getIntent());

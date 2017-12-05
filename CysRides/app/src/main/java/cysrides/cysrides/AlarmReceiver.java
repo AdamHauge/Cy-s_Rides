@@ -6,9 +6,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.support.v4.app.NotificationCompat;
-import android.view.View;
 import android.widget.Toast;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
@@ -23,8 +21,10 @@ public class AlarmReceiver extends BroadcastReceiver {
     }
 
     public void showNotification(Context context) {
-        Intent intent = new Intent(context, MainActivity.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        //Intent intent = new Intent(context, MainActivity.class);
+        //PendingIntent contentIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        PendingIntent contentIntent = PendingIntent.getActivity(context, 0, new Intent(context, LoginActivity.class), 0);
 
         NotificationCompat.Builder b = new NotificationCompat.Builder(context);
 
@@ -38,7 +38,6 @@ public class AlarmReceiver extends BroadcastReceiver {
                 .setDefaults(Notification.DEFAULT_LIGHTS| Notification.DEFAULT_SOUND)
                 .setContentIntent(contentIntent)
                 .setContentInfo("Info");
-
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(1, b.build());
