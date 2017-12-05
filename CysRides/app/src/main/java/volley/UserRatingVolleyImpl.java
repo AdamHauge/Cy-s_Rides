@@ -41,6 +41,7 @@ public class UserRatingVolleyImpl extends AsyncTask<Void, Void, JSONArray> imple
     private String numberRatings;
     private ArrayList<String> ratings;
 
+    public UserRatingVolleyImpl(){};
     public UserRatingVolleyImpl(Callback call){
         callback = call;
     }
