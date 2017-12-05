@@ -32,4 +32,18 @@ public class UserRatingServiceImpl implements UserRatingService {
         return userGroups;
     }
 
+    @Override
+    public ArrayList<String> getMembersFromGroups(ArrayList<Group> groups) {
+        ArrayList<String> groupMembers = new ArrayList<>();
+        for(int i=0 ; i<groups.size() ; i++) {
+            ArrayList<String> gM = groups.get(i).getGroupMembers();
+            for(int j=0 ; j<gM.size() ; j++) {
+                if(!gM.get(j).equals("null")) {
+                    groupMembers.add(gM.get(j));
+                }
+            }
+        }
+        return groupMembers;
+    }
+
 }

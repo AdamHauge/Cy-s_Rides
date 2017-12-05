@@ -31,7 +31,9 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 import java.util.List;
 
+import domain.Group;
 import domain.Offer;
+import domain.UserInfo;
 import service.ActivityService;
 import service.ActivityServiceImpl;
 import service.Callback;
@@ -43,6 +45,10 @@ import service.RefreshServiceImpl;
 import service.SearchCallback;
 import service.UserIntentService;
 import service.UserIntentServiceImpl;
+import service.UserRatingService;
+import service.UserRatingServiceImpl;
+import volley.ExpiredGroupVolleyImpl;
+import volley.GroupVolleyImpl;
 import volley.OfferVolleyImpl;
 
 public class GroupRating extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DrawerLock {
@@ -51,13 +57,14 @@ public class GroupRating extends AppCompatActivity implements NavigationView.OnN
     private NavigationService navigationService = new NavigationServiceImpl();
     private RefreshService refreshService = new RefreshServiceImpl();
     private ActivityService activityService = new ActivityServiceImpl();
+    private UserRatingService userRatingService = new UserRatingServiceImpl();
 
     private Intent i;
     private DrawerLayout drawer;
     private SwipeRefreshLayout refresh;
     private ArrayAdapter<String> adapter;
-    private List<Offer> offers = new ArrayList<>();
-    private List<String> destinations = new ArrayList<>();
+    private ArrayList<Group> groups = new ArrayList<>();
+    private List<String> groupMembers = new ArrayList<>();
     private TextView searchResult;
     private FragmentManager fragmentManager = this.getSupportFragmentManager();
 
@@ -84,44 +91,44 @@ public class GroupRating extends AppCompatActivity implements NavigationView.OnN
         Menu menu = navigationView.getMenu();
         navigationService.hideMenuItems(menu, userIntentService.getUserFromIntent(this.getIntent()));
 
-        searchResult = (TextView) findViewById(R.id.search_result);
+//        searchResult = (TextView) findViewById(R.id.search_result);
 
         refresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
         refresh.setColorSchemeColors(ContextCompat.getColor(GroupRating.this,
                 R.color.colorGold), ContextCompat.getColor(GroupRating.this, R.color.colorCardinal));
-        refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (searchResult.getVisibility() != View.VISIBLE) {
-                    getOffersList();
-                }
-                else {
-                    refresh.setRefreshing(false);
-                }
-            }
-        });
-        getOffersList();
+//        refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                if (searchResult.getVisibility() != View.VISIBLE) {
+//                    getGroupsList();
+//                }
+//                else {
+//                    refresh.setRefreshing(false);
+//                }
+//            }
+//        });
+        getGroupsList();
 
         /* display list of ride offers on screen */
         i = this.getIntent();
         ListView listView = (ListView) findViewById(R.id.group_list);
-        adapter = new ArrayAdapter<>(GroupRating.this, android.R.layout.simple_list_item_1, destinations);
+        adapter = new ArrayAdapter<>(GroupRating.this, android.R.layout.simple_list_item_1, groupMembers);
         listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                /* notify fragment manager to display ride offer information */
-                RideFragment viewOffer = new ViewOffer();
-                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-
-                viewOffer.setData(offers.get(position));
-                viewOffer.setContext(GroupRating.this);
-                viewOffer.setUserInfo(userIntentService.getUserFromIntent(i));
-                fragmentTransaction.replace(R.id.ride_offers_activity, viewOffer);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-            }
-        });
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+//                /* notify fragment manager to display ride offer information */
+//                RideFragment viewOffer = new ViewOffer();
+//                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+//
+//                viewOffer.setData(groups.get(position));
+//                viewOffer.setContext(GroupRating.this);
+//                viewOffer.setUserInfo(userIntentService.getUserFromIntent(i));
+//                fragmentTransaction.replace(R.id.group_rating_activity, viewOffer);
+//                fragmentTransaction.addToBackStack(null);
+//                fragmentTransaction.commit();
+//            }
+//        });
 
         if (navigationService.checkInternetConnection(GroupRating.this)) {
             connectionPopUp();
@@ -132,25 +139,25 @@ public class GroupRating extends AppCompatActivity implements NavigationView.OnN
      * Method which notifies ride offer volley to pull ride offer data from database
      */
     @SuppressWarnings("unchecked")
-    public void getOffersList() {
+    public void getGroupsList() {
+        final UserInfo userInfo = userIntentService.getUserFromIntent(this.getIntent());
         /* notify offer volley to pull data */
-        OfferVolleyImpl volley = new OfferVolleyImpl(this, new Callback() {
+        ExpiredGroupVolleyImpl volley = new ExpiredGroupVolleyImpl(this, new Callback() {
             public void call(ArrayList<?> result) {
                 try {
-                    if (result.get(0) instanceof Offer) {
-                        offers = (ArrayList<Offer>) result;
+                    if (result.get(0) instanceof Group) {
+                        groups = (ArrayList<Group>) result;
                     }
                 } catch (Exception e) {
-                    offers = new ArrayList<>();
+                    groups = new ArrayList<>();
                     e.printStackTrace();
                 }
 
                 /* display data to user */
                 adapter.clear();
-                destinations.clear();
-                for (int i = 0; i < offers.size(); i++) {
-                    destinations.add(offers.get(i).getDestination());
-                }
+                groupMembers.clear();
+                ArrayList<Group> yourGroups = userRatingService.getGroupsByUser(userInfo, groups);
+                groupMembers = userRatingService.getMembersFromGroups(yourGroups);
 
                 /* stop refreshing page */
                 if (refresh.isRefreshing()) {
@@ -180,7 +187,7 @@ public class GroupRating extends AppCompatActivity implements NavigationView.OnN
         /* close search results */
         else if (View.VISIBLE == searchResult.getVisibility()) {
             searchResult.setVisibility(View.GONE);
-            getOffersList();
+            getGroupsList();
         }
         /* return to main activity */
         else {
@@ -229,28 +236,30 @@ public class GroupRating extends AppCompatActivity implements NavigationView.OnN
             i = userIntentService.createIntent(GroupRating.this, ViewProfile.class, userIntentService.getUserFromIntent(this.getIntent()));
             i.putExtra("caller", "Ride Offers");
             startActivity(i);
-        } else if (R.id.search == id) {
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            RideSearch rideSearch = new RideSearch();
-            rideSearch.setData(new SearchCallback() {
-                @Override
-                public void call(Place place) {
-                    String display = "Rides near\n" + place.getName().toString();
-
-                    onBackPressed();
-
-                    if(filterResults(place)) {
-                        searchResult.setText(display);
-                        searchResult.setVisibility(View.VISIBLE);
-                    }
-
-                }
-            });
-
-            fragmentTransaction.replace(R.id.ride_offers_activity, rideSearch);
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
-        } else if(id == R.id.admin_actions) {
+        }
+//        else if (R.id.search == id) {
+//            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+//            RideSearch rideSearch = new RideSearch();
+//            rideSearch.setData(new SearchCallback() {
+//                @Override
+//                public void call(Place place) {
+//                    String display = "Rides near\n" + place.getName().toString();
+//
+//                    onBackPressed();
+//
+////                    if(filterResults(place)) {
+////                        searchResult.setText(display);
+////                        searchResult.setVisibility(View.VISIBLE);
+////                    }
+//
+//                }
+//            });
+//
+//            fragmentTransaction.replace(R.id.ride_offers_activity, rideSearch);
+//            fragmentTransaction.addToBackStack(null);
+//            fragmentTransaction.commit();
+//        }
+        else if(id == R.id.admin_actions) {
             i = userIntentService.createIntent(GroupRating.this, AdminActions.class, userIntentService.getUserFromIntent(this.getIntent()));
             startActivity(i);
         }
@@ -271,7 +280,7 @@ public class GroupRating extends AppCompatActivity implements NavigationView.OnN
         i = navigationService.getNavigationIntent(item, GroupRating.this, this.getIntent());
 
         /* check if user wants to log out */
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ride_offers_activity);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.group_rating_activity);
         drawer.closeDrawer(GravityCompat.START);
         if (R.id.logout == id) {
             AlertDialog.Builder alert = navigationService.logOutButton(GroupRating.this);
@@ -310,42 +319,42 @@ public class GroupRating extends AppCompatActivity implements NavigationView.OnN
      * @param place - user's search info
      * @return true on success
      */
-    public boolean filterResults(Place place) {
-        List<Offer> filtered = new ArrayList<>();
-        List<String> destinations = new ArrayList<>();
-        LatLng compare = place.getLatLng();
-
-        for(int i = 0; i < offers.size(); i++) {
-            float distance[] = new float[1];
-            LatLng current = offers.get(i).getDestCoordinates();
-
-            Location.distanceBetween(compare.latitude, compare.longitude,
-                    current.latitude, current.longitude, distance);
-
-            /* if distance is less than 15 miles away, add it to filtered destinations list */
-            if(distance[0] <= 1600 * 15) {
-                destinations.add(offers.get(i).getDestination());
-                filtered.add(offers.get(i));
-            }
-        }
-
-        /* if no destinations were found, return false */
-        if(destinations.size() == 0) {
-            Snackbar.make(findViewById(R.id.ride_offers_activity),
-                    "No rides available for this location. You can try making a new request.",
-                    Snackbar.LENGTH_SHORT).show();
-            return false;
-        }
-
-        /* display the filtered results */
-        adapter.clear();
-        for(int i = 0; i < destinations.size(); i++) {
-            this.destinations.add(destinations.get(i));
-        }
-        this.offers = filtered;
-        adapter.notifyDataSetChanged();
-
-        return true;
-    }
+//    public boolean filterResults(Place place) {
+//        List<Offer> filtered = new ArrayList<>();
+//        List<String> destinations = new ArrayList<>();
+//        LatLng compare = place.getLatLng();
+//
+//        for(int i = 0; i < offers.size(); i++) {
+//            float distance[] = new float[1];
+//            LatLng current = offers.get(i).getDestCoordinates();
+//
+//            Location.distanceBetween(compare.latitude, compare.longitude,
+//                    current.latitude, current.longitude, distance);
+//
+//            /* if distance is less than 15 miles away, add it to filtered destinations list */
+//            if(distance[0] <= 1600 * 15) {
+//                destinations.add(offers.get(i).getDestination());
+//                filtered.add(offers.get(i));
+//            }
+//        }
+//
+//        /* if no destinations were found, return false */
+//        if(destinations.size() == 0) {
+//            Snackbar.make(findViewById(R.id.ride_offers_activity),
+//                    "No rides available for this location. You can try making a new request.",
+//                    Snackbar.LENGTH_SHORT).show();
+//            return false;
+//        }
+//
+//        /* display the filtered results */
+//        adapter.clear();
+//        for(int i = 0; i < destinations.size(); i++) {
+//            this.destinations.add(destinations.get(i));
+//        }
+//        this.offers = filtered;
+//        adapter.notifyDataSetChanged();
+//
+//        return true;
+//    }
 
 }
