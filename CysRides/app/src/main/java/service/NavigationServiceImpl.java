@@ -18,6 +18,7 @@ import cysrides.cysrides.Groups;
 import cysrides.cysrides.LoginActivity;
 import cysrides.cysrides.Messaging;
 import cysrides.cysrides.R;
+import cysrides.cysrides.RateGroups;
 import cysrides.cysrides.RequestsOffers;
 import cysrides.cysrides.RideOffers;
 import cysrides.cysrides.RideRequests;
@@ -68,6 +69,8 @@ public class NavigationServiceImpl extends AppCompatActivity implements Navigati
             case R.id.messaging:
                 intent = userIntentService.createIntent(context, Messaging.class, userIntentService.getUserFromIntent(intent));
                 break;
+            case R.id.rate_groups_activity:
+                intent = userIntentService.createIntent(context, RateGroups.class, userIntentService.getUserFromIntent(intent));
             default:
                 break;
         }
