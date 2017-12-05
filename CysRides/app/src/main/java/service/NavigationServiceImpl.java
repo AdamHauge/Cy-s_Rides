@@ -11,7 +11,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import cysrides.cysrides.CalendarActivity;
-import cysrides.cysrides.Contacts;
 import cysrides.cysrides.CreateOffer;
 import cysrides.cysrides.CreateRequest;
 import cysrides.cysrides.GroupRating;
@@ -45,9 +44,6 @@ public class NavigationServiceImpl extends AppCompatActivity implements Navigati
                 break;
             case R.id.offers:
                 intent = userIntentService.createIntent(context, RideOffers.class, userIntentService.getUserFromIntent(intent));
-                break;
-            case R.id.contacts:
-                intent = userIntentService.createIntent(context, Contacts.class, userIntentService.getUserFromIntent(intent));
                 break;
             case R.id.createOffer:
                 intent = userIntentService.createIntent(context, CreateOffer.class, userIntentService.getUserFromIntent(intent));
