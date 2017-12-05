@@ -13,5 +13,6 @@ public interface NavigationService {
     Intent getNavigationIntent(@NonNull MenuItem item, Context c, Intent intent);
     boolean checkInternetConnection(Context c);
     void hideMenuItems(Menu menu, UserInfo userInfo);
+    void hideAdminButton(Menu menu, UserInfo userInfo);
     AlertDialog.Builder logOutButton(Context c);
 }
