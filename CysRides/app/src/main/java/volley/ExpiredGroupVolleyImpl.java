@@ -1,6 +1,8 @@
 package volley;
 
 import android.content.Context;
+import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -15,6 +17,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +30,7 @@ import java.util.Map;
 import domain.Group;
 import service.Callback;
 
-public class ExpiredGroupVolleyImpl implements ExpiredGroupVolley{
+public class ExpiredGroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements ExpiredGroupVolley{
 
     private String getExpiredGroupUrl = "http://proj-309-sa-b-5.cs.iastate.edu/getExpiredGroups.php";
     private String getGroupByGroupIdUrl = "http://proj-309-sa-b-5.cs.iastate.edu/getGroupByGroupId.php";
@@ -34,6 +42,8 @@ public class ExpiredGroupVolleyImpl implements ExpiredGroupVolley{
     private int rideId;
     private Callback callback;
     private int gId;
+    private ArrayList<Group> groups;
+    private String driver, rider1, rider2, rider3, rider4, rider5, rider6, rider7;
 
     public ExpiredGroupVolleyImpl(){};
     public ExpiredGroupVolleyImpl(Context currentContext, Callback c) {
@@ -259,6 +269,83 @@ public class ExpiredGroupVolleyImpl implements ExpiredGroupVolley{
 
         /* push request to database */
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
+    }
+
+    public void onPostExecute(JSONArray jsonArray) {
+        try{
+            groups = new ArrayList<>();
+            for(int i = 0; i < jsonArray.length(); i++) {
+                Log.d("JSON", jsonArray.toString());
+                JSONObject jsonGroup = jsonArray.getJSONObject(i);
+                ArrayList<String> groupMembers = new ArrayList<>();
+
+                groupMembers.add(jsonGroup.getString("EXPIRED_DRIVER"));
+                groupMembers.add(jsonGroup.getString("EXPIRED_RIDER_1"));
+                groupMembers.add(jsonGroup.getString("EXPIRED_RIDER_2"));
+                groupMembers.add(jsonGroup.getString("EXPIRED_RIDER_3"));
+                groupMembers.add(jsonGroup.getString("EXPIRED_RIDER_4"));
+                groupMembers.add(jsonGroup.getString("EXPIRED_RIDER_5"));
+                groupMembers.add(jsonGroup.getString("EXPIRED_RIDER_6"));
+                groupMembers.add(jsonGroup.getString("EXPIRED_RIDER_7"));
+
+                Group g = new Group();
+                g.setGroupMembers(groupMembers);
+
+                groups.add(g);
+
+                Log.d("size", groups.size() + "");
+
+            }
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        callback.call(groups);
+    }
+
+    /*
+    Part of the asynchronous process of grabbing a list of users from the database. Reads the strings from the
+    JSONObjects received from the database and adds them to the JSONArray.
+     */
+    @Override
+    protected JSONArray doInBackground(Void... aVoid) {
+        HttpURLConnection urlConnection = null;
+        StringBuilder result = new StringBuilder();
+
+        try {
+            URL url = new URL(getExpiredGroupUrl);
+            urlConnection = (HttpURLConnection) url.openConnection();
+            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                result.append(line);
+            }
+
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                if(null != urlConnection) {
+                    urlConnection.disconnect();
+                }
+            }catch(NullPointerException e) {
+                e.printStackTrace();
+            }
+        }
+
+        Log.d("String", result.toString());
+        JSONArray array = null;
+        try {
+            array = new JSONArray(result.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return array;
     }
 
 }
