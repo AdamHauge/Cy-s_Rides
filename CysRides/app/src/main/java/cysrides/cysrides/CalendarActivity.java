@@ -75,11 +75,10 @@ public class CalendarActivity extends AppCompatActivity implements NavigationVie
         navigationService.hideMenuItems(menu, userIntentService.getUserFromIntent(this.getIntent()));
 
         beginTime = Calendar.getInstance();
-        beginTime.set(2017, 12 - 1, 2, 7, 30);
-
-
+        //beginTime.set(2017, 12 - 1, 5, 10, 30);
+        
         endTime = Calendar.getInstance();
-        endTime.set(2017, 12 - 1, 2, 8, 30);
+        endTime.set(2017, 12 - 1, 5, 11, 30);
 
         Intent intent = new Intent(Intent.ACTION_INSERT)
                 .setData(CalendarContract.Events.CONTENT_URI)
