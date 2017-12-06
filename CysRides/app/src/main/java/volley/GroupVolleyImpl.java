@@ -59,8 +59,8 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
 
     /**
      * Adds a group to the database
-     * @param context
-     * @param g
+     * @param context - context for mySingleton class
+     * @param g - Group to be added
      */
     @Override
     public void createGroup(Context context, Group g) {
@@ -118,8 +118,8 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
 
     /**
      * Returns a group from the database with the group id
-     * @param currentContext
-     * @param groupNum
+     * @param currentContext - context for mySingleton class
+     * @param groupNum - id of the Group to be returned
      */
     @Override
     public void getGroup(final Context currentContext, final int groupNum) {
@@ -189,9 +189,9 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
 
     /**
      * Adds a rider to a group in the database
-     * @param context
-     * @param g
-     * @param netID
+     * @param context - context for mySingleton class
+     * @param g - Group the rider is to be added to
+     * @param netID - netID of the rider to be added
      */
     @Override
     public void addRider(Context context, final Group g, final String netID) {
@@ -252,9 +252,9 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
 
     /**
      * Adds a driver to a group in the database
-     * @param context
-     * @param g
-     * @param netID
+     * @param context - context for mySingleton class
+     * @param g - Group the driver is to be added to
+     * @param netID - netID of the driver to be added
      */
     @Override
     public void addDriver(Context context, final Group g, final String netID) {
@@ -299,8 +299,8 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
 
     /**
      * Sets up a connection to the server
-     * @param voids
-     * @return
+     * @param voids - Execute() takes no parameters
+     * @return json array for postExecute
      */
      @Override
      protected JSONArray doInBackground(Void... voids) {
@@ -344,7 +344,7 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
 
     /**
      * returns all groups in the database
-     * @param jsonArray
+     * @param jsonArray - json array containing GOR data
      */
     @Override
      protected void onPostExecute(JSONArray jsonArray){
