@@ -8,10 +8,12 @@ import domain.UserType;
 
 public class UserIntentServiceImpl implements UserIntentService {
 
-    /*
-    Creates an intent based on the current context and class. A user is used as
-    a parameter so that it can break down all relevant parts of userInfo and send
-    the data across the intent.
+    /**
+     * Passes the user information between pages
+     * @param context
+     * @param cls
+     * @param userInfo
+     * @return an intent that has the user information stored in it
      */
     @Override
     public Intent createIntent(Context context, Class<?> cls, UserInfo userInfo) {
@@ -31,6 +33,12 @@ public class UserIntentServiceImpl implements UserIntentService {
     /*
     Grabs user from the intent that was used. Creates UserInfo object and sets its fields
     to the values of the strings send over from the CreateIntent method.
+     */
+
+    /**
+     * Creates a UserInfo object from the current intent
+     * @param intent
+     * @return a user retrieved from the intent
      */
     @Override
     public UserInfo getUserFromIntent(Intent intent) {

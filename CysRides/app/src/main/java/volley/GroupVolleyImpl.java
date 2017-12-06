@@ -56,7 +56,12 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
         this.currentContext = currentContext;
         callback = c;
     }
-    //adds group to the database
+
+    /**
+     * Adds a group to the database
+     * @param context
+     * @param g
+     */
     @Override
     public void createGroup(Context context, Group g) {
         this.group = g;
@@ -110,7 +115,12 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
 
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
-    //pulls group from the database
+
+    /**
+     * Returns a group from the database with the group id
+     * @param currentContext
+     * @param groupNum
+     */
     @Override
     public void getGroup(final Context currentContext, final int groupNum) {
         this.currentContext = currentContext;
@@ -177,7 +187,12 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
 
-    //adds a user to a group as a new rider
+    /**
+     * Adds a rider to a group in the database
+     * @param context
+     * @param g
+     * @param netID
+     */
     @Override
     public void addRider(Context context, final Group g, final String netID) {
         currentContext = context;
@@ -234,6 +249,13 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
     //adds user to a group as a driver
+
+    /**
+     * Adds a driver to a group in the database
+     * @param context
+     * @param g
+     * @param netID
+     */
     @Override
     public void addDriver(Context context, final Group g, final String netID) {
         currentContext = context;
@@ -275,6 +297,11 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
 
+    /**
+     * Sets up a connection to the server
+     * @param voids
+     * @return
+     */
      @Override
      protected JSONArray doInBackground(Void... voids) {
        HttpURLConnection urlConnection = null;
@@ -315,7 +342,11 @@ public class GroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
 
        return array;     }
 
-     @Override
+    /**
+     * returns all groups in the database
+     * @param jsonArray
+     */
+    @Override
      protected void onPostExecute(JSONArray jsonArray){
        try{
            Log.d("Groups", jsonArray.toString());

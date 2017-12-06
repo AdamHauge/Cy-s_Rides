@@ -46,6 +46,13 @@ public class UserRatingVolleyImpl extends AsyncTask<Void, Void, JSONArray> imple
         callback = call;
     }
 
+    /**
+     * Updates a rating in the database
+     * @param context
+     * @param netID
+     * @param userRating
+     * @param numberRatings
+     */
     @Override
     public void addRating(Context context, final String netID, final float userRating, final float numberRatings){
 
@@ -80,6 +87,11 @@ public class UserRatingVolleyImpl extends AsyncTask<Void, Void, JSONArray> imple
 
     }
 
+    /**
+     * Returns all ratings from the ratings table
+     * @param jsonArray
+     */
+    @Override
     public void onPostExecute(JSONArray jsonArray) {
         try{
             ratings = new ArrayList<>();
@@ -105,9 +117,11 @@ public class UserRatingVolleyImpl extends AsyncTask<Void, Void, JSONArray> imple
         callback.call(ratings);
     }
 
-    /*
-    Part of the asynchronous process of grabbing a list of users from the database. Reads the strings from the
-    JSONObjects received from the database and adds them to the JSONArray.
+    /**
+     * Part of the asynchronous process of grabbing a list of users from the database. Reads the strings from the
+       JSONObjects received from the database and adds them to the JSONArray.
+     * @param aVoid
+     * @return
      */
     @Override
     protected JSONArray doInBackground(Void... aVoid) {

@@ -39,6 +39,12 @@ public class LoginServiceImpl implements LoginService {
         return null;
     }
 
+    /**
+     * This method checks if the array of bans contains that email
+     * @param bans
+     * @param email
+     * @return a boolean
+     */
     @Override
     public boolean isBanned(ArrayList<Ban> bans, String email) {
         if(bans != null) {

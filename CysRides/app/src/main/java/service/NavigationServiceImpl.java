@@ -31,6 +31,14 @@ public class NavigationServiceImpl extends AppCompatActivity implements Navigati
     private UserIntentService userIntentService = new UserIntentServiceImpl();
 
     //Sets the intent when traversing through pages
+
+    /**
+     * This method returns and intent based off where the user is going
+     * @param item
+     * @param context
+     * @param intent
+     * @return the new Intent
+     */
     @Override
     public Intent getNavigationIntent(@NonNull MenuItem item, Context context, Intent intent) {
         int id = item.getItemId();
@@ -79,6 +87,11 @@ public class NavigationServiceImpl extends AppCompatActivity implements Navigati
         return intent;
     }
 
+    /**
+     * Checks if the user is connected to the internet
+     * @param c
+     * @return a boolean
+     */
     @Override
     public boolean checkInternetConnection(Context c) {
         ConnectivityManager connMgr = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -87,7 +100,11 @@ public class NavigationServiceImpl extends AppCompatActivity implements Navigati
         return null == networkInfo;
     }
 
-    //Hides menu options depending on what the userType is
+    /**
+     * Hides menus from passengers that they shouldn't be able to use
+     * @param menu
+     * @param userInfo
+     */
     @Override
     public void hideMenuItems(Menu menu, UserInfo userInfo) {
         MenuItem item;
@@ -99,6 +116,11 @@ public class NavigationServiceImpl extends AppCompatActivity implements Navigati
         }
     }
 
+    /**
+     * Hides the admin button from drivers and passengers
+     * @param menu
+     * @param userInfo
+     */
     @Override
     public void hideAdminButton(Menu menu, UserInfo userInfo) {
         MenuItem item;
@@ -108,6 +130,11 @@ public class NavigationServiceImpl extends AppCompatActivity implements Navigati
         }
     }
 
+    /**
+     * Creates a button to warn the user that they're logging out
+     * @param c
+     * @return
+     */
     @Override
     public AlertDialog.Builder logOutButton(Context c) {
         AlertDialog.Builder alert = new AlertDialog.Builder(c);

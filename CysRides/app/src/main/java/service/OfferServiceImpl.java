@@ -14,6 +14,12 @@ public class OfferServiceImpl implements OfferService {
     private OfferVolley offerVolley = new OfferVolleyImpl();
 
     //Formats the information before passing it into the volley code
+
+    /**
+     * Creates an offer in the database when given an offer
+     * @param context
+     * @param offer
+     */
     @Override
     public void createOffer(Context context, Offer offer) {
         String destination = String.format("%s %s", offer.getDestination(), offer.getDestCoordinates().toString());
@@ -21,17 +27,33 @@ public class OfferServiceImpl implements OfferService {
         offerVolley.createOffer(context, offer, destination, start);
     }
 
+    /**
+     * Deletes an offer in the database
+     * @param context
+     * @param id
+     */
     @Override
     public void deleteOffer(Context context, int id) {
         offerVolley.deleteOffer(context, id);
     }
 
+    /**
+     * Gives an offer from the database from a certain id
+     * @param context
+     * @param offerId
+     * @param groupId
+     */
     @Override
     public void giveOfferGroup(Context context, final int offerId, final int groupId){
         offerVolley.giveOfferGroup(context, offerId, groupId);
     }
 
-    //Finds the offers for a specific email
+    /**
+     * Finds offers from the database by who created them
+     * @param offers
+     * @param userInfo
+     * @return
+     */
     @Override
     public ArrayList<Offer> findOffersByEmail(ArrayList<Offer> offers, UserInfo userInfo) {
         ArrayList<Offer> emailOffers = new ArrayList<>();

@@ -44,6 +44,11 @@ public class BanVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements B
         callback = o;
     }
 
+    /**
+     * Creates a ban in the database
+     * @param context
+     * @param ban
+     */
     @Override
     public void createBan(Context context, Ban ban) {
         currentContext = context;
@@ -76,6 +81,10 @@ public class BanVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements B
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
 
+    /**
+     * Returns an array of all bans from the database
+     * @param jsonArray
+     */
     @Override
     protected void onPostExecute(JSONArray jsonArray) {
         try{
@@ -96,6 +105,11 @@ public class BanVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements B
         callback.call(bans);
     }
 
+    /**
+     * Sets up the connection to the server
+     * @param aVoid
+     * @return
+     */
     @Override
     protected JSONArray doInBackground(Void... aVoid) {
         HttpURLConnection urlConnection = null;
