@@ -111,6 +111,22 @@ public class Group {
     public int getOfferId(){return offerID;}
 
     /**
+     * Sets the ID of the offer in the Group
+     * @param offerID - ID of the offer
+     */
+    public void setOfferID(int offerID){
+        this.offerID = offerID;
+    }
+
+    /**
+     * Sets the ID of the request in the Group
+     * @param requestID - ID of the request
+     */
+    public void setRequestID(int requestID){
+        this.requestID = requestID;
+    }
+
+    /**
      * Get the id of the Request associated to a Group
      * @return int requestID
      */
