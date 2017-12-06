@@ -85,6 +85,11 @@ public class MessageVolleyImpl extends AsyncTask<Integer, Void, JSONArray> imple
        MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
    }
 
+    /**
+     * Gets json array to be decoded in postExecute
+     * @param groupID array containing the groupID for the group pulling messages
+     * @return json array containing messages to be parsed
+     */
     @Override
     protected JSONArray doInBackground(Integer... groupID) {
         String getMessagesUrl = "http://proj-309-sa-b-5.cs.iastate.edu/getGroupsMessages.php";
@@ -127,6 +132,10 @@ public class MessageVolleyImpl extends AsyncTask<Integer, Void, JSONArray> imple
         return array;
     }
 
+    /**
+     * Decodes json Array of messages and runs a callback to the caller of Execute(groupID);
+     * @param jsonArray - json array of messages to be parsed and returned
+     */
     @Override
     protected void onPostExecute(JSONArray jsonArray){
         try {
