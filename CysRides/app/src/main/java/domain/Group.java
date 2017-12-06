@@ -10,11 +10,18 @@ public class Group {
     private int requestID;
     private String type;
 
+    /**
+     * empty constructor
+     */
     public Group() {
 
     }
 
-    //Group that is created in offer
+    /**
+     * Constructor that creates a group with what is needed to put one in the database
+     * @param user - String netID of the first group member
+     * @param type - type of ride
+     */
     public Group(String user, String type){
 
         this.type = type;
@@ -30,7 +37,14 @@ public class Group {
         }
 
     }
-    //Group that is pulled from database
+
+    /**
+     * Constructor that creates a group with what is needed to pull one from the database
+     * @param groupID - int ID of the Group
+     * @param groupMembers - ArrayList<String> members of group
+     * @param offerID = int ID of the Offer
+     * @param requestID - int ID of the request
+     */
     public Group(int groupID, ArrayList<String> groupMembers, int offerID, int requestID){
         this.groupMembers = groupMembers;
         this.groupID = groupID;
@@ -46,32 +60,66 @@ public class Group {
 
     }
 
+    /**
+     * Check if a user is in a Group
+     * @param netID - netID to be checked
+     * @return boolean inGroup
+     */
     public boolean inGroup(String netID) {
         return groupMembers.contains(netID);
     }
 
+    /**
+     * Get the members in a Group
+     * @return ArrayList<String> groupMembers
+     */
     public ArrayList<String> getGroupMembers(){
         return groupMembers;
     }
 
+    /**
+     * Set the members of a Group
+     * @param groupMembers - ArrayList<String> members of group
+     */
     public void setGroupMembers(ArrayList<String> groupMembers) {
         this.groupMembers = groupMembers;
     }
 
+    /**
+     * Get the type of a Group
+     * @return String type
+     */
     public String getType(){return type;}
 
+    /**
+     * Get the driver of a Group
+     * @return String driver
+     */
     public String getDriver(){return driver;}
 
+    /**
+     * Get the id of a Group in the database (only to be used with
+     * Groups that have been pulled from the database)
+     * @return int groupID
+     */
     public int getId(){return groupID;}
 
+    /**
+     * Get the id of the Offer associated to a Group
+     * @return int offerID
+     */
     public int getOfferId(){return offerID;}
 
-    public void setOfferID(int id){this.offerID = id;}
-
-    public void setRequestID(int id){this.requestID = id;}
-
+    /**
+     * Get the id of the Request associated to a Group
+     * @return int requestID
+     */
     public int getRequestID(){return this.requestID;}
 
+    /**
+     * Get the number of members of a Group
+     * @return int size
+     */
     public int getSize(){return this.getGroupMembers().size();}
 
 
