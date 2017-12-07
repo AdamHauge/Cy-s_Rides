@@ -214,7 +214,6 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
                 String time = String.format(Locale.US, "%02d", hour) + ":" + String.format(Locale.US, "%02d", minute) + ":" + String.format(Locale.US, "%02d", seconds);
                 EditText editText = (EditText)findViewById(R.id.LeaveTime);
                 editText.setText(time);
-                timeChanged = true;
             }
         };
 

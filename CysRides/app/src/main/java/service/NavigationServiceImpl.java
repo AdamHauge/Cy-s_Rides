@@ -30,14 +30,12 @@ public class NavigationServiceImpl extends AppCompatActivity implements Navigati
 
     private UserIntentService userIntentService = new UserIntentServiceImpl();
 
-    //Sets the intent when traversing through pages
-
     /**
      * This method returns and intent based off where the user is going
-     * @param item
+     * @param item - page selected
      * @param context
-     * @param intent
-     * @return the new Intent
+     * @param intent - intent of current page
+     * @return intent of page being navigated to
      */
     @Override
     public Intent getNavigationIntent(@NonNull MenuItem item, Context context, Intent intent) {
@@ -89,8 +87,8 @@ public class NavigationServiceImpl extends AppCompatActivity implements Navigati
 
     /**
      * Checks if the user is connected to the internet
-     * @param c
-     * @return a boolean
+     * @param c context of app
+     * @return false if user is connected to wifi
      */
     @Override
     public boolean checkInternetConnection(Context c) {
@@ -101,9 +99,9 @@ public class NavigationServiceImpl extends AppCompatActivity implements Navigati
     }
 
     /**
-     * Hides menus from passengers that they shouldn't be able to use
-     * @param menu
-     * @param userInfo
+     * hides admin buttons for non admins
+     * @param menu - menu to be modified
+     * @param userInfo - user's user info
      */
     @Override
     public void hideMenuItems(Menu menu, UserInfo userInfo) {
@@ -131,9 +129,9 @@ public class NavigationServiceImpl extends AppCompatActivity implements Navigati
     }
 
     /**
-     * Creates a button to warn the user that they're logging out
-     * @param c
-     * @return
+     * creates an alert dialog if user tries to log out
+     * @param c - context of app
+     * @return alert dialog asking user to log out
      */
     @Override
     public AlertDialog.Builder logOutButton(Context c) {

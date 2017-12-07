@@ -7,6 +7,12 @@ import android.view.View;
 
 public class ActivityServiceImpl implements ActivityService {
 
+    /**
+     * Creates a snackbar if wifi is not connected
+     * @param context of app
+     * @param v current page
+     * @return snackbar with option to enable wifi
+     */
     @Override
     public Snackbar setupConnection(final Context context, View v) {
         Snackbar snackbar = Snackbar.make(v, "Cy's Rides Requires\nInternet Connection", Snackbar.LENGTH_INDEFINITE);

@@ -14,9 +14,9 @@ public class RequestServiceImpl implements RequestService {
     private RequestVolley requestVolley = new RequestVolleyImpl();
 
     /**
-     * Creates a request in the database
-     * @param context
-     * @param request
+     * creates ride request
+     * @param context - context of app
+     * @param request - request to be created
      */
     @Override
     public void createRequest(Context context, Request request) {
@@ -26,9 +26,9 @@ public class RequestServiceImpl implements RequestService {
     }
 
     /**
-     * Deletes a request in the database using a request id
-     * @param context
-     * @param id
+     * removes request from database
+     * @param context - context of app
+     * @param id - id of request to be deleted
      */
     @Override
     public void deleteRequest(Context context, int id) {
@@ -38,10 +38,10 @@ public class RequestServiceImpl implements RequestService {
     //Finds the requests for a specific email
 
     /**
-     * Finds the requests by an email from the database
-     * @param requests
-     * @param userInfo
-     * @return an arraylist of requests from the database
+     * returns a list of all requests by a user
+     * @param requests - list of requests
+     * @param userInfo - user's user info
+     * @return list of ride requests by user
      */
     @Override
     public ArrayList<Request> findRequestsByEmail(ArrayList<Request> requests, UserInfo userInfo) {
@@ -53,24 +53,4 @@ public class RequestServiceImpl implements RequestService {
         }
         return emailRequests;
     }
-
-    /**
-     * Gives specified request the given groupID
-     * @param context
-     * @param requestID
-     * @param groupID
-     */
-    @Override
-    public void giveRequestGroup(Context context, int requestID, int groupID){
-        requestVolley.giveRequestGroup(context, requestID, groupID);
-    }
-
-    //protected List<Offer> getDriverOfferRequests() {
-    //    return offerJdbc.getDriverOffers();
-    //}
-
-    //protected List<Offer> getPassengerOfferRequests() {
-    //    return offerJdbc.getPassengerOffers();
-    //}
-
 }

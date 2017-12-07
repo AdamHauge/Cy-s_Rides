@@ -16,9 +16,9 @@ public class OfferServiceImpl implements OfferService {
     //Formats the information before passing it into the volley code
 
     /**
-     * Creates an offer in the database when given an offer
-     * @param context
-     * @param offer
+     * creates ride offer
+     * @param context - context of app
+     * @param offer - offer to be created
      */
     @Override
     public void createOffer(Context context, Offer offer) {
@@ -28,9 +28,9 @@ public class OfferServiceImpl implements OfferService {
     }
 
     /**
-     * Deletes an offer in the database
-     * @param context
-     * @param id
+     * removes offer from database
+     * @param context - context of app
+     * @param id - id of offer to be deleted
      */
     @Override
     public void deleteOffer(Context context, int id) {
@@ -38,21 +38,10 @@ public class OfferServiceImpl implements OfferService {
     }
 
     /**
-     * Gives an offer from the database from a certain id
-     * @param context
-     * @param offerId
-     * @param groupId
-     */
-    @Override
-    public void giveOfferGroup(Context context, final int offerId, final int groupId){
-        offerVolley.giveOfferGroup(context, offerId, groupId);
-    }
-
-    /**
-     * Finds offers from the database by who created them
-     * @param offers
-     * @param userInfo
-     * @return
+     * returns all offers associated with user
+     * @param offers - list of ride offers
+     * @param userInfo - user's user info
+     * @return - list of offers by user
      */
     @Override
     public ArrayList<Offer> findOffersByEmail(ArrayList<Offer> offers, UserInfo userInfo) {
@@ -64,13 +53,4 @@ public class OfferServiceImpl implements OfferService {
         }
         return emailOffers;
     }
-
-    //protected List<Offer> getDriverOfferRequests() {
-    //    return offerJdbc.getDriverOffers();
-    //}
-
-    //protected List<Offer> getPassengerOfferRequests() {
-    //    return offerJdbc.getPassengerOffers();
-    //}
-
 }

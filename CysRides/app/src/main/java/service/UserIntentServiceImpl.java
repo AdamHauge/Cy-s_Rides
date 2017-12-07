@@ -9,11 +9,11 @@ import domain.UserType;
 public class UserIntentServiceImpl implements UserIntentService {
 
     /**
-     * Passes the user information between pages
-     * @param context
-     * @param cls
-     * @param userInfo
-     * @return an intent that has the user information stored in it
+     * creates new page intent
+     * @param context - context of app
+     * @param cls - current class
+     * @param userInfo - user's user info
+     * @return intent of app page
      */
     @Override
     public Intent createIntent(Context context, Class<?> cls, UserInfo userInfo) {
@@ -36,9 +36,9 @@ public class UserIntentServiceImpl implements UserIntentService {
      */
 
     /**
-     * Creates a UserInfo object from the current intent
-     * @param intent
-     * @return a user retrieved from the intent
+     * returns user info from page intent
+     * @param intent - intent of current page
+     * @return - current user's user info
      */
     @Override
     public UserInfo getUserFromIntent(Intent intent) {

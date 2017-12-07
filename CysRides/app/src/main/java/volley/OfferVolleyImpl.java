@@ -48,12 +48,7 @@ public class OfferVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements
     /**
      * Default constructor initializes current date to be determine if a ride needs to be deleted
      */
-    public OfferVolleyImpl() {
-//        current.set(Calendar.HOUR_OF_DAY, 0);
-//        current.set(Calendar.MINUTE, 0);
-//        current.set(Calendar.SECOND, 0);
-//        current.set(Calendar.MILLISECOND, 0);
-    }
+    public OfferVolleyImpl() {}
 
     /**
      * OfferVolleyImpl constructor

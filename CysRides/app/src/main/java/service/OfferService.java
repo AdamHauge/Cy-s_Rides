@@ -8,9 +8,25 @@ import domain.Offer;
 import domain.UserInfo;
 
 public interface OfferService {
+    /**
+     * creates ride offer
+     * @param context - context of app
+     * @param offer - offer to be created
+     */
     void createOffer(Context context, Offer offer);
-    void deleteOffer(Context context, int id);
-    ArrayList<Offer> findOffersByEmail(ArrayList<Offer> offers, UserInfo userInfo);
 
-    void giveOfferGroup(Context context, final int offerId, final int groupId);
+    /**
+     * removes offer from database
+     * @param context - context of app
+     * @param id - id of offer to be deleted
+     */
+    void deleteOffer(Context context, int id);
+
+    /**
+     * returns all offers associated with user
+     * @param offers - list of ride offers
+     * @param userInfo - user's user info
+     * @return - list of offers by user
+     */
+    ArrayList<Offer> findOffersByEmail(ArrayList<Offer> offers, UserInfo userInfo);
 }

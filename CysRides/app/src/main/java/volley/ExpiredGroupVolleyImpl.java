@@ -40,6 +40,8 @@ public class ExpiredGroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> imp
     private int gId;
     private ArrayList<Group> groups;
 
+    public ExpiredGroupVolleyImpl() {}
+
     /**
      * Constructor that sets app context and callback
      * @param currentContext - context of app

@@ -9,6 +9,11 @@ public class RefreshServiceImpl implements RefreshService {
     private SwipeRefreshLayout refresh;
     private ArrayAdapter<String> adapter;
 
+    /**
+     * determines when to stop refreshing page
+     * @param r - page being refreshed
+     * @param a - data being refreshed
+     */
     @Override
     public void stopRefreshing(SwipeRefreshLayout r, ArrayAdapter<String> a) {
         refresh = r;

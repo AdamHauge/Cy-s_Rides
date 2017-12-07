@@ -7,7 +7,12 @@ import domain.UserInfo;
 
 public interface LoginService {
 
-    boolean verifyLogin(String netID, String password);
+    /**
+     * returns user's info
+     * @param users - list of users
+     * @param netID - user's netID
+     * @param enteredPassword - user's entered password
+     * @return user info of user
+     */
     UserInfo getUserInfo(ArrayList<UserInfo> users, String netID, String enteredPassword);
-    boolean isBanned(ArrayList<Ban> bans, String email);
 }

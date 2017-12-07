@@ -12,10 +12,12 @@ import cysrides.cysrides.R;
 
 public class NotificationServiceImpl implements NotificationService {
 
+    /**
+     * sends notification about ride to user
+     * @param context - context of app
+     */
+    @Override
     public void showRideNotification(Context context) {
-        //Intent intent = new Intent(context, MainActivity.class);
-        //PendingIntent contentIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
         PendingIntent contentIntent = PendingIntent.getActivity(context, 0, new Intent(context, LoginActivity.class), 0);
 
         NotificationCompat.Builder b = new NotificationCompat.Builder(context);
