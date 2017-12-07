@@ -54,6 +54,10 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
     private ArrayList<String> bansString;
     private FragmentManager fragmentManager = this.getSupportFragmentManager();
 
+    /**
+     * Constructs page
+     * @param savedInstanceState - app data
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,6 +109,9 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
         }
     }
 
+    /**
+     * Gets banned users from database
+     */
     @SuppressWarnings("unchecked")
     public void getBansList() {
         bansString = new ArrayList<>();
@@ -135,6 +142,9 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
         volley.execute();
     }
 
+    /**
+     * Handles back button press
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.banned_users_activity);
@@ -151,12 +161,21 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
         }
     }
 
+    /**
+     * Locks the drawer
+     * @param enabled - true when drawer is locked
+     */
     @Override
     public void lockDrawer(boolean enabled) {
         int lockMode = enabled ? DrawerLayout.LOCK_MODE_LOCKED_CLOSED : DrawerLayout.LOCK_MODE_UNLOCKED;
         drawer.setDrawerLockMode(lockMode);
     }
 
+    /**
+     * Creates the options menu
+     * @param menu to be created
+     * @return true on success
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -164,6 +183,11 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
         return true;
     }
 
+    /**
+     * Handles menu selections
+     * @param item selected
+     * @return true on success
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -184,6 +208,11 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Handles navigation item selections
+     * @param item selected
+     * @return true on success
+     */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -213,6 +242,9 @@ public class BannedUsers extends AppCompatActivity implements NavigationView.OnN
         }
     }
 
+    /**
+     * opens snackbar when no wifi connection
+     */
     public void connectionPopUp() {
         Snackbar snackbar = activityService.setupConnection(BannedUsers.this, findViewById(R.id.contacts_activity));
         snackbar.show();

@@ -12,8 +12,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Locale;
-import java.util.Random;
 
 import domain.UserInfo;
 import service.Callback;
@@ -21,48 +19,21 @@ import service.LoginService;
 import service.LoginServiceImpl;
 import service.UserIntentService;
 import service.UserIntentServiceImpl;
-import volley.EmailVolley;
-import volley.EmailVolleyImpl;
 import volley.UserVolleyImpl;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private static final int REQUEST_READ_CONTACTS = 0;
-
     private UserIntentService userIntentService = new UserIntentServiceImpl();
     private LoginService loginService = new LoginServiceImpl();
-    private EmailVolley emailVolley = new EmailVolleyImpl();
 
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
-    private View mProgressView;
-    private View mLoginFormView;
-    private ArrayList<UserInfo> users;
-    private UserInfo user;
 
-    /*
-    Constructor that sets the email and password views.
+    /**
+     * creates page
+     * @param savedInstanceState - app info
      */
-    void LoginActivity(){
-        AutoCompleteTextView email = mEmailView;
-        EditText password = mPasswordView;
-    }
-
-    /*
-    Returns the value of the email field.
-     */
-    public String getmEmailView() {
-        return mEmailView.getText().toString();
-    }
-
-    /*
-    Returns the value of the password field.
-     */
-    public String getmPasswordView() {
-        return mPasswordView.getText().toString();
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,14 +59,11 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
 
-
-            mLoginFormView = findViewById(R.id.login_form);
-            mProgressView = findViewById(R.id.login_progress);
         }
     }
 
-    /*
-    On back pressed, it double checks with the user if he or she would really like to exit the app.
+    /**
+     * On back pressed, it double checks with the user if he or she would really like to exit the app.
      */
     @Override
     public void onBackPressed() {
@@ -111,15 +79,19 @@ public class LoginActivity extends AppCompatActivity {
         alertbox.show();
     }
 
-    /*
-    A valid email contains "@iastate.edu."
+    /**
+     * checks for valid email
+     * @param email - entered email
+     * @return true if valid
      */
     private boolean isEmailValid(String email) {
         return email.contains("@iastate.edu");
     }
 
-    /*
-    A valid password contains a digit and is at least eight characters long.
+    /**
+     * A valid password contains a digit and is at least eight characters long.
+     * @param password - entered password
+     * @return true if valid
      */
     private boolean isPasswordValid(String password) {
         if (password.length() > 8){
@@ -132,31 +104,11 @@ public class LoginActivity extends AppCompatActivity {
         return false;
     }
 
-    /*
-    Generates the random four digit confirmation code for the user.
-     */
-    public String generateCode(){
-        Random rand = new Random();
-
-        return String.format(Locale.US, "%04d", rand.nextInt(10000));
-    }
-
-    /*
-    Calls the emailValley send email method that sends the confirmation email to the inputted net-id.
-     */
-    public void sendEmail(){
-        String to = mEmailView.getText().toString();
-        String from = "cysrides@iastate.edu";
-        String subject = "Welcome to Cy's Rides!";
-        String body = "Here's your confirmation code: " + generateCode();
-
-        emailVolley.sendEmail(to, from, subject, body, LoginActivity.this);
-    }
-
-    /*
-    When the register button is clicked, it checks whether or not the email and password are valid.
-    If both are valid, the user continues onto the CreateProfile activity. If the email or password are
-    incorrect, a toast will appear alerting the user about the problem.
+    /**
+     * When the register button is clicked, it checks whether or not the email and password are valid.
+     * If both are valid, the user continues onto the CreateProfile activity. If the email or password are
+     * incorrect, a toast will appear alerting the user about the problem.
+     * @param view selected
      */
     public void onRegisterClick(View view){
         if((isEmailValid(mEmailView.getText().toString()) && isPasswordValid(mPasswordView.getText().toString()))) {
@@ -176,11 +128,13 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    /*
-    Part of the asynchronous login process because this method grabs the list of users from the database.
-    From that list of users, the login service is called to find the specific user we want with the username
-    parameter. Sets the shared preferences of the user so that re-logging in is not necessary. If the login attempt
-    fails, a toast appears saying the entered credentials were not valid.
+    /**
+     * Part of the asynchronous login process because this method grabs the list of users from the database.
+     * From that list of users, the login service is called to find the specific user we want with the username
+     * parameter. Sets the shared preferences of the user so that re-logging in is not necessary. If the login attempt
+     * fails, a toast appears saying the entered credentials were not valid.
+     * @param username - entered username
+     * @param password - entered password
      */
     @SuppressWarnings("unchecked")
     private void login(final String username, final String password) {

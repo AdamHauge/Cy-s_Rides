@@ -39,6 +39,10 @@ public class BanUser extends AppCompatActivity implements NavigationView.OnNavig
     private NavigationService navigationService = new NavigationServiceImpl();
     boolean retValue;
 
+    /**
+     * Creates page features
+     * @param savedInstanceState - app info
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,7 +71,7 @@ public class BanUser extends AppCompatActivity implements NavigationView.OnNavig
                 data = (EditText) findViewById(R.id.Reason);
                 reason = data.getText().toString();
 
-                if (email == null || reason == null) {
+                if (email == null) {
                     Snackbar.make(findViewById(R.id.submit), "All data fields required", Snackbar.LENGTH_LONG).show();
                 } else {
                     Ban ban = new Ban(email, reason);
@@ -85,6 +89,9 @@ public class BanUser extends AppCompatActivity implements NavigationView.OnNavig
         }
     }
 
+    /**
+     * Handlse back button presses
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.ban_user_activity);
@@ -105,6 +112,11 @@ public class BanUser extends AppCompatActivity implements NavigationView.OnNavig
         }
     }
 
+    /**
+     * Creates options menu
+     * @param menu to be created
+     * @return true on success
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -112,6 +124,11 @@ public class BanUser extends AppCompatActivity implements NavigationView.OnNavig
         return true;
     }
 
+    /**
+     * Handles menu selections
+     * @param item selected
+     * @return true on success
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -132,6 +149,11 @@ public class BanUser extends AppCompatActivity implements NavigationView.OnNavig
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Handles navigation item selection
+     * @param item selected
+     * @return true on success
+     */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
@@ -173,6 +195,9 @@ public class BanUser extends AppCompatActivity implements NavigationView.OnNavig
         return retValue;
     }
 
+    /**
+     * opens snackbar when no wifi connection
+     */
     public void connectionPopUp() {
         Snackbar snackbar = activityService.setupConnection(BanUser.this, findViewById(R.id.contacts_activity));
         snackbar.show();

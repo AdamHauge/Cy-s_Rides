@@ -32,10 +32,6 @@ import service.Callback;
 
 public class ExpiredGroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements ExpiredGroupVolley{
 
-    private String getExpiredGroupUrl = "http://proj-309-sa-b-5.cs.iastate.edu/getExpiredGroups.php";
-    private String getGroupByGroupIdUrl = "http://proj-309-sa-b-5.cs.iastate.edu/getGroupByGroupId.php";
-    private String createExpiredGroupUrl = "http://proj-309-sa-b-5.cs.iastate.edu/createExpiredGroup.php";
-
     private Group newGroup;
     private Context currentContext;
     private boolean iO;
@@ -43,16 +39,27 @@ public class ExpiredGroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> imp
     private Callback callback;
     private int gId;
     private ArrayList<Group> groups;
-    private String driver, rider1, rider2, rider3, rider4, rider5, rider6, rider7;
 
-    public ExpiredGroupVolleyImpl(){};
+    /**
+     * Constructor that sets app context and callback
+     * @param currentContext - context of app
+     * @param c - callback to send data to
+     */
     public ExpiredGroupVolleyImpl(Context currentContext, Callback c) {
         this.currentContext = currentContext;
         callback = c;
     }
 
+    /**
+     * Creates expired groups
+     * @param groupId - ID of group
+     * @param isOffer - is the ride a request or an offer
+     * @param id - ID of ride
+     * @param context - context of app
+     */
     @Override
     public void createExpiredGroupByRideId(final int groupId, boolean isOffer, int id, Context context) {
+        String getGroupByGroupIdUrl = "http://proj-309-sa-b-5.cs.iastate.edu/getGroupByGroupId.php";
         currentContext = context;
         iO = isOffer;
         rideId = id;
@@ -94,7 +101,7 @@ public class ExpiredGroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> imp
                 }){
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String,String> params = new HashMap<String,String>();
+                Map<String,String> params = new HashMap<>();
                 params.put("id", gId+"");
                 return params;
             }
@@ -104,8 +111,14 @@ public class ExpiredGroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> imp
         requestQueue.add(stringRequest);
     }
 
+    /**
+     * Creates expired group
+     * @param group - group that's expired
+     * @param context - context of app
+     */
     @Override
     public void createExpiredGroup(Group group, Context context) {
+        String createExpiredGroupUrl = "http://proj-309-sa-b-5.cs.iastate.edu/createExpiredGroup.php";
         newGroup = group;
         currentContext = context;
 
@@ -146,72 +159,11 @@ public class ExpiredGroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> imp
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
 
-//    @Override
-//    public void getGroup(final Context currentContext, final int groupNum) {
-//        this.currentContext = currentContext;
-//        StringRequest stringRequest = new StringRequest(com.android.volley.Request.Method.POST, getExpiredGroupUrl,
-//                new Response.Listener<String>() {
-//                    @Override
-//                    public void onResponse(String response) {
-//                        try {
-//                            JSONArray jarr = new JSONArray(response);
-//                            JSONObject jGroup = jarr.getJSONObject(0);
-//                            int groupNum = jGroup.getInt("ID");
-//
-//                            ArrayList<String> members = new ArrayList<>();
-//                            String rider = jGroup.getString("DRIVER");
-//                            members.add(rider);
-//                            rider = jGroup.getString("RIDER_1");
-//                            members.add(rider);
-//                            rider = jGroup.getString("RIDER_2");
-//                            members.add(rider);
-//                            rider = jGroup.getString("RIDER_3");
-//                            members.add(rider);
-//                            rider = jGroup.getString("RIDER_4");
-//                            members.add(rider);
-//                            rider = jGroup.getString("RIDER_5");
-//                            members.add(rider);
-//                            rider = jGroup.getString("RIDER_6");
-//                            members.add(rider);
-//                            rider = jGroup.getString("RIDER_7");
-//                            members.add(rider);
-//
-//                            String  offerNum = jGroup.getString("OFFER_ID");
-//                            if(!offerNum.equals("null")){
-//                                group = new Group(groupNum, members,Integer.parseInt(offerNum), Integer.MIN_VALUE);
-//                            }else {
-//                                group = new Group(groupNum, members, Integer.MIN_VALUE, Integer.parseInt(jGroup.getString("REQUEST_ID")));
-//                            }
-//                            ArrayList<Group> groupList = new ArrayList<>();
-//                            groupList.add(group);
-//                            callback.call(groupList);
-//
-//
-//
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//
-//                    }
-//                },
-//                new Response.ErrorListener() {
-//                    @Override
-//                    public void onErrorResponse(VolleyError error) {
-//                        Toast.makeText(currentContext, "Error...", Toast.LENGTH_SHORT).show();
-//                        error.printStackTrace();
-//                    }
-//                }) {
-//            @Override
-//            protected Map<String, String> getParams() throws AuthFailureError {
-//                Map<String, String> params = new HashMap<>();
-//                params.put("group_id", Integer.toString(groupNum));
-//                return params;
-//            }
-//        };
-//
-//        MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
-//    }
-
+    /**
+     * delete ride offer
+     * @param context - context of app
+     * @param id - ride ID
+     */
     private void deleteOffer(final Context context, final int id) {
         String deleteOfferUrl = "http://proj-309-sa-b-5.cs.iastate.edu/deleteOffer.php";
         currentContext = context;
@@ -271,6 +223,11 @@ public class ExpiredGroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> imp
         MySingleton.getInstance(currentContext).addToRequestQueue(stringRequest);
     }
 
+    /**
+     * Delete group and send back data
+     * @param jsonArray - Array of ride info
+     */
+    @Override
     public void onPostExecute(JSONArray jsonArray) {
         try{
             groups = new ArrayList<>();
@@ -307,8 +264,16 @@ public class ExpiredGroupVolleyImpl extends AsyncTask<Void, Void, JSONArray> imp
     Part of the asynchronous process of grabbing a list of users from the database. Reads the strings from the
     JSONObjects received from the database and adds them to the JSONArray.
      */
+
+    /**
+     * Part of the asynchronous process of grabbing a list of users from the database. Reads the strings from the
+     * JSONObjects received from the database and adds them to the JSONArray.
+     * @param aVoid - nothing
+     * @return JSONArray of ride data
+     */
     @Override
     protected JSONArray doInBackground(Void... aVoid) {
+        String getExpiredGroupUrl = "http://proj-309-sa-b-5.cs.iastate.edu/getExpiredGroups.php";
         HttpURLConnection urlConnection = null;
         StringBuilder result = new StringBuilder();
 

@@ -6,6 +6,10 @@ import android.support.v7.widget.Toolbar;
 
 public class ViewMyGroups extends AppCompatActivity {
 
+    /**
+     * Initializes page display data
+     * @param savedInstanceState - app info
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

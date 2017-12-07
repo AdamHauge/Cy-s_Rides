@@ -15,45 +15,28 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
-import domain.Offer;
-import domain.Request;
 import service.ActivityService;
 import service.ActivityServiceImpl;
-import service.Callback;
 import service.NavigationService;
 import service.NavigationServiceImpl;
-import service.OfferService;
-import service.OfferServiceImpl;
-import service.RefreshService;
-import service.RefreshServiceImpl;
-import service.RequestService;
-import service.RequestServiceImpl;
 import service.UserIntentService;
 import service.UserIntentServiceImpl;
-import volley.OfferVolleyImpl;
-import volley.RequestVolleyImpl;
 
 public class CalendarActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private UserIntentService userIntentService = new UserIntentServiceImpl();
     private NavigationService navigationService = new NavigationServiceImpl();
     private ActivityService activityService = new ActivityServiceImpl();
-    private OfferService offerService = new OfferServiceImpl();
-    private RequestService requestService = new RequestServiceImpl();
-    private RefreshService refreshService = new RefreshServiceImpl();
-
-    private List<Offer> offers = new ArrayList<>();
-    private List<Request> requests = new ArrayList<>();
-    private List<String> destinations = new ArrayList<>();
 
     private Intent i;
 
-    private Calendar beginTime, endTime;
 
+    /**
+     * Initializes page
+     * @param savedInstanceState - app info
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +57,7 @@ public class CalendarActivity extends AppCompatActivity implements NavigationVie
         Menu menu = navigationView.getMenu();
         navigationService.hideMenuItems(menu, userIntentService.getUserFromIntent(this.getIntent()));
 
+        Calendar beginTime, endTime;
         beginTime = Calendar.getInstance();
         //beginTime.set(2017, 12 - 1, 5, 10, 30);
 
@@ -92,6 +76,9 @@ public class CalendarActivity extends AppCompatActivity implements NavigationVie
         startActivity(intent);
     }
 
+    /**
+     * Handles back button presses
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_calendar);
@@ -115,6 +102,11 @@ public class CalendarActivity extends AppCompatActivity implements NavigationVie
         return true;
     }
 
+    /**
+     * Handles options menu selection
+     * @param item selected
+     * @return true on success
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -136,11 +128,10 @@ public class CalendarActivity extends AppCompatActivity implements NavigationVie
     }
 
 
-    /*
-         * method to handle user's menu selection
-         *
-         * Param: selected menu item
-         */
+    /**
+     * method to handle user's menu selection
+     * @param item selected
+     */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -171,63 +162,11 @@ public class CalendarActivity extends AppCompatActivity implements NavigationVie
         }
     }
 
+    /**
+     * opens snackbar when no wifi connection
+     */
     public void connectionPopUp() {
         Snackbar snackbar = activityService.setupConnection(CalendarActivity.this, findViewById(R.id.activity_calendar));
         snackbar.show();
     }
-
-    @SuppressWarnings("unchecked")
-    public void getOffersList() {
-        i = this.getIntent();
-        OfferVolleyImpl volley = new OfferVolleyImpl(this, new Callback() {
-            public void call(ArrayList<?> result) {
-                try {
-                    if (result.get(0) instanceof Offer) {
-                        offers = (ArrayList<Offer>) result;
-                    }
-                } catch(Exception e) {
-                    offers = new ArrayList<>();
-                }
-
-                ArrayList<Offer> o = new ArrayList<>();
-
-                o.addAll(offers);
-                offers = offerService.findOffersByEmail(o, userIntentService.getUserFromIntent(i));
-                for(int i = 0; i < offers.size(); i++) {
-                    destinations.add(offers.get(i).getDestination());
-
-                }
-            }
-        });
-        volley.execute();
-    }
-
-    @SuppressWarnings("unchecked")
-    public void getRequestsList() {
-        RequestVolleyImpl volley = new RequestVolleyImpl(this, new Callback() {
-            public void call(ArrayList<?> result) {
-                try {
-                    if (result.get(0) instanceof Request) {
-                        requests = (ArrayList<Request>) result;
-                    }
-                } catch(Exception e) {
-                    requests = new ArrayList<>();
-                }
-
-                ArrayList<Request> r = new ArrayList<>();
-                for(int i=0 ; i<offers.size() ; i++) {
-                    r.add(requests.get(i));
-                }
-                requests = requestService.findRequestsByEmail(r, userIntentService.getUserFromIntent(i));
-
-                for(int i = 0; i < requests.size(); i++) {
-                    destinations.add(requests.get(i).getDestination());
-                }
-
-            }
-        });
-        volley.execute();
-    }
-
-
 }

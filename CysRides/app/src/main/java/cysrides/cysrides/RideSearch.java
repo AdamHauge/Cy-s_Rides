@@ -53,6 +53,10 @@ public class RideSearch extends FragmentImpl {
         this.callback = (SearchCallback) callback;
     }
 
+    /**
+     * set text to be displayed for non-admins
+     * @param v view to be set
+     */
     @Override
     protected void setNonAdminTextInfo(View v) {
         SupportPlaceAutocompleteFragment placeAutoComplete = new SupportPlaceAutocompleteFragment();
@@ -80,6 +84,10 @@ public class RideSearch extends FragmentImpl {
         });
     }
 
+    /**
+     * set text to be displayedf for admins
+     * @param v view to be set
+     */
     @Override
     protected void setAdminTextInfo(View v) {
         setNonAdminTextInfo(v);

@@ -3,13 +3,11 @@ package cysrides.cysrides;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -22,19 +20,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import domain.Group;
-import domain.Offer;
 import domain.UserInfo;
 import service.ActivityService;
 import service.ActivityServiceImpl;
@@ -44,14 +36,11 @@ import service.NavigationService;
 import service.NavigationServiceImpl;
 import service.RefreshService;
 import service.RefreshServiceImpl;
-import service.SearchCallback;
 import service.UserIntentService;
 import service.UserIntentServiceImpl;
 import service.UserRatingService;
 import service.UserRatingServiceImpl;
 import volley.ExpiredGroupVolleyImpl;
-import volley.GroupVolleyImpl;
-import volley.OfferVolleyImpl;
 
 public class GroupRating extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DrawerLock {
 
@@ -99,23 +88,9 @@ public class GroupRating extends AppCompatActivity implements NavigationView.OnN
 
         user = userIntentService.getUserFromIntent(this.getIntent());
 
-
-//        searchResult = (TextView) findViewById(R.id.search_result);
-
         refresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
         refresh.setColorSchemeColors(ContextCompat.getColor(GroupRating.this,
                 R.color.colorGold), ContextCompat.getColor(GroupRating.this, R.color.colorCardinal));
-//        refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                if (searchResult.getVisibility() != View.VISIBLE) {
-//                    getGroupsList();
-//                }
-//                else {
-//                    refresh.setRefreshing(false);
-//                }
-//            }
-//        });
         getGroupsList();
 
         /* display list of groups on screen */
@@ -248,28 +223,6 @@ public class GroupRating extends AppCompatActivity implements NavigationView.OnN
             i.putExtra("caller", "Ride Offers");
             startActivity(i);
         }
-//        else if (R.id.search == id) {
-//            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-//            RideSearch rideSearch = new RideSearch();
-//            rideSearch.setData(new SearchCallback() {
-//                @Override
-//                public void call(Place place) {
-//                    String display = "Rides near\n" + place.getName().toString();
-//
-//                    onBackPressed();
-//
-////                    if(filterResults(place)) {
-////                        searchResult.setText(display);
-////                        searchResult.setVisibility(View.VISIBLE);
-////                    }
-//
-//                }
-//            });
-//
-//            fragmentTransaction.replace(R.id.ride_offers_activity, rideSearch);
-//            fragmentTransaction.addToBackStack(null);
-//            fragmentTransaction.commit();
-//        }
         else if(id == R.id.admin_actions) {
             i = userIntentService.createIntent(GroupRating.this, AdminActions.class, userIntentService.getUserFromIntent(this.getIntent()));
             startActivity(i);
@@ -324,48 +277,4 @@ public class GroupRating extends AppCompatActivity implements NavigationView.OnN
         Snackbar snackbar = activityService.setupConnection(GroupRating.this, findViewById(R.id.contacts_activity));
         snackbar.show();
     }
-
-    /**
-     * Filters ride offers based on search information
-     * @param place - user's search info
-     * @return true on success
-     */
-//    public boolean filterResults(Place place) {
-//        List<Offer> filtered = new ArrayList<>();
-//        List<String> destinations = new ArrayList<>();
-//        LatLng compare = place.getLatLng();
-//
-//        for(int i = 0; i < offers.size(); i++) {
-//            float distance[] = new float[1];
-//            LatLng current = offers.get(i).getDestCoordinates();
-//
-//            Location.distanceBetween(compare.latitude, compare.longitude,
-//                    current.latitude, current.longitude, distance);
-//
-//            /* if distance is less than 15 miles away, add it to filtered destinations list */
-//            if(distance[0] <= 1600 * 15) {
-//                destinations.add(offers.get(i).getDestination());
-//                filtered.add(offers.get(i));
-//            }
-//        }
-//
-//        /* if no destinations were found, return false */
-//        if(destinations.size() == 0) {
-//            Snackbar.make(findViewById(R.id.ride_offers_activity),
-//                    "No rides available for this location. You can try making a new request.",
-//                    Snackbar.LENGTH_SHORT).show();
-//            return false;
-//        }
-//
-//        /* display the filtered results */
-//        adapter.clear();
-//        for(int i = 0; i < destinations.size(); i++) {
-//            this.destinations.add(destinations.get(i));
-//        }
-//        this.offers = filtered;
-//        adapter.notifyDataSetChanged();
-//
-//        return true;
-//    }
-
 }

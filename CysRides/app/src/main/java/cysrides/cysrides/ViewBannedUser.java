@@ -50,7 +50,7 @@ public class ViewBannedUser extends FragmentImpl {
     }
 
     /**
-     * This method doesn't do anything
+     * This method doesn't do anything, non-admins can't see banned users
      * @param v view to be set
      */
     @Override
@@ -59,6 +59,10 @@ public class ViewBannedUser extends FragmentImpl {
         info.setText(R.string.debug);
     }
 
+    /**
+     * set data to be displayed for admins
+     * @param v view to be set
+     */
     @Override
     protected void setAdminTextInfo(View v) {
         TextView info = v.findViewById(R.id.ban);

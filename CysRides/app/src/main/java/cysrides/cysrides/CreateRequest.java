@@ -70,6 +70,10 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
     private boolean retValue;
     private final static int RQS_1 = 1;
 
+    /**
+     * Initializes page
+     * @param savedInstanceState - app data
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -226,14 +230,14 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
                             description, gc.getTime());
                     requestService.createRequest(CreateRequest.this, r);
 
-                    setAlarm(gc, false);
+                    setAlarm(gc);
 
                     gc.set(year, (month - 1), day, (hour - 1), minute, seconds);
 
                     Calendar now = Calendar.getInstance();
 
                     if(gc.getTime().after(now.getTime())){
-                        setAlarm(gc, false);
+                        setAlarm(gc);
                     }
 
                     finish();
@@ -248,7 +252,11 @@ public class CreateRequest extends AppCompatActivity implements NavigationView.O
         }
     }
 
-    private void setAlarm(Calendar targetCal, boolean repeat){
+    /**
+     * set user's alarm
+     * @param targetCal - user's calendar
+     */
+    private void setAlarm(Calendar targetCal){
 
         Intent intent = new Intent(CreateRequest.this, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getBaseContext(), RQS_1, intent, 0);

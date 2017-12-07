@@ -58,6 +58,10 @@ public class RequestsOffers extends AppCompatActivity implements NavigationView.
     private List<String> destinations = new ArrayList<>();
     private FragmentManager fragmentManager = this.getSupportFragmentManager();
 
+    /**
+     * Initializes app page
+     * @param savedInstanceState - app data
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,25 +97,15 @@ public class RequestsOffers extends AppCompatActivity implements NavigationView.
         ListView listView = (ListView)findViewById(R.id.requests_offers_list);
         adapter = new ArrayAdapter<>(RequestsOffers.this, android.R.layout.simple_list_item_1, destinations);
         listView.setAdapter(adapter);
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-//                ViewOffer viewOffer = new ViewOffer();
-//                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-//
-//                viewOffer.setData(offers.get(position));
-//                viewOffer.setContext(RideOffers.this);
-//                fragmentTransaction.replace(R.id.ride_offers_activity, viewOffer);
-//                fragmentTransaction.addToBackStack(null);
-//                fragmentTransaction.commit();
-//            }
-//        });
 
         if(navigationService.checkInternetConnection(RequestsOffers.this)) {
             connectionPopUp();
         }
     }
 
+    /**
+     * gets list of offers from the database
+     */
     @SuppressWarnings("unchecked")
     public void getOffersList() {
         i = this.getIntent();
@@ -143,6 +137,9 @@ public class RequestsOffers extends AppCompatActivity implements NavigationView.
         volley.execute();
     }
 
+    /**
+     * gets list of requests from the database
+     */
     @SuppressWarnings("unchecked")
     public void getRequestsList() {
         RequestVolleyImpl volley = new RequestVolleyImpl(this, new Callback() {
@@ -176,6 +173,9 @@ public class RequestsOffers extends AppCompatActivity implements NavigationView.
         volley.execute();
     }
 
+    /**
+     * handles back button presses
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.requests_offers_activity);
@@ -193,6 +193,11 @@ public class RequestsOffers extends AppCompatActivity implements NavigationView.
         }
     }
 
+    /**
+     * creates options menu
+     * @param menu to be created
+     * @return true on success
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -201,6 +206,11 @@ public class RequestsOffers extends AppCompatActivity implements NavigationView.
         return true;
     }
 
+    /**
+     * handles options menu selection
+     * @param item selected
+     * @return true on success
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -221,6 +231,11 @@ public class RequestsOffers extends AppCompatActivity implements NavigationView.
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * handles navigation item selections
+     * @param item selected
+     * @return true on success
+     */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -251,6 +266,9 @@ public class RequestsOffers extends AppCompatActivity implements NavigationView.
         }
     }
 
+    /**
+     * opens snackbar if wifi is not connected
+     */
     public void connectionPopUp() {
         Snackbar snackbar = activityService.setupConnection(RequestsOffers.this, findViewById(R.id.contacts_activity));
         snackbar.show();

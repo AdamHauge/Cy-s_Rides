@@ -1,17 +1,11 @@
 package cysrides.cysrides;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import domain.Offer;
@@ -43,19 +37,6 @@ public class ViewOffer extends RideFragment {
             @Override
             public void onClick(View view) {
                 groupService.addRider(context, offer.getGroup(), userInfo.getNetID());
-
-//                GregorianCalendar gc = new GregorianCalendar();
-//                gc.setGregorianChange(offer.getDate());
-//
-//                setAlarm(gc, false);
-//
-//                gc.set(year, (month - 1), day, (hour - 1), minute, seconds);
-//
-//                Calendar now = Calendar.getInstance();
-//
-//                if(gc.getTime().after(now.getTime())){
-//                    setAlarm(gc, false);
-//                }
 
             }
         });

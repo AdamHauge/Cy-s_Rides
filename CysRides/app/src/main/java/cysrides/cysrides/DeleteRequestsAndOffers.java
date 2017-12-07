@@ -52,6 +52,10 @@ public class DeleteRequestsAndOffers extends AppCompatActivity implements Naviga
     private static final int RB1_ID = 1000; //first radio button id
     private static final int RB2_ID = 1001; //second radio button id
 
+    /**
+     * Initializes page
+     * @param savedInstanceState - app data
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,6 +120,9 @@ public class DeleteRequestsAndOffers extends AppCompatActivity implements Naviga
         }
     }
 
+    /**
+     * handles back button presses
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.delete_requests_and_offers_activity);
@@ -136,6 +143,11 @@ public class DeleteRequestsAndOffers extends AppCompatActivity implements Naviga
         }
     }
 
+    /**
+     * creates options menu
+     * @param menu menu to be created
+     * @return true on success
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -143,6 +155,11 @@ public class DeleteRequestsAndOffers extends AppCompatActivity implements Naviga
         return true;
     }
 
+    /**
+     * handles option selections
+     * @param item selected
+     * @return true on success
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -163,6 +180,11 @@ public class DeleteRequestsAndOffers extends AppCompatActivity implements Naviga
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Handles navigation item selections
+     * @param item selected
+     * @return true on success
+     */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
@@ -204,11 +226,18 @@ public class DeleteRequestsAndOffers extends AppCompatActivity implements Naviga
         return retValue;
     }
 
+    /**
+     * opens snackbar on no wifi connection
+     */
     public void connectionPopUp() {
         Snackbar snackbar = activityService.setupConnection(DeleteRequestsAndOffers.this, findViewById(R.id.contacts_activity));
         snackbar.show();
     }
 
+    /**
+     * handles radio button selection
+     * @return true if selected
+     */
     private boolean isTypeSelected() {
         return (requestRadioButton.isChecked() || offerRadioButton.isChecked());
     }

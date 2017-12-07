@@ -1,15 +1,12 @@
 package cysrides.cysrides;
 
-import android.content.Context;
 import android.content.Intent;
-import android.provider.Telephony;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -19,7 +16,6 @@ import service.UserIntentService;
 import service.UserIntentServiceImpl;
 import service.UserRatingService;
 import service.UserRatingServiceImpl;
-import volley.UserRatingVolley;
 import volley.UserRatingVolleyImpl;
 import volley.UserVolleyImpl;
 
@@ -31,8 +27,6 @@ public class RateRider extends AppCompatActivity {
     private UserRatingService userRatingService = new UserRatingServiceImpl();
 
     private EditText resultView;
-    private Button goButton;
-    private TextView rateRiderTextView;
 
     private float rating;
     private UserInfo user;
@@ -40,6 +34,10 @@ public class RateRider extends AppCompatActivity {
     private float userRating;
     private String username1;
 
+    /**
+     * Initializes page
+     * @param savedInstanceState - app data
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +46,10 @@ public class RateRider extends AppCompatActivity {
         riderName = (this.getIntent().getExtras().getString("Rider name"));
 
         resultView = (EditText) findViewById(R.id.ratingResultTextView);
+
+        Button goButton;
+        TextView rateRiderTextView;
+
         goButton = (Button) findViewById(R.id.goButton);
         rateRiderTextView = (TextView) findViewById(R.id.rateRiderTextView);
 
@@ -68,6 +70,10 @@ public class RateRider extends AppCompatActivity {
         });
     }
 
+    /**
+     * Returns user data
+     * @param username - user's username
+     */
     @SuppressWarnings("unchecked")
     private void getUser(final String username) {
         username1 = username;
@@ -94,6 +100,9 @@ public class RateRider extends AppCompatActivity {
         volley.execute();
     }
 
+    /**
+     * gets user's ratings from the database
+     */
     @SuppressWarnings("unchecked")
     private void getRatings() {
         UserRatingVolleyImpl volley = new UserRatingVolleyImpl(new Callback() {

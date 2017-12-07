@@ -1,10 +1,6 @@
 package cysrides.cysrides;
 
-import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,7 +10,6 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -39,7 +34,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -65,8 +59,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private UserIntentService userIntentService = new UserIntentServiceImpl();
     private NavigationService navigationService = new NavigationServiceImpl();
     private ActivityService activityService = new ActivityServiceImpl();
-    private OfferService offerService = new OfferServiceImpl();
-    private RequestService requestService = new RequestServiceImpl();
 
     private DrawerLayout drawer;
     private Intent i;
@@ -79,7 +71,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private float defaultZoom = 15.0f;
     private HashMap<Marker, Offer> offerMarkers;
     private HashMap<Marker, Request> requestMarkers;
-    private List<String> destinations = new ArrayList<>();
 
     /**
      * Initializes page to be displayed
@@ -407,57 +398,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void connectionPopUp() {
         Snackbar snackbar = activityService.setupConnection(MainActivity.this, findViewById(R.id.activity_main));
         snackbar.show();
-    }
-
-    @SuppressWarnings("unchecked")
-    public void getOffersList() {
-        i = this.getIntent();
-        OfferVolleyImpl volley = new OfferVolleyImpl(this, new Callback() {
-            public void call(ArrayList<?> result) {
-                try {
-                    if (result.get(0) instanceof Offer) {
-                        offers = (ArrayList<Offer>) result;
-                    }
-                } catch(Exception e) {
-                    offers = new ArrayList<>();
-                }
-
-                ArrayList<Offer> o = new ArrayList<>();
-                o.addAll(offers);
-                offers = offerService.findOffersByEmail(o, userIntentService.getUserFromIntent(i));
-                for(int i = 0; i < offers.size(); i++) {
-                    destinations.add(offers.get(i).getDestination());
-                }
-
-            }
-        });
-        volley.execute();
-    }
-
-    @SuppressWarnings("unchecked")
-    public void getRequestsList() {
-        RequestVolleyImpl volley = new RequestVolleyImpl(this, new Callback() {
-            public void call(ArrayList<?> result) {
-                try {
-                    if (result.get(0) instanceof Request) {
-                        requests = (ArrayList<Request>) result;
-                    }
-                } catch(Exception e) {
-                    requests = new ArrayList<>();
-                }
-
-                ArrayList<Request> r = new ArrayList<>();
-                for(int i=0 ; i< requests.size() ; i++) {
-                    r.add(requests.get(i));
-                }
-                requests = requestService.findRequestsByEmail(r, userIntentService.getUserFromIntent(i));
-
-                for(int i = 0; i < requests.size(); i++) {
-                    destinations.add(requests.get(i).getDestination());
-                }
-
-            }
-        });
-        volley.execute();
     }
 }

@@ -59,10 +59,11 @@ public class CreateProfile extends AppCompatActivity {
     private UserVolley userVolley = new UserVolleyImpl(call);
     private Intent i;
 
-    /*
-    Initializes all UI components in the class to the ones in the xml file.
-    Grabs username and password from the previous intent and adds then to the text fields.
-    Listeners for radio group and create profile button.
+    /**
+     * Initializes all UI components in the class to the ones in the xml file.
+     * Grabs username and password from the previous intent and adds then to the text fields.
+     * Listeners for radio group and create profile button.
+     * @param savedInstanceState - App info
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,12 +157,19 @@ public class CreateProfile extends AppCompatActivity {
 
     }
 
-    /* An email is valid if it contains "@iastate.edu"*/
+    /**
+     * An email is valid if it contains "@iastate.edu"
+     * @param email of user
+     * @return true if valid
+     */
     private boolean isEmailValid(String email) {
         return email.contains("@iastate.edu");
     }
 
-    /* A password is valid if it contains a digit and is at least eight characters long*/
+    /**
+     *  A password is valid if it contains a digit and is at least eight characters long
+     *  @param password - user password
+     */
     private boolean isPasswordValid(String password) {
         if (password.length() > 8) {
             for (int i = 0; i < password.length(); i++) {
@@ -173,12 +181,21 @@ public class CreateProfile extends AppCompatActivity {
         return false;
     }
 
-    /* A description is valid if it is longer than 10 characters*/
+    /**
+     * A description is valid if it is longer than 10 characters
+     * @param profileDescription - user's profile description
+     * @return true if valid
+     */
     private boolean isDescriptionValid(String profileDescription) {
         return profileDescription.length() > 10;
     }
 
-    /* A name is valid if the first and last name are greater than one character and do not contain a digit*/
+    /**
+     *  A name is valid if the first and last name are greater than one character and do not contain a digit
+     *  @param firstName - user's first name
+     *  @param lastName - user's last name
+     *  @return true if valid
+     */
     private boolean isNameValid(String firstName, String lastName) {
         if (firstName.length() > 1 && lastName.length() > 1) {
             for (int i = 0; i < firstName.length(); i++) {
@@ -197,7 +214,11 @@ public class CreateProfile extends AppCompatActivity {
         }
     }
 
-    /* A venmo is valid if it is longer than 2 characters*/
+    /**
+     * A venmo is valid if it is longer than 2 characters
+     * @param venmo - user's venmo
+     * @return true if valid
+     */
     private boolean isVenmoValid(String venmo){
         return venmo.length() > 2;
     }
@@ -207,7 +228,10 @@ public class CreateProfile extends AppCompatActivity {
         return (driverRadioButton.isChecked() || passengerRadioButton.isChecked());
     }
 
-    /* All inputs are valid if the aforementioned methods are true*/
+    /**
+     * All inputs are valid if the aforementioned methods are true
+     * @return true if valid
+     */
     private boolean inputsValid(){
         return (isEmailValid(netID) && isPasswordValid(password) && isDescriptionValid(profileDescription) &&
                 isNameValid(firstName, lastName) && isVenmoValid(venmo) && isTypeSelected());

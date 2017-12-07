@@ -18,10 +18,11 @@ public class DialogConfirmationCode extends AppCompatActivity {
     private EditText resultView;
     private UserInfo user;
 
-    /*
-    This method primarily listens for the "goButton" to be clicked. When clicked, it references the
-    code the user inputs to the code in the database for that user. If the user inputs the wrong code,
-    a toast appears saying so.
+    /**
+     * This method primarily listens for the "goButton" to be clicked. When clicked, it references the
+     * code the user inputs to the code in the database for that user. If the user inputs the wrong code,
+     * a toast appears saying so.
+     * @param savedInstanceState - app data
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {

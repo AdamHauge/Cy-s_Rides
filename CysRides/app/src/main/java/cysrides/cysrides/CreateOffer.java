@@ -36,7 +36,6 @@ import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 
 import java.io.IOException;
-import java.sql.Time;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -62,7 +61,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
     private Place destination;
     private Place start;
     private int year, month, day, hour, minute, seconds;
-    private boolean dateChanged = false, timeChanged = false;
+    private boolean dateChanged = false;
     private String description;
     private double cost;
     private Intent i;
@@ -212,7 +211,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
                 minute = m;
                 seconds = 0;
                 Log.d("CreateOffer", "onTimeSet date: " + String.format("%02d", hour) + ":" + String.format("%02d", minute) + ":" + String.format("%02d", seconds));
-                String time = String.format("%02d", hour) + ":" + String.format("%02d", minute) + ":" + String.format("%02d", seconds);
+                String time = String.format(Locale.US, "%02d", hour) + ":" + String.format(Locale.US, "%02d", minute) + ":" + String.format(Locale.US, "%02d", seconds);
                 EditText editText = (EditText)findViewById(R.id.LeaveTime);
                 editText.setText(time);
                 timeChanged = true;
@@ -236,7 +235,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
 
                     offerService.createOffer(CreateOffer.this, o);
 
-                    setAlarm(gc, false);
+                    setAlarm(gc);
 
                     /* Refresh the page */
                     finish();
@@ -250,7 +249,7 @@ public class CreateOffer extends AppCompatActivity implements NavigationView.OnN
         }
     }
 
-    private void setAlarm(Calendar targetCal, boolean repeat){
+    private void setAlarm(Calendar targetCal){
 
         Intent intent = new Intent(CreateOffer.this, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getBaseContext(), RQS_1, intent, 0);

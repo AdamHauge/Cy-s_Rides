@@ -1,17 +1,12 @@
 package domain;
 
-/**
- * Created by Ryan on 12/3/2017.
- */
-
 public class GOR {
-
     private Group group;
     private Offer offer;
     private Request request;
 
     /**
-     * Creates new GOR Objec (Group, Offer, Request
+     * Creates new GOR Object (Group, Offer, Request
      * @param group - a group
      * @param offer - offer associated with that group (null if a request)
      * @param request - request associated with that group (null if an offer)

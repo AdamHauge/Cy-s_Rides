@@ -17,8 +17,6 @@ import android.view.MenuItem;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
 import domain.UserInfo;
@@ -29,9 +27,7 @@ import service.NavigationService;
 import service.NavigationServiceImpl;
 import service.UserIntentService;
 import service.UserIntentServiceImpl;
-import volley.UserRatingVolley;
 import volley.UserRatingVolleyImpl;
-import volley.UserVolleyImpl;
 
 public class ViewProfile extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -45,10 +41,10 @@ public class ViewProfile extends AppCompatActivity implements NavigationView.OnN
     TextView testView;
     RatingBar userRatingBar;
 
-
-    /*
-    When this activity is created, it initializes all the UI components to the values of the UserInfo
-    object.
+    /**
+     * When this activity is created, it initializes all the UI components to the values of the UserInfo
+     * object.
+     * @param savedInstanceState - app data
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +88,9 @@ public class ViewProfile extends AppCompatActivity implements NavigationView.OnN
 
     }
 
+    /**
+     * handles back button presses
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.my_profile);
@@ -104,6 +103,11 @@ public class ViewProfile extends AppCompatActivity implements NavigationView.OnN
         }
     }
 
+    /**
+     * Creates options menu
+     * @param menu to be created
+     * @return true on success
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -112,6 +116,11 @@ public class ViewProfile extends AppCompatActivity implements NavigationView.OnN
         return true;
     }
 
+    /**
+     * handles options menu selections
+     * @param item selected
+     * @return true on success
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -132,6 +141,11 @@ public class ViewProfile extends AppCompatActivity implements NavigationView.OnN
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Handles navigation item selections
+     * @param item selected
+     * @return true on success
+     */
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
@@ -158,11 +172,18 @@ public class ViewProfile extends AppCompatActivity implements NavigationView.OnN
         }
     }
 
+    /**
+     * opens snackbar if wifi is not connected
+     */
     public void connectionPopUp() {
         Snackbar snackbar = activityService.setupConnection(this.getApplicationContext(), findViewById(R.id.my_profile));
         snackbar.show();
     }
 
+    /**
+     * returns user's rating from the database
+     * @param netID - user's netID
+     */
     @SuppressWarnings("unchecked")
     private void getRatings(final String netID) {
         UserRatingVolleyImpl volley = new UserRatingVolleyImpl(new Callback() {
