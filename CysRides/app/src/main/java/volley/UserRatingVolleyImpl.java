@@ -22,12 +22,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import domain.Offer;
-import domain.UserInfo;
-import domain.UserType;
 import service.Callback;
 
 public class UserRatingVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements UserRatingVolley {
@@ -48,10 +44,10 @@ public class UserRatingVolleyImpl extends AsyncTask<Void, Void, JSONArray> imple
 
     /**
      * Updates a rating in the database
-     * @param context
-     * @param netID
-     * @param userRating
-     * @param numberRatings
+     * @param context - context of app
+     * @param netID - user's netID
+     * @param userRating - user's rating
+     * @param numberRatings - amount of user ratings
      */
     @Override
     public void addRating(Context context, final String netID, final float userRating, final float numberRatings){
@@ -89,7 +85,7 @@ public class UserRatingVolleyImpl extends AsyncTask<Void, Void, JSONArray> imple
 
     /**
      * Returns all ratings from the ratings table
-     * @param jsonArray
+     * @param jsonArray - array of ratings from database
      */
     @Override
     public void onPostExecute(JSONArray jsonArray) {
@@ -120,8 +116,8 @@ public class UserRatingVolleyImpl extends AsyncTask<Void, Void, JSONArray> imple
     /**
      * Part of the asynchronous process of grabbing a list of users from the database. Reads the strings from the
        JSONObjects received from the database and adds them to the JSONArray.
-     * @param aVoid
-     * @return
+     * @param aVoid - nothing
+     * @return - JSONArray of user ratings
      */
     @Override
     protected JSONArray doInBackground(Void... aVoid) {

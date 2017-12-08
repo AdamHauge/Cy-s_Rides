@@ -4,6 +4,11 @@ import android.content.Context;
 
 import domain.Ban;
 
-public interface BanVolley {
+interface BanVolley {
+    /**
+     * Creates new user ban
+     * @param context of app
+     * @param ban - user ban
+     */
     void createBan(Context context, Ban ban);
 }

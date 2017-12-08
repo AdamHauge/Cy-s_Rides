@@ -43,9 +43,11 @@ public class UserVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements 
         callback = call;
     }
 
-    /*
-    Creates a user row in the database based on the information given in the UserInfo object.
-    Sends a map over of the fields of the current user to the createUser php file.
+    /**
+     * Creates a user row in the database based on the information given in the UserInfo object.
+     * Sends a map over of the fields of the current user to the createUser php file.
+     * @param context context of app
+     * @param user - user data
      */
     @Override
     public void createUser(Context context, final UserInfo user) {
@@ -91,6 +93,14 @@ public class UserVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements 
     JSONArray, it parses JSONObjects from it and then creates UserInfo objects based on the Strings in
     the JSONObject. Adds each individual user to the users ArrayList. Calls the callback function on
     the users ArrayList.
+     */
+
+    /**
+     * Part of the asynchronous process of grabbing a list of users from the database. For the given
+     * JSONArray, it parses JSONObjects from it and then creates UserInfo objects based on the Strings in
+     * the JSONObject. Adds each individual user to the users ArrayList. Calls the callback function on
+     * the users ArrayList.
+     * @param jsonArray of userData from database
      */
     @Override
     public void onPostExecute(JSONArray jsonArray) {
@@ -140,6 +150,13 @@ public class UserVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements 
     /*
     Part of the asynchronous process of grabbing a list of users from the database. Reads the strings from the
     JSONObjects received from the database and adds them to the JSONArray.
+     */
+
+    /**
+     * Part of the asynchronous process of grabbing a list of users from the database. Reads the strings from the
+     * JSONObjects received from the database and adds them to the JSONArray
+     * @param aVoid - nothing
+     * @return JSONArray of user data from database
      */
     @Override
     protected JSONArray doInBackground(Void... aVoid) {

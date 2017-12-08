@@ -30,8 +30,6 @@ import domain.Ban;
 
 public class BanVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements BanVolley {
 
-    private String createBanUrl = "http://proj-309-sa-b-5.cs.iastate.edu/createBan.php";
-    private String getBansUrl = "http://proj-309-sa-b-5.cs.iastate.edu/getBan.php";
     private Context currentContext;
     private String email;
     private String reason;
@@ -46,11 +44,12 @@ public class BanVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements B
 
     /**
      * Creates a ban in the database
-     * @param context
-     * @param ban
+     * @param context of app
+     * @param ban - user ban
      */
     @Override
     public void createBan(Context context, Ban ban) {
+        String createBanUrl = "http://proj-309-sa-b-5.cs.iastate.edu/createBan.php";
         currentContext = context;
         email = ban.getEmail();
         reason = ban.getReason();
@@ -83,7 +82,7 @@ public class BanVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements B
 
     /**
      * Returns an array of all bans from the database
-     * @param jsonArray
+     * @param jsonArray of user bans
      */
     @Override
     protected void onPostExecute(JSONArray jsonArray) {
@@ -107,11 +106,12 @@ public class BanVolleyImpl extends AsyncTask<Void, Void, JSONArray> implements B
 
     /**
      * Sets up the connection to the server
-     * @param aVoid
-     * @return
+     * @param aVoid - nothing
+     * @return json Array of bans
      */
     @Override
     protected JSONArray doInBackground(Void... aVoid) {
+        String getBansUrl = "http://proj-309-sa-b-5.cs.iastate.edu/getBan.php";
         HttpURLConnection urlConnection = null;
         StringBuilder result = new StringBuilder();
 

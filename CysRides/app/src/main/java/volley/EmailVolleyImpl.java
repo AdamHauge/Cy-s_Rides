@@ -14,18 +14,19 @@ import java.util.Map;
 
 public class EmailVolleyImpl implements EmailVolley {
 
-
-    private String sendEmailUrl = "http://proj-309-sa-b-5.cs.iastate.edu/sendEmail.php";
     private Context currentContext;
     private String to, from, subject, message;
 
-    /*
-    Method to send the user a confirmation email. Takes parameters for the email fields like to, from,
-    subject, and the message. Also needs current context. Makes volley request to sendEmail.php. Sends
-    given parameters over as a map.
+    /**
+     * Sends email to user
+     * @param toData - email address to send to
+     * @param fromData - email address of app
+     * @param subjectData - email subject
+     * @param messageData - email message
+     * @param context - context of app
      */
-    public void sendEmail(String toData, String fromData, String subjectData, String messageData, Context context)
-    {
+    public void sendEmail(String toData, String fromData, String subjectData, String messageData, Context context)    {
+        String sendEmailUrl = "http://proj-309-sa-b-5.cs.iastate.edu/sendEmail.php";
         currentContext = context;
         to = toData;
         from = fromData;

@@ -4,12 +4,13 @@ import android.content.Context;
 
 import domain.Message;
 
-/**
- * Created by Ryan on 12/1/2017.
- */
+interface MessageVolley {
 
-public interface MessageVolley {
-
+    /**
+     * creates message to be sent to group
+     * @param context - context of app
+     * @param message - message to be sent
+     */
     void createMessage(final Context context, final Message message);
   
 }
