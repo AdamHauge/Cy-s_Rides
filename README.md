@@ -1,10 +1,10 @@
 Project Name: Cy’s Rides
 
 Team Members:
-Adam Hauge (Best Team Manager)
-Claudia Athens (Best Coder)
-Ryan Cerveny
-Zachery Knoll
+Adam Hauge, 
+Claudia Athens, 
+Ryan Cerveny, 
+Zachery Knoll 
 
 Description of project: 
 For this project, we will be creating a ridesharing app which works specifically for ISU students. This app will allow students who have cars to offer rides to students heading to various locations such as home for a holiday break. This app will be utilized both by students offering rides and by students looking for rides. Drivers will be able to request a certain amount of payment per ride, specifically to cover gas money. Our app will also include a private messaging system to allow users to more closely coordinate rides with each other and can be used by as many people as the driver can fit in their car. This app will be specific to Iowa State so that all rides must either start or end in Ames, IA and all user accounts will require an Iowa State email address to ensure that only ISU students utilize the app. Map locations and directions will be implemented through the use of the Google Maps API in order to calculate travel time and distance. Our app will also include a calendar system to allow for ride schedules and a reminder system to both the driver and the rider. 
